@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Gap - Intro</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #1a1a3a 0%, #000 100%);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .scroll-container {
+      height: 800vh;
+      position: relative;
+    }
+
+    .scene {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .background {
+      position: absolute;
+      inset: 0;
+      transition: all 1.5s ease;
+    }
+
+    .portraits {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .human-portrait {
+      position: absolute;
+      left: 25%;
+      transition: all 1.5s ease;
+      opacity: 0;
+    }
+
+    .ai-entity {
+      position: absolute;
+      right: 25%;
+      transition: all 1.5s ease;
+      opacity: 0;
+    }
+
+    .human-portrait.visible, .ai-entity.visible {
+      opacity: 1;
+    }
+
+    .text-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .text-layer h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .text-layer h1.visible {
+      opacity: 1;
+    }
+
+    .text-layer p {
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
+      color: #999;
+      opacity: 0;
+      transition: opacity 1s ease 0.2s;
+    }
+
+    .text-layer p.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Progress indicator -->
+  <div class="progress-bar">
+    <div class="progress-dot" data-scene="1"></div>
+    <div class="progress-dot" data-scene="2"></div>
+    <div class="progress-dot" data-scene="3"></div>
+    <div class="progress-dot" data-scene="4"></div>
+    <div class="progress-dot" data-scene="5"></div>
+    <div class="progress-dot" data-scene="6"></div>
+    <div class="progress-dot" data-scene="7"></div>
+  </div>
+
+  <div class="scroll-container">
+    <!-- Shared scene container -->
+    <div class="scene" id="mainScene">
+      <div class="background"></div>
+
+      <!-- Stars layer -->
+      <div class="stars-layer" id="starsLayer"></div>
+
+      <!-- Landscape layer -->
+      <div class="landscape" id="landscape">
+        <div class="wave wave-1"></div>
+        <div class="wave wave-2"></div>
+        <div class="wave wave-3"></div>
+        <div class="wave wave-4"></div>
+        <div class="wave wave-5"></div>
+      </div>
+
+      <!-- Portraits -->
+      <div class="portraits" id="portraits">
+        <div class="human-portrait" id="humanPortrait">
+          <div class="silhouette human-silhouette">
+            <div class="head"></div>
+            <div class="body">
+              <div class="pattern-dots"></div>
+            </div>
+            <div class="legs"></div>
+          </div>
+        </div>
+
+        <div class="ai-entity" id="aiEntity">
+          <div class="silhouette ai-silhouette">
+            <div class="core-sphere">
+              <div class="orbit orbit-1"></div>
+              <div class="orbit orbit-2"></div>
+              <div class="orbit orbit-3"></div>
+              <div class="glow"></div>
+              <div class="particles-container" id="aiParticles"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gap visualization -->
+      <div class="gap-visual" id="gapVisual">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M 50 0 Q 45 25 50 50 Q 55 75 50 100" stroke="#E85D4D" stroke-width="0.5" fill="none" opacity="0.8"/>
+          <path d="M 48 0 Q 43 25 48 50 Q 53 75 48 100" stroke="#1a1a1a" stroke-width="2" fill="none" opacity="0.9"/>
+          <path d="M 52 0 Q 57 25 52 50 Q 47 75 52 100" stroke="#1a1a1a" stroke-width="2" fill="none" opacity="0.9"/>
+          <g opacity="0.6">
+            <rect x="48" y="30" width="4" height="0.3" fill="#E85D4D">
+              <animate attributeName="y" values="30;32;30" dur="0.4s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="48" y="50" width="4" height="0.3" fill="#E85D4D">
+              <animate attributeName="y" values="50;48;50" dur="0.5s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="48" y="70" width="4" height="0.3" fill="#E85D4D">
+              <animate attributeName="y" values="70;72;70" dur="0.3s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Avalanche -->
+      <div class="avalanche" id="avalanche">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" id="avalancheSvg"></svg>
+      </div>
+
+      <!-- AI rays -->
+      <div class="ai-rays" id="aiRays"></div>
+
+      <!-- Shifts visualization -->
+      <div class="shifts-visual" id="shiftsVisual"></div>
+
+      <!-- Text layers -->
+      <div class="text-layer top-left" id="text1">
+        <div class="text-content">
+          <h1 id="title1"></h1>
+          <p id="subtitle1"></p>
+        </div>
+      </div>
+
+      <!-- Scroll hint -->
+      <div class="scroll-hint">Scroll to explore</div>
+    </div>
+  </div>
+
+  <script>
+    const scenes = [
+      { 
+        title: 'We stand still.', 
+        subtitle: 'Stable. Known. Human.',
+        position: 'bottom-left',
+        duration: 3000
+      },
+      { 
+        title: 'While AI evolves.', 
+        subtitle: 'Shifting. Morphing. Expanding.',
+        position: 'top-right',
+        duration: 3500
+      },
+      { 
+        title: 'It reaches us.', 
+        subtitle: 'Waves of change.',
+        position: 'center',
+        duration: 3000
+      },
+      { 
+        title: 'We transform.', 
+        subtitle: 'Adapting. Overwhelmed.',
+        position: 'bottom-left',
+        duration: 3000
+      },
+      { 
+        title: 'THE CONTEXT GAP', 
+        subtitle: 'The space between capability and comprehension.',
+        position: 'center',
+        duration: 4000
+      },
+      { 
+        title: '11 TECTONIC SHIFTS', 
+        subtitle: 'Fractures in our reality.',
+        position: 'center',
+        duration: 3500
+      },
+      { 
+        title: 'Annual Report 2025/26', 
+        subtitle: 'by AI Mindset',
+        position: 'center',
+        duration: 4000
+      }
+    ];
+
+    const mainScene = document.getElementById('mainScene');
+    const portraits = document.getElementById('portraits');
+    const humanPortrait = document.getElementById('humanPortrait');
+    const aiEntity = document.getElementById('aiEntity');
+    const gapVisual = document.getElementById('gapVisual');
+    const avalanche = document.getElementById('avalanche');
+    const shiftsVisual = document.getElementById('shiftsVisual');
+    const textLayer = document.getElementById('text1');
+    const title = document.getElementById('title1');
+    const subtitle = document.getElementById('subtitle1');
+    const scrollHint = document.querySelector('.scroll-hint');
+    const progressDots = document.querySelectorAll('.progress-dot');
+    const starsLayer = document.getElementById('starsLayer');
+    const landscape = document.getElementById('landscape');
+    const aiParticles = document.getElementById('aiParticles');
+    const aiRays = document.getElementById('aiRays');
+
+    // Generate stars
+    const starsCount = 80;
+    for (let i = 0; i < starsCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 60}%`;
+      star.style.setProperty('--delay', `${Math.random() * 3}s`);
+      starsLayer.appendChild(star);
+    }
+
+    // Generate AI particles
+    const particlesCount = 16;
+    for (let i = 0; i < particlesCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'ai-particle';
+      const angle = (i / particlesCount) * Math.PI * 2;
+      const distance = 60 + Math.random() * 40;
+      particle.style.left = '50%';
+      particle.style.top = '50%';
+      particle.style.setProperty('--delay', `${i * 0.25}s`);
+      particle.style.setProperty('--x', `${Math.cos(angle) * distance}px`);
+      particle.style.setProperty('--y', `${Math.sin(angle) * distance}px`);
+      aiParticles.appendChild(particle);
+    }
+
+    // Generate AI rays
+    const raysCount = 8;
+    for (let i = 0; i < raysCount; i++) {
+      const ray = document.createElement('div');
+      ray.className = 'ray';
+      const angle = (i / raysCount) * 360;
+      ray.style.transform = `rotate(${angle}deg)`;
+      ray.style.setProperty('--delay', `${i * 0.2}s`);
+      aiRays.appendChild(ray);
+    }
+
+    // Generate shifts visualization
+    const shiftsData = [
+      { name: 'REASONING', y: '15%' },
+      { name: 'KNOWLEDGE', y: '22%' },
+      { name: 'DISCOVERY', y: '29%' },
+      { name: 'CRAFT', y: '36%' },
+      { name: 'MATTER', y: '43%' },
+      { name: 'DEFENSE', y: '50%' },
+      { name: 'NARRATIVE', y: '57%' },
+      { name: 'SOVEREIGNTY', y: '64%' },
+      { name: 'INTIMACY', y: '71%' },
+      { name: 'COST', y: '78%' },
+      { name: 'DISPLACEMENT', y: '85%' }
+    ];
+
+    shiftsData.forEach((shift, i) => {
+      const wave = document.createElement('div');
+      wave.className = 'shift-wave';
+      wave.style.top = shift.y;
+      wave.style.setProperty('--i', i);
+      shiftsVisual.appendChild(wave);
+
+      const label = document.createElement('div');
+      label.className = 'shift-label';
+      label.textContent = shift.name;
+      label.style.top = shift.y;
+      label.style.left = '10%';
+      label.style.setProperty('--i', i);
+      shiftsVisual.appendChild(label);
+    });
+
+    // Generate avalanche particles
+    const avalancheSvg = document.getElementById('avalancheSvg');
+    const particles = 50;
+    for (let i = 0; i < particles; i++) {
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const delay = Math.random() * 3;
+      const duration = 3 + Math.random() * 3;
+      const symbols = ['01', '10', '11', 'AI', 'GPT', 'LLM', 'RAG', 'API'];
+      
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', x);
+      text.setAttribute('y', y);
+      text.setAttribute('fill', '#4D9DE8');
+      text.setAttribute('font-size', '1');
+      text.setAttribute('opacity', '0.4');
+      text.textContent = symbols[i % symbols.length];
+      
+      const animTransform = document.createElementNS('http://www.w3.org/2000/svg', 'animateTransform');
+      animTransform.setAttribute('attributeName', 'transform');
+      animTransform.setAttribute('type', 'translate');
+      animTransform.setAttribute('from', `0 -10`);
+      animTransform.setAttribute('to', `0 110`);
+      animTransform.setAttribute('dur', `${duration}s`);
+      animTransform.setAttribute('begin', `${delay}s`);
+      animTransform.setAttribute('repeatCount', 'indefinite');
+      
+      const animOpacity = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+      animOpacity.setAttribute('attributeName', 'opacity');
+      animOpacity.setAttribute('values', '0;0.4;0');
+      animOpacity.setAttribute('dur', `${duration}s`);
+      animOpacity.setAttribute('begin', `${delay}s`);
+      animOpacity.setAttribute('repeatCount', 'indefinite');
+      
+      text.appendChild(animTransform);
+      text.appendChild(animOpacity);
+      avalancheSvg.appendChild(text);
+    }
+
+    let currentScene = 0;
+
+    function splitTextIntoWords(text) {
+      return text.split(' ').map((word, i) => 
+        `<span class="word" style="--i:${i}">${word}</span>`
+      ).join(' ');
+    }
+
+    function updateScene() {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.querySelector('.scroll-container').scrollHeight;
+      const scrollProgress = Math.min(scrollTop / (documentHeight - windowHeight), 1);
+      
+      const sceneIndex = Math.floor(scrollProgress * scenes.length);
+      const newScene = Math.min(sceneIndex, scenes.length - 1);
+      const sceneProgress = (scrollProgress * scenes.length) % 1;
+
+      // Update progress dots
+      progressDots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === newScene);
+      });
+
+      // Update scene class
+      mainScene.className = `scene scene-${newScene + 1}`;
+      if (newScene === scenes.length - 1) {
+        mainScene.classList.add('final');
+      }
+
+      // Scene transitions
+      if (newScene !== currentScene) {
+        currentScene = newScene;
+        
+        // Update text
+        title.innerHTML = splitTextIntoWords(scenes[currentScene].title);
+        subtitle.textContent = scenes[currentScene].subtitle;
+        
+        // Reset text layer position
+        textLayer.className = `text-layer ${scenes[currentScene].position}`;
+        
+        // Trigger text animations with proper timing
+        setTimeout(() => {
+          title.classList.add('visible');
+          subtitle.classList.add('visible');
+        }, 200);
+
+        // Keep visible for scene duration
+        const textDuration = scenes[currentScene].duration || 3000;
+        setTimeout(() => {
+          title.classList.remove('visible');
+          subtitle.classList.remove('visible');
+        }, textDuration - 500);
+      }
+
+      // Scene-specific animations
+      // Scene 0: Human portrait closeup
+      if (newScene === 0) {
+        starsLayer.classList.add('active');
+        landscape.classList.add('active');
+        portraits.classList.add('active');
+        humanPortrait.classList.add('visible');
+        scrollHint.classList.add('visible');
+        mainScene.classList.remove('camera-zoom-out', 'camera-wide');
+      }
+
+      // Scene 1: Zoom out, show AI
+      if (newScene === 1) {
+        mainScene.classList.add('camera-zoom-out');
+        humanPortrait.classList.add('zoom-out');
+        aiEntity.classList.add('visible', 'zoom-out');
+      }
+
+      // Scene 2: AI reaches human with rays
+      if (newScene === 2) {
+        aiEntity.classList.add('reaching');
+        aiRays.classList.add('active');
+      }
+
+      // Scene 3: Human transforms
+      if (newScene === 3) {
+        humanPortrait.classList.add('affected');
+        aiRays.classList.remove('active');
+      }
+
+      // Scene 4: Context Gap
+      if (newScene === 4) {
+        mainScene.classList.add('camera-wide');
+        gapVisual.classList.add('active');
+        portraits.style.opacity = Math.max(0.3, 1 - sceneProgress * 1.5);
+        starsLayer.style.opacity = Math.max(0, 1 - sceneProgress);
+        landscape.style.opacity = Math.max(0, 1 - sceneProgress);
+      }
+
+      // Scene 5: Shifts visualization
+      if (newScene === 5) {
+        shiftsVisual.classList.add('active');
+        gapVisual.style.opacity = Math.max(0.5, 1 - sceneProgress * 0.8);
+        portraits.style.opacity = Math.max(0, 0.3 - sceneProgress * 0.5);
+      }
+
+      // Scene 6: Final title
+      if (newScene === 6) {
+        avalanche.classList.add('active');
+        shiftsVisual.style.opacity = Math.max(0.3, 1 - sceneProgress * 0.5);
+      }
+    }
+
+    window.addEventListener('scroll', updateScene);
+    updateScene();
+  </script>
+</body>
+</html>
