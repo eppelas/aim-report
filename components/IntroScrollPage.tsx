@@ -27,6 +27,11 @@ const scenes: Scene[] = [
     text: 'THE CONTEXT GAP',
     subtext: 'The space between capability and comprehension.'
   },
+    {
+    id: 5,
+    text: '11 Tectonic Shifts',
+    subtext: 'Mapping the fracture.'
+  },
   {
     id: 6,
     text: '11 Tectonic Shifts',
