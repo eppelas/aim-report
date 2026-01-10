@@ -75,7 +75,8 @@ const RAW_SLIDES: SlideData[] = [
     ],
   },
 
-  // Slide 3 — For the Sovereign Individual
+  // Slide 3 — For the Sovereign Individual (HIDDEN - temporarily commented out)
+  /*
   {
     id: 4,
     title: '02 / for the sovereign individual',
@@ -92,11 +93,12 @@ const RAW_SLIDES: SlideData[] = [
       "we have synthesized **72+ primary sources**—from arxiv research papers to 8-hour deep dives with silicon valley architects, from mckinsey enterprise reports to gartner strategic forecasts—to give you a navigation tool for sovereignty, not just \"trends.\"",
     ],
   },
+  */
 
   // Slide 4 — The 11 Shifts Architecture
   {
     id: 5,
-    title: 'the 11 shifts architecture',
+    title: '02 / the 11 shifts architecture',
     subtitle: 'a paired map in 4 layers.',
     visual: 'hierarchy',
     layout: 'split',
@@ -109,29 +111,6 @@ const RAW_SLIDES: SlideData[] = [
       'this is: **machine signal** (capability / deployment / economics) ↔ **human signal** (cognition / identity / culture) ↔ **the context gap** (where coordination breaks)',
       "this isn't: a hype deck, a moral panic, or a consulting pdf that says nothing new.",
     ],
-  },
-
-  // Slide 5 — Lab Evidence & Credibility
-  {
-    id: 6,
-    title: '04 / lab evidence & credibility',
-    subtitle: 'hardened by the field notes of 1,500+ lab participants.',
-    visual: 'STATS_ANIMATED',
-    layout: 'stats',
-    stats: [
-      { value: '1,500+', label: 'lab participants', color: 'red' },
-      { value: '72+', label: 'primary sources', color: 'black' },
-      { value: '8', label: 'deep interviews', color: 'black' },
-      { value: '12', label: 'academic papers', color: 'red' },
-      { value: '25+', label: 'industry reports', color: 'black' },
-    ],
-    content: [
-      'this report is hardened by the field notes and artifacts of our research:',
-      '**ivanov.aimindset.org** — protecting the psyche in the age of machine intimacy.',
-      '**intention.aimindset.org** — managing attention when context explodes.',
-      '**spiridonov.aimindset.org** — why pragmatic romanticism is the only defense against cold machine logic.',
-    ],
-    source: { label: 'AI Mindset Labs', url: 'https://aimindset.org/ai-mindset-w25' },
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -1146,6 +1125,29 @@ const RAW_SLIDES: SlideData[] = [
       { label: 'Coding with Claude 3.5', url: 'https://t.me/ai_mind_set/282' },
       { label: 'AI + Mental Health Boundaries (Founder OS)', url: 'https://aimindsetspace.substack.com/p/founder-os-mental-health' },
     ],
+  },
+
+  // Lab Evidence & Credibility (moved to end)
+  {
+    id: 43,
+    title: '11 / lab evidence & credibility',
+    subtitle: 'hardened by the field notes of 1,500+ lab participants.',
+    visual: 'STATS_ANIMATED',
+    layout: 'stats',
+    stats: [
+      { value: '1,500+', label: 'lab participants', color: 'red' },
+      { value: '72+', label: 'primary sources', color: 'black' },
+      { value: '8', label: 'deep interviews', color: 'black' },
+      { value: '12', label: 'academic papers', color: 'red' },
+      { value: '25+', label: 'industry reports', color: 'black' },
+    ],
+    content: [
+      'this report is hardened by the field notes and artifacts of our research:',
+      '**ivanov.aimindset.org** — protecting the psyche in the age of machine intimacy.',
+      '**intention.aimindset.org** — managing attention when context explodes.',
+      '**spiridonov.aimindset.org** — why pragmatic romanticism is the only defense against cold machine logic.',
+    ],
+    source: { label: 'AI Mindset Labs', url: 'https://aimindset.org/ai-mindset-w25' },
   },
 
   // ═══════════════════════════════════════════════════════════════════
