@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AIM Annual Report 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts: Roboto Flex (Animations) & IBM Plex Mono (UI/Data) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+    
+    <style>
+      body {
+        background-color: #0A0A0A; /* Design Rules: Background */
+        color: #F5F5F5;            /* Design Rules: Foreground */
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        font-family: 'Roboto Flex', sans-serif; /* Default for big text */
+      }
+
+      /* Utility class for the Mono font specified in guidelines */
+      .font-mono {
+        font-family: 'IBM Plex Mono', monospace;
+      }
+      
+      /* Helper for variable font settings using CSS variables */
+      .vf-anim {
+        font-family: 'Roboto Flex', sans-serif;
+        /* Default values if variables aren't set */
+        --wght: 400;
+        --wdth: 100;
+        --slnt: 0;
+        --opsz: 14; 
+        /* Added opsz for maximum thickness control */
+        font-variation-settings: "wght" var(--wght), "wdth" var(--wdth), "slnt" var(--slnt), "opsz" var(--opsz);
+        will-change: font-variation-settings;
+      }
+      
+      .bg-noise {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+    </style>
+
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "gsap": "https://esm.sh/gsap@3.12.5",
+    "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+    "lenis": "https://esm.sh/lenis@1.0.42",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "gsap/": "https://esm.sh/gsap@^3.14.2/"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div class="bg-noise"></div>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
