@@ -166,6 +166,195 @@ npm run preview
 
 ---
 
+## Evidence System Architecture
+
+### Data Structure
+
+Each shift contains multiple evidence types, structured hierarchically:
+
+```typescript
+interface ShiftData {
+  // ... shift metadata ...
+  
+  stats: Array<{           // Key Statistics (top of page)
+    label: string;         // e.g. "Surge", "Gap", "CapEx"
+    value: string;         // e.g. "160%", "40x", "$7T"
+    desc: string;          // Full description with source attribution
+    url?: string;          // Optional link to source
+  }>;
+  
+  evidence?: Array<{       // AIM Evidence (custom research/artifacts)
+    title: string;         // e.g. "Intention OS", "Founder OS"
+    desc: string;          // Description of the evidence
+    url: string;           // Link to artifact
+  }>;
+  
+  sources: Array<{         // Industry Sources (academic, reports, articles)
+    id: number;
+    title: string;         // Source title
+    author: string;        // Author/Organization
+    type: string;          // "Report", "Paper", "Article", "Standard"
+    url: string;           // Link to source
+  }>;
+  
+  voices?: Array<{         // Community Voices (quotes from practitioners)
+    quote: string;         // The quote text
+    author: string;        // Person's name
+    role: string;          // Their role/title
+  }>;
+}
+```
+
+### Rendering Logic
+
+Evidence is displayed in order on shift pages:
+
+1. **Key Stats Section** (top)
+   - Rendered as 3-column grid (mobile: 1 column)
+   - Large numbers with labels
+   - Clickable if `url` is provided → opens modal with iframe/OG preview
+   - Height: 160px mobile, 300px desktop
+
+2. **Data Sources Section** (middle)
+   - **AIM Evidence subsection** (if exists)
+     - Branded with AIM logo
+     - 2-column grid layout
+     - Cards with title + description
+     - Marked as `type: "Evidence", author: "AIM Lab"`
+   - **Industry Sources subsection**
+     - 4-column grid layout
+     - Grid class determined by `type`:
+       - `"Report"` → `col-span-2` (wider)
+       - `"Paper"` → `col-span-2` (wider)
+       - `"Article"` → `col-span-1` (standard)
+       - Other → `col-span-1`
+     - Shows: type badge, title, author
+
+3. **Voices Section** (bottom, optional)
+   - Only renders if `voices` array exists and has items
+   - Quote cards with attribution
+   - Italic serif font for quotes
+   - Author + role displayed below
+
+### Translation Strategy
+
+- **English evidence** is stored in `public/content/shifts.json`
+- **Translated shifts** (ru/by/ro) inherit ALL English evidence data
+- Only shift narratives (tech/human/gap) are translated
+- Evidence blocks remain in English across all languages
+- This is by design - evidence is factual and doesn't require translation
+
+---
+
+## Iframe vs OG Preview System
+
+### Decision Logic
+
+When a user clicks on a stat/source/evidence item, the system decides whether to show:
+1. **Iframe embed** (default) - shows the actual website
+2. **OG preview** (fallback) - shows Open Graph card with metadata
+
+Decision flow:
+```
+User clicks link
+  ↓
+Check: Is domain in BLOCKED_DOMAINS?
+  ↓ YES → Show OG Preview
+  ↓ NO  → Try Iframe
+      ↓
+      Iframe loads successfully? 
+        ↓ YES → Show Iframe
+        ↓ NO  → Show OG Preview (fallback)
+```
+
+### BLOCKED_DOMAINS List
+
+Domains that **cannot** be embedded in iframe (security/policy restrictions):
+
+```typescript
+const BLOCKED_DOMAINS = [
+  // Video platforms (X-Frame-Options: DENY)
+  'youtube.com', 'youtu.be',
+  
+  // Messaging platforms (CSP restrictions)
+  't.me', 'telegram.me',
+  
+  // Academic journals (paywall/security)
+  'nature.com', 'science.org',
+  
+  // Tech media (anti-iframe policies)
+  'technologyreview.com', 'theverge.com', 'techcrunch.com',
+  
+  // Industry reports (security policies)
+  'iea.org', 'mckinsey.com',
+  
+  // Newsletters/blogs
+  'substack.com',
+  
+  // AIM artifacts (custom handling)
+  'intention.aimindset.org', 
+  'spiridonov.aimindset.org', 
+  'ivanov.aimindset.org'
+]
+```
+
+### Implementation Details
+
+**Iframe Mode:**
+- Modal opens with full-screen iframe
+- Website loads inside the modal
+- User can navigate within iframe
+- "Open Full" button opens in new tab
+- Close button exits modal
+
+**OG Preview Mode:**
+- Fetches Open Graph metadata via `https://opengraph.io` API
+- Caches results in `ogCache` ref (avoid repeated fetches)
+- Prefetches on hover for instant display
+- Shows: image, title, description, site name
+- "Open Link" button opens in new tab
+- Fallback if OG fetch fails: shows basic link info
+
+**Error Handling:**
+```typescript
+// Iframe error detection
+<iframe 
+  onError={() => setIframeError(true)}  // Triggers OG fallback
+/>
+
+// OG fetch with cache
+if (ogCache.current[url]) {
+  setOgData(ogCache.current[url]);  // Use cached data
+} else {
+  const response = await fetch(...);  // Fetch new
+  ogCache.current[url] = result;     // Cache for future
+}
+```
+
+### Adding New Blocked Domain
+
+To add a domain to the blocked list:
+
+1. Edit `components/ReportView.tsx`:
+   ```typescript
+   const BLOCKED_DOMAINS = [
+     // ... existing domains
+     'newdomain.com'  // Add here
+   ];
+   ```
+
+2. Edit `components/ManifestoPage/Index.tsx`:
+   ```typescript
+   const BLOCKED_DOMAINS = [
+     // ... existing domains
+     'newdomain.com'  // Keep synchronized
+   ];
+   ```
+
+3. Both lists **must be identical** to ensure consistent behavior across the app.
+
+---
+
 ## Known Issues & Quirks
 
 ### Fixed Issues
