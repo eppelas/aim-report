@@ -1,6 +1,4 @@
 import React from 'react';
-import logoWhite from '../assets/logo.png';
-import logoBlack from '../assets/logo_rb.png';
 
 interface AIMindsetLogoProps {
   className?: string;
