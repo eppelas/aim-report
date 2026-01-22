@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { ShiftData } from './shiftsData';
 import { ShiftMetaphor } from './ShiftMetaphor';
+import { AIMindsetLogo } from './AIMindsetLogo';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
@@ -258,6 +259,10 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {data.evidence.map((item, idx) => (
                               <button key={idx} onClick={() => handleOpenSource({ ...item, type: "Evidence", author: "AIM Lab" })} className={`evidence-card group block w-full text-left p-8 rounded-lg border ${borderMain} ${bgCard} hover:border-[#DC2626] transition-all shadow-md`}>
+                                  <div className="flex items-center gap-3 mb-4">
+                                      <AIMindsetLogo className="w-8 h-8 flex-shrink-0" color={isDark ? 'white' : 'black'} />
+                                      <span className="font-mono text-xs text-neutral-500 tracking-wide">[ai mindset]</span>
+                                  </div>
                                   <h4 className="text-xl md:text-2xl font-bold text-[#DC2626] mb-3">{item.title}</h4>
                                   <p className={`font-mono text-sm leading-relaxed ${textSecondary}`}>{item.desc}</p>
                               </button>

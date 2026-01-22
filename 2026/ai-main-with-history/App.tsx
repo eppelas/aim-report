@@ -12,6 +12,7 @@ import { IndexNavigation } from './components/NavigationPopUp/IndexNavigation';
 import { shifts, layers, ShiftData, LayerData } from './components/shiftsData';
 import { ThankYou } from './components/ThankYou';
 import { ManifestoPage } from './components/ManifestoPage/Index';
+import { AIMindsetLogo } from './components/AIMindsetLogo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -245,11 +246,9 @@ export default function App() {
                 href="https://aimindset.org" 
                 target="_blank" 
                 rel="noreferrer"
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all hover:bg-white/5 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all hover:bg-white/5 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
             >
-                <div className="w-8 h-8 bg-[#DC2626] rounded flex items-center justify-center">
-                    <span className="text-white font-black text-xs">AI</span>
-                </div>
+                <AIMindsetLogo className="w-8 h-8" color={theme === 'dark' ? 'white' : 'black'} />
                 <span className="font-mono text-sm font-bold tracking-wide hidden md:inline">MINDSET</span>
             </a>
         </div>

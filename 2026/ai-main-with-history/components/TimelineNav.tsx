@@ -302,16 +302,18 @@ export const TimelineNav: React.FC<NavigationProps> = ({
                             className={`group relative flex items-center justify-center h-24 ${widthClass} focus:outline-none cursor-pointer`}
                          >  
                             <div className={`
-                                absolute -top-16 left-1/2 -translate-x-1/2 
+                                absolute -top-8 left-1/2 -translate-x-1/2 
                                 ${colors.tooltipBg} border 
                                 px-4 py-2 rounded-lg shadow-xl backdrop-blur-md
                                 whitespace-nowrap transition-all duration-300 pointer-events-none z-50
                                 flex flex-col items-center gap-1
                                 ${isHovered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-90'}
                             `}>
-                                <span className={`font-mono text-[9px] uppercase tracking-widest leading-none ${colors.tooltipText}`}>
-                                    {type === 'layer' ? 'SECTION' : type === 'shift' ? 'SHIFT' : type.toUpperCase()}
-                                </span>
+                                {type !== 'manifesto' && type !== 'thankyou' && type !== 'summary' && (
+                                    <span className={`font-mono text-[9px] uppercase tracking-widest leading-none ${colors.tooltipText}`}>
+                                        {type === 'layer' ? 'SECTION' : type === 'shift' ? 'SHIFT' : type.toUpperCase()}
+                                    </span>
+                                )}
                                 <span className={`text-xs font-bold tracking-wide uppercase text-[${colors.activeMain}]`}>
                                      {getTooltipText(i)}
                                 </span>
