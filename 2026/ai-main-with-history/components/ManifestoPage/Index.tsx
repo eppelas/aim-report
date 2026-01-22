@@ -8,13 +8,18 @@ import { useI18n } from '../../hooks/useI18n';
 
 const BLOCKED_DOMAINS = [
   'youtube.com',
+  'youtu.be',
+  't.me',
   'telegram.me',
   'intention.aimindset.org',
-  'spiridonov.aimindset.org',
-  'ivanov.aimindset.org',
   'nature.com',
-  'wired.com',
-  'fortune.com'
+  'spiridonov.aimindset.org',
+  'science.org',
+  'technologyreview.com',
+  'theverge.com',
+  'techcrunch.com',
+  'iea.org',
+  'mckinsey.com'
 ];
 
 const isUrlBlocked = (url: string): boolean => {
