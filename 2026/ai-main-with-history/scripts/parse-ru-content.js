@@ -8,6 +8,13 @@ const __dirname = path.dirname(__filename);
 const inputPath = path.join(__dirname, '../../../content/slides.ru.md');
 const outputPath = path.join(__dirname, '../public/content/shifts-ru.json');
 
+// Check if input file exists
+if (!fs.existsSync(inputPath)) {
+  console.warn(`⚠ slides.ru.md not found at ${inputPath}`);
+  console.log('Skipping Russian content generation...');
+  process.exit(0);
+}
+
 const content = fs.readFileSync(inputPath, 'utf-8');
 const sections = content.split('---').slice(1);
 
@@ -58,29 +65,33 @@ sections.forEach((section, index) => {
     const layerId = shiftNum <= 3 ? 'I' : shiftNum <= 6 ? 'II' : shiftNum <= 9 ? 'III' : 'IV';
     
     // Парсим контент
-    const techSection = slide.content.match(/\*\*технологии:\*\*(.*?)(?=\*\*вывод для технологий:|$)/s)?.[1]?.trim() || '';
-    const humanSection = slide.content.match(/\*\*люди:\*\*(.*?)(?=\*\*вывод для людей:|$)/s)?.[1]?.trim() || '';
-    const gapSection = slide.content.match(/\*\*разрыв:\*\*(.*?)$/s)?.[1]?.trim() || '';
+    const techSection = (slide.content.match(/\*\*технологии:\*\*(.*?)(?=\*\*вывод для технологий:|$)/s)?.[1]?.trim() || '').replace(/\*\*/g, '');
+    const humanSection = (slide.content.match(/\*\*люди:\*\*(.*?)(?=\*\*вывод для людей:|$)/s)?.[1]?.trim() || '').replace(/\*\*/g, '');
+    const gapSection = (slide.content.match(/\*\*разрыв:\*\*(.*?)$/s)?.[1]?.trim() || '').replace(/\*\*/g, '');
 
+    // Extract shift name from title (remove "сдвиг XX: " prefix)
+    const shiftName = slide.metadata.title.replace(/^сдвиг \d+:\s*/i, '');
+    
     shifts.push({
       id: shiftNum.toString().padStart(2, '0'),
       layerId: layerId,
-      title: slide.metadata.subtitle || slide.metadata.title,
-      subtitle: slide.metadata.alternativeSubtitle || '',
-      metaphor: 'battery',
+      layerTitle: layerId === 'I' ? 'ФУНДАМЕНТ' : layerId === 'II' ? 'МЫШЛЕНИЕ' : layerId === 'III' ? 'ИНТЕРФЕЙС' : 'ЧЕЛОВЕЧНОСТЬ',
+      title: slide.metadata.subtitle || '',
+      subtitle: shiftName || '',
+      context: slide.metadata.alternativeSubtitle || '',
       machineCol: {
         label: 'ТЕХНОЛОГИЯ',
         title: 'Что строится',
-        desc: techSection.substring(0, 500)
+        desc: techSection
       },
       humanCol: {
         label: 'ЧЕЛОВЕК',
         title: 'Как люди адаптируются',
-        desc: humanSection.substring(0, 500)
+        desc: humanSection
       },
-      gapStatement: {
+      gap: {
         title: 'РАЗРЫВ',
-        desc: gapSection.substring(0, 500)
+        desc: gapSection
       },
       stats: [],
       evidence: [],

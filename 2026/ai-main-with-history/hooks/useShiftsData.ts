@@ -24,15 +24,34 @@ export const useShiftsData = (lang: 'en' | 'ru' | 'by' | 'ro' = 'en'): ShiftsDat
       setData(prev => ({ ...prev, loading: true }));
 
       try {
-        const response = await fetch(`/content/shifts-${lang}.json`);
+        // In dev mode, public/ files are served at root
+        // In production with base: '/aim-report/', they're at /aim-report/
+        const basePath = import.meta.env.MODE === 'production' 
+          ? (import.meta.env.BASE_URL || '/') 
+          : '/';
+        const response = await fetch(`${basePath}content/shifts-${lang}.json`);
         if (response.ok) {
           const content = await response.json();
+          
+          // Merge English evidence/stats/sources data into translated shifts
+          const mergedShifts = (content.shifts || []).map((shift: ShiftData, index: number) => {
+            const englishShift = defaultShifts[index];
+            return {
+              ...shift,
+              stats: englishShift?.stats || [],
+              evidence: englishShift?.evidence || [],
+              sources: englishShift?.sources || [],
+              voices: englishShift?.voices || []
+            };
+          });
+          
           setData({
-            shifts: content.shifts || defaultShifts,
+            shifts: mergedShifts,
             layers: content.layers || defaultLayers,
             loading: false
           });
         } else {
+          console.warn(`Failed to load ${lang} content, using English`);
           setData({ shifts: defaultShifts, layers: defaultLayers, loading: false });
         }
       } catch (error) {

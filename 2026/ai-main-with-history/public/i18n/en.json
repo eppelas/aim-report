@@ -10,7 +10,12 @@
     "index": "Index",
     "preview": "Preview",
     "loading": "Loading...",
-    "couldNotLoadPreview": "Could not load preview"
+    "couldNotLoadPreview": "Could not load preview",
+    "keyStats": "Key Stats",
+    "research": "Research",
+    "industrySignals": "Industry Signals",
+    "dataSources": "Data Sources",
+    "voices": "Voices"
   },
   "hero": {
     "title": "AI Mindset 2026 report",
@@ -41,7 +46,19 @@
   },
   "thankYou": {
     "title": "Thank You",
-    "subtitle": "for reading",
+    "subtitle": "Created with the AI Mindset Labs Community",
     "backToStart": "Back to Start"
+  },
+  "summary": {
+    "title1": "MACHINES",
+    "title2": "HUMANS",
+    "badge": "Summarised",
+    "period": "2025 → 2026",
+    "trend": "The trend is: as energy becomes the primary bottleneck, AI agents with wallets will emerge as autonomous economic actors within a landscape of fragmented regional sovereignty and embedded ideology. Synthetic data saturation will shift the focus toward provenance literacy, while users navigate context obesity and orchestration anxiety. In this zero-trust environment, privacy will serve as a status symbol, fueling a crisis of authorship and the mainstream acceptance of synthetic intimacy.",
+    "finalQuote": "The gap between what machines generate and what humans can integrate is the",
+    "finalQuoteHighlight": "defining challenge",
+    "finalQuoteEnd": "of our time.",
+    "reviewButton": "Review",
+    "manifestoButton": "The Manifesto"
   }
 }

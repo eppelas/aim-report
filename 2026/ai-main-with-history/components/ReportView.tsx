@@ -330,7 +330,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
       <section className={`relative py-24 px-4 md:px-10 ${bgSectionDarker} border-t ${borderMain} backdrop-blur-sm`}>
           <div className="max-w-7xl mx-auto">
               <div className={`mb-16 border-b ${borderMain} pb-6`}>
-                  <h2 className={`text-5xl md:text-7xl font-black ${textMain} uppercase tracking-tighter leading-none`}>The Reality Check</h2>
+                  <h2 className={`text-5xl md:text-7xl font-black ${textMain} uppercase tracking-tighter leading-none`}>{i18n?.ui.keyStats || 'Key Stats'}</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {data.stats.map((stat, idx) => (
@@ -352,11 +352,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
       {/* EVIDENCE & SOURCES SECTION */}
       <section className={`relative py-24 px-4 md:px-10 ${bgSectionAlt} border-t ${borderMain} backdrop-blur-sm`}>
           <div className="max-w-7xl mx-auto">
-              <h2 className={`text-5xl md:text-7xl font-black ${textMain} uppercase tracking-tighter leading-none mb-12`}>Data Sources</h2>
+              <h2 className={`text-5xl md:text-7xl font-black ${textMain} uppercase tracking-tighter leading-none mb-12`}>{i18n?.ui.dataSources || 'Data Sources'}</h2>
               
               {data.evidence && data.evidence.length > 0 && (
                   <div className="mb-16">
-                      <h3 className="font-mono text-[#DC2626] text-xs uppercase tracking-widest font-bold mb-8">Research & Evidence</h3>
+                      <h3 className="font-mono text-[#DC2626] text-xs uppercase tracking-widest font-bold mb-8">{i18n?.ui.research || 'Research'}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {data.evidence.map((item, idx) => (
                               <button 
@@ -403,7 +403,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
               <div className="max-w-7xl mx-auto">
                   <div className={`p-8 md:p-12 rounded-xl border ${borderMain} ${isDark ? 'bg-neutral-900/50' : 'bg-neutral-100'}`}>
                       <div className="flex items-center gap-4 mb-12">
-                          <span className={`font-mono text-xs font-bold uppercase tracking-widest ${textSecondary}`}>Community Voices</span>
+                          <span className={`font-mono text-xs font-bold uppercase tracking-widest ${textSecondary}`}>{i18n?.ui.voices || 'Voices'}</span>
                       </div>
                       <div className="space-y-12">
                           {data.voices.map((voice, idx) => (

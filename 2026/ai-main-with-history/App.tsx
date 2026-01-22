@@ -108,6 +108,17 @@ export default function App() {
 
   const [isNavVisible, setIsNavVisible] = useState(false);
 
+  // Update timeline index when language changes to keep user on same item
+  useEffect(() => {
+    if (viewState.view === 'report' && !loading) {
+      const currentItem = timeline[viewState.index];
+      if (!currentItem) {
+        // If current index is invalid, reset to first shift
+        setViewState({ view: 'report', index: 1 });
+      }
+    }
+  }, [lang, loading, timeline, viewState.view, viewState.index]);
+
   useEffect(() => {
       let targetHash = 'main';
       if (viewState.view === 'report') targetHash = getHashFromIndex(viewState.index);
@@ -207,6 +218,15 @@ export default function App() {
   }, [viewState.view, viewState.index]);
 
   const renderContent = () => {
+    // Show loading while shifts data is loading
+    if (loading && lang !== 'en') {
+      return (
+        <div className={`flex items-center justify-center min-h-screen ${theme === 'dark' ? 'bg-[#0A0A0A]' : 'bg-[#F4F4F5]'}`}>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626]"></div>
+        </div>
+      );
+    }
+
     if (viewState.view === 'thankyou') return <ThankYou theme={theme} onPrev={handlePrev} lang={lang} />;
     if (viewState.view === 'conclusion') {
         const footerBg = theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#FAFAFA]';
@@ -238,7 +258,7 @@ export default function App() {
         const currentItem = timeline[viewState.index];
         if (!currentItem) return null;
         if (currentItem.type === 'layer') return <LayerView data={currentItem.data as LayerData} onNext={handleNext} onPrev={handlePrev} onBack={closeReport} nextTitle={""} theme={theme} toggleTheme={toggleTheme} />;
-        if (currentItem.type === 'summary') return <SummaryView onNext={handleNext} onPrev={handlePrev} theme={theme} />;
+        if (currentItem.type === 'summary') return <SummaryView onNext={handleNext} onPrev={handlePrev} theme={theme} lang={lang} />;
         return <ReportView onBack={closeReport} data={currentItem.data as ShiftData} onNext={handleNext} onPrev={handlePrev} isFirst={viewState.index === 0} isLast={viewState.index === timeline.length - 1} theme={theme} toggleTheme={toggleTheme} lang={lang} />;
     }
     return (

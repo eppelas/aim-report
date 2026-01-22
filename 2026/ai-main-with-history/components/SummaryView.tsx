@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ShiftMetaphor } from './ShiftMetaphor';
+import { useI18n } from '../hooks/useI18n';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +15,7 @@ interface SummaryViewProps {
   nextLabel?: string;
   theme: 'dark' | 'light';
   toggleTheme?: () => void;
+  lang?: 'en' | 'ru' | 'by' | 'ro';
 }
 
 // --- SUBCOMPONENT: RuptureLine ---
@@ -95,9 +97,10 @@ const RuptureLine: React.FC = () => {
   );
 };
 
-export const SummaryView: React.FC<SummaryViewProps> = ({ onNext, onPrev, theme }) => {
+export const SummaryView: React.FC<SummaryViewProps> = ({ onNext, onPrev, theme, lang = 'en' }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const bgSvgRef = useRef<SVGSVGElement>(null);
+  const i18n = useI18n(lang);
   const isDark = theme === 'dark';
   const bgCol = isDark ? 'bg-[#0A0A0A]' : 'bg-[#F4F4F5]';
   const textMain = isDark ? 'text-white' : 'text-neutral-900';
@@ -173,7 +176,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({ onNext, onPrev, theme 
   }, []);
 
   const renderTrendText = () => {
-      const text = "The trend is: as energy becomes the primary bottleneck, AI agents with wallets will emerge as autonomous economic actors within a landscape of fragmented regional sovereignty and embedded ideology. Synthetic data saturation will shift the focus toward provenance literacy, while users navigate context obesity and orchestration anxiety. In this zero-trust environment, privacy will serve as a status symbol, fueling a crisis of authorship and the mainstream acceptance of synthetic intimacy.";
+      const text = i18n?.summary.trend || "The trend is: as energy becomes the primary bottleneck, AI agents with wallets will emerge as autonomous economic actors within a landscape of fragmented regional sovereignty and embedded ideology. Synthetic data saturation will shift the focus toward provenance literacy, while users navigate context obesity and orchestration anxiety. In this zero-trust environment, privacy will serve as a status symbol, fueling a crisis of authorship and the mainstream acceptance of synthetic intimacy.";
       const highlights = ["energy", "bottleneck", "agents", "wallets", "sovereignty", "ideology", "synthetic", "provenance", "context obesity", "privacy", "authorship", "intimacy"];
       const baseTextColor = isDark ? 'text-neutral-200' : 'text-neutral-600';
       return text.split(' ').map((word, i) => {
@@ -203,13 +206,13 @@ export const SummaryView: React.FC<SummaryViewProps> = ({ onNext, onPrev, theme 
       <div className="relative z-10 flex flex-col items-center w-full pt-32 pb-32">
           <div className="w-full max-w-7xl mb-24 relative text-center px-4 flex flex-col items-center">
               <div className="main-header flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-6">
-                  <h1 className={`text-6xl md:text-8xl font-black tracking-tighter ${isDark ? 'text-white' : 'text-black'}`}>MACHINES</h1>
+                  <h1 className={`text-6xl md:text-8xl font-black tracking-tighter ${isDark ? 'text-white' : 'text-black'}`}>{i18n?.summary.title1 || 'MACHINES'}</h1>
                   <span className="text-4xl md:text-6xl text-[#DC2626] font-light">↔</span>
-                  <h1 className={`text-6xl md:text-8xl font-black tracking-tighter text-transparent`} style={{ WebkitTextStroke: `1px ${isDark ? 'white' : 'black'}` }}>HUMANS</h1>
+                  <h1 className={`text-6xl md:text-8xl font-black tracking-tighter text-transparent`} style={{ WebkitTextStroke: `1px ${isDark ? 'white' : 'black'}` }}>{i18n?.summary.title2 || 'HUMANS'}</h1>
               </div>
               <div className="sub-header-anim flex flex-col items-center gap-3">
-                  <p className="font-mono text-[#DC2626] text-xs uppercase tracking-[0.2em] border border-[#DC2626] px-3 py-1 rounded-full bg-[#DC2626]/10">Summarised</p>
-                  <p className="font-mono text-[#737373] text-sm uppercase tracking-[0.4em]">2025 → 2026</p>
+                  <p className="font-mono text-[#DC2626] text-xs uppercase tracking-[0.2em] border border-[#DC2626] px-3 py-1 rounded-full bg-[#DC2626]/10">{i18n?.summary.badge || 'Summarised'}</p>
+                  <p className="font-mono text-[#737373] text-sm uppercase tracking-[0.4em]">{i18n?.summary.period || '2025 → 2026'}</p>
               </div>
           </div>
 
@@ -239,14 +242,14 @@ export const SummaryView: React.FC<SummaryViewProps> = ({ onNext, onPrev, theme 
               <div className="relative inline-block">
                 <div className="absolute -top-8 -left-12 text-[#DC2626] text-6xl opacity-20 font-serif">“</div>
                 <h2 className={`final-quote text-3xl md:text-5xl font-black leading-tight tracking-tight ${isDark ? 'text-white' : 'text-black'} relative z-10`}>
-                    The gap between what machines generate and what humans can integrate is the <span className="text-[#DC2626] underline decoration-2 underline-offset-8">defining challenge</span> of our time.
+                    {i18n?.summary.finalQuote || 'The gap between what machines generate and what humans can integrate is the'} <span className="text-[#DC2626] underline decoration-2 underline-offset-8">{i18n?.summary.finalQuoteHighlight || 'defining challenge'}</span> {i18n?.summary.finalQuoteEnd || 'of our time.'}
                 </h2>
                 <div className="absolute -bottom-12 -right-12 text-[#DC2626] text-6xl opacity-20 font-serif">”</div>
               </div>
               
               <div className="flex justify-center mt-64 gap-8 nav-buttons">
-                  <button onClick={onPrev} className={`px-8 py-4 border ${isDark ? 'border-neutral-800 text-neutral-500' : 'border-neutral-300 text-neutral-600'} font-mono text-xs uppercase tracking-[0.2em] hover:text-[#DC2626] hover:border-[#DC2626] transition-all`}>Review</button>
-                  <button onClick={onNext} className={`${isDark ? 'bg-white text-black' : 'bg-black text-white'} px-10 py-4 font-mono text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#DC2626] hover:text-white transition-all shadow-xl`}>The Manifesto</button>
+                  <button onClick={onPrev} className={`px-8 py-4 border ${isDark ? 'border-neutral-800 text-neutral-500' : 'border-neutral-300 text-neutral-600'} font-mono text-xs uppercase tracking-[0.2em] hover:text-[#DC2626] hover:border-[#DC2626] transition-all`}>{i18n?.summary.reviewButton || 'Review'}</button>
+                  <button onClick={onNext} className={`${isDark ? 'bg-white text-black' : 'bg-black text-white'} px-10 py-4 font-mono text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#DC2626] hover:text-white transition-all shadow-xl`}>{i18n?.summary.manifestoButton || 'The Manifesto'}</button>
               </div>
           </div>
       </div>
