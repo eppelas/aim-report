@@ -24,6 +24,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedSource, setSelectedSource] = useState<any | null>(null);
   const [selectedStat, setSelectedStat] = useState<any | null>(null);
+  const [iframeError, setIframeError] = useState<boolean>(false);
   const isDark = theme === 'dark';
 
   const plate1Ref = useRef<SVGRectElement>(null);
@@ -234,7 +235,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                   {data.stats.map((stat, idx) => (
                       <div 
                           key={idx} 
-                          onClick={() => stat.url && setSelectedStat(stat)}
+                          onClick={() => { if (stat.url) { setIframeError(false); setSelectedStat(stat); } }}
                           className={`group text-left w-full ${isDark ? 'bg-neutral-900/30' : 'bg-white/50'} border ${isDark ? 'border-white/5 hover:border-[#DC2626]/50' : 'border-black/5 hover:border-[#DC2626]/50'} p-6 rounded-xl h-[160px] md:h-[300px] flex flex-col justify-between transition-all shadow-lg ${stat.url ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
                       >
                           <span className={`font-mono text-[10px] md:text-xs ${textSecondary} uppercase group-hover:text-[#DC2626] transition-colors`}>{stat.label}</span>
@@ -333,10 +334,29 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                     </div>
                  </div>
                  <div className="flex-1 bg-white relative">
-                    {selectedSource.url ? (
-                        <iframe src={selectedSource.url} className="w-full h-full border-0" title={selectedSource.title} sandbox="allow-same-origin allow-scripts allow-popups allow-forms" />
+                    {iframeError || !selectedSource.url ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-100 p-10 text-center gap-6">
+                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold mb-2 text-black">Cannot Display Content</h2>
+                                <p className="max-w-md text-neutral-600 mb-4">This website doesn't allow embedding. Click below to open in a new tab.</p>
+                            </div>
+                            {selectedSource.url && (
+                                <a href={selectedSource.url} target="_blank" rel="noreferrer" className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors">
+                                    Open in New Tab
+                                </a>
+                            )}
+                        </div>
                     ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-100 p-10 text-center"><h2 className="text-3xl font-bold mb-4 text-black">{selectedSource.title}</h2><p className="max-w-md text-neutral-600">{selectedSource.desc}</p></div>
+                        <iframe 
+                            src={selectedSource.url} 
+                            className="w-full h-full border-0" 
+                            title={selectedSource.title} 
+                            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                            onError={() => setIframeError(true)}
+                        />
                     )}
                  </div>
              </div>
@@ -364,13 +384,29 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                     </div>
                  </div>
                  <div className="flex-1 bg-white relative">
-                    {selectedStat.url ? (
-                        <iframe src={selectedStat.url} className="w-full h-full border-0" title={selectedStat.desc} sandbox="allow-same-origin allow-scripts allow-popups allow-forms" />
-                    ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-100 p-10 text-center">
-                            <h2 className="text-3xl font-bold mb-4 text-black">{selectedStat.value}</h2>
-                            <p className="max-w-md text-neutral-600">{selectedStat.desc}</p>
+                    {iframeError || !selectedStat.url ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-100 p-10 text-center gap-6">
+                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold mb-2 text-black">Cannot Display Content</h2>
+                                <p className="max-w-md text-neutral-600 mb-4">This website doesn't allow embedding. Click below to open in a new tab.</p>
+                            </div>
+                            {selectedStat.url && (
+                                <a href={selectedStat.url} target="_blank" rel="noreferrer" className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors">
+                                    Open in New Tab
+                                </a>
+                            )}
                         </div>
+                    ) : (
+                        <iframe 
+                            src={selectedStat.url} 
+                            className="w-full h-full border-0" 
+                            title={selectedStat.desc} 
+                            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                            onError={() => setIframeError(true)}
+                        />
                     )}
                  </div>
              </div>
