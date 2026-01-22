@@ -1,1127 +1,296 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { SlideData } from './types';
-import { SLIDES, SECTIONS, assetUrl } from './reportDeck';
-import { Slide } from './components/Slide';
-import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, FileDown, LayoutGrid } from 'lucide-react';
-import { exportElementsToPdf } from './pdfExport';
-import { LeadGateModal, type LeadInfo } from './components/LeadGateModal';
-import { ContentOverlay } from './components/ContentOverlay';
-import { LanguageProvider, useLanguage } from './LanguageContext';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
-import { ContentCards } from './ContentCards';
+import React, { useLayoutEffect, useState, useEffect, useMemo, useCallback } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Hero } from './components/Hero';
+import { TectonicShifts } from './components/TectonicShiftsAnimation';
+import { VariableTextSection } from './components/VariableTextSection';
+import { ReportView } from './components/ReportView';
+import { LayerView } from './components/LayerView';
+import { SummaryView } from './components/SummaryView';
+import { TimelineNav, TimelineItem } from './components/TimelineNav'; 
+import { IndexNavigation } from './components/NavigationPopUp/IndexNavigation';
+import { shifts as defaultShifts, layers as defaultLayers, ShiftData, LayerData } from './components/shiftsData';
+import { ThankYou } from './components/ThankYou';
+import { ManifestoPage } from './components/ManifestoPage/Index';
+import { AIMindsetLogo } from './components/AIMindsetLogo';
+import { useShiftsData } from './hooks/useShiftsData';
 
-type PrintMode = 'off' | 'deck' | 'slide';
-type PdfMode = 'deck' | 'slide';
+gsap.registerPlugin(ScrollTrigger);
 
-type LeadState = LeadInfo & { capturedAt: string };
+export default function App() {
+  const [lang, setLang] = useState<'en' | 'ru' | 'by' | 'ro'>('en');
+  const { shifts, layers, loading } = useShiftsData(lang);
 
-const LEAD_STORAGE_KEY = 'aim_annual_report_2025_lead_v1';
-const SLIDE_POSITION_KEY = 'aim_annual_report_2025_slide_position';
+  const timeline = useMemo<TimelineItem[]>(() => {
+    const items: TimelineItem[] = [];
+    const sortedShifts = [...shifts].sort((a, b) => parseInt(a.id) - parseInt(b.id));
 
-const loadLead = (): LeadState | null => {
-  try {
-    const raw = localStorage.getItem(LEAD_STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as LeadState;
-    if (!parsed || (!parsed.email && !parsed.telegram)) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
-};
-
-const saveLead = (lead: LeadState) => {
-  try {
-    localStorage.setItem(LEAD_STORAGE_KEY, JSON.stringify(lead));
-  } catch {
-    // no-op
-  }
-};
-
-const loadSlidePosition = (): number => {
-  try {
-    const raw = localStorage.getItem(SLIDE_POSITION_KEY);
-    if (!raw) return 0;
-    const pos = Number.parseInt(raw, 10);
-    return Number.isFinite(pos) && pos >= 0 ? pos : 0;
-  } catch {
-    return 0;
-  }
-};
-
-const saveSlidePosition = (position: number) => {
-  try {
-    localStorage.setItem(SLIDE_POSITION_KEY, String(position));
-  } catch {
-    // no-op
-  }
-};
-
-const getExportPassword = (): string => {
-  try {
-    // Avoid needing a dedicated `vite-env.d.ts` file in this repo.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const env = (import.meta as any)?.env as Record<string, unknown> | undefined;
-    const raw = typeof env?.VITE_PDF_PASSWORD === 'string' ? env.VITE_PDF_PASSWORD : '';
-    return raw.trim();
-  } catch {
-    return '';
-  }
-};
-
-const getInitialPrintState = (): { mode: PrintMode; slideIdx: number } => {
-  if (typeof window === 'undefined') return { mode: 'off', slideIdx: 0 };
-
-  const params = new URLSearchParams(window.location.search);
-  const print = (params.get('print') || '').toLowerCase();
-
-  if (print === 'deck') return { mode: 'deck', slideIdx: 0 };
-  if (print === 'slide') {
-    const raw = params.get('n') ?? params.get('slide') ?? '0';
-    const n = Number.parseInt(raw, 10);
-    const slideIdx = Number.isFinite(n) ? Math.max(0, Math.min(n, SLIDES.length - 1)) : 0;
-    return { mode: 'slide', slideIdx };
-  }
-
-  return { mode: 'off', slideIdx: 0 };
-};
-
-const pad2 = (n: number): string => String(n).padStart(2, '0');
-
-const exportStamp = (): string => {
-  const d = new Date();
-  // Local time (human-friendly)
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}_${pad2(d.getHours())}${pad2(d.getMinutes())}`;
-};
-
-const slugify = (input: string): string =>
-  input
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-    .slice(0, 60);
-
-const buildExportTitle = (mode: PrintMode, slideIdx: number): string => {
-  const base = 'AIM Annual Report 2025 — The Context Gap';
-  const stamp = exportStamp();
-
-  if (mode === 'deck') return `${base} — ${stamp} — deck`;
-  if (mode === 'slide') {
-    const slide = SLIDES[slideIdx];
-    const safeTitle = slide?.title ? slugify(slide.title) : `slide-${slideIdx + 1}`;
-    return `${base} — ${stamp} — s${slideIdx + 1}-${safeTitle}`;
-  }
-
-  return base;
-};
-
-const buildExportFilename = (mode: PdfMode, slideIdx: number): string => {
-  const stamp = exportStamp();
-  const base = 'aim-annual-report-2025';
-
-  if (mode === 'deck') return `${base}_${stamp}_deck.pdf`;
-
-  const slide = SLIDES[slideIdx];
-  const safeTitle = slide?.title ? slugify(slide.title) : `slide-${slideIdx + 1}`;
-  return `${base}_${stamp}_s${slideIdx + 1}_${safeTitle}.pdf`;
-};
-
-const PrintDeck: React.FC<{ slides: SlideData[] }> = ({ slides }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // "Smart print": auto-scale a slide down (slightly) if something overflows the fixed 16:9 page.
-  useLayoutEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const raf = requestAnimationFrame(() => {
-      const roots = Array.from(container.querySelectorAll<HTMLElement>('.print-scale-root'));
-
-      roots.forEach((root) => {
-        const page = root.closest<HTMLElement>('.print-page');
-        if (!page) return;
-
-        root.style.transform = '';
-        root.style.transformOrigin = 'top left';
-
-        const pageW = page.clientWidth;
-        const pageH = page.clientHeight;
-        const contentW = root.scrollWidth;
-        const contentH = root.scrollHeight;
-
-        const scale = Math.min(1, pageW / contentW, pageH / contentH);
-        if (scale < 1) root.style.transform = `scale(${scale})`;
-      });
+    layers.forEach(layer => {
+        items.push({ type: 'layer', data: layer });
+        const layerShifts = sortedShifts.filter(s => s.layerId === layer.id);
+        layerShifts.forEach(shift => {
+            items.push({ type: 'shift', data: shift });
+        });
     });
 
-    return () => cancelAnimationFrame(raf);
-  }, [slides.length]);
+    const summaryLayer: LayerData = {
+        id: "SUM",
+        title: lang === 'ru' ? "ИСПОЛНИТЕЛЬНОЕ РЕЗЮМЕ" : "EXECUTIVE SUMMARY",
+        subtitle: lang === 'ru' ? "11 тектонических сдвигов" : "11 Tectonic Shifts",
+        desc: lang === 'ru' ? "Консолидированный взгляд на расхождение между возможностями машин и адаптацией человека." : "A consolidated view of the divergence between machine capability and human adaptation.",
+        constraint: lang === 'ru' ? "Контекстный разрыв" : "The Context Gap",
+        metaphor: 'globe' 
+    };
 
-  return (
-    <MotionConfig reducedMotion="always">
-      <div ref={containerRef} className="print-root">
-        {slides.map((slide, idx) => (
-          <div key={`${slide.id}-${idx}`} className="print-page">
-            <div className="print-scale-root">
-              <Slide data={slide} index={idx} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </MotionConfig>
-  );
-};
+    items.push({ 
+        type: 'summary', 
+        data: { ...summaryLayer, shifts: sortedShifts } 
+    });
 
-const AppContent: React.FC = () => {
-  const { t, lang } = useLanguage();
-  const [currentSlideIdx, setCurrentSlideIdx] = useState(() => {
-    // Restore last position from localStorage
-    return typeof window === 'undefined' ? 0 : loadSlidePosition();
+    return items;
+  }, [shifts, layers, lang]);
+
+  const getHashFromIndex = (idx: number) => {
+      const item = timeline[idx];
+      if (!item) return 'main'; 
+      if (item.type === 'layer') return `layer-${item.data.id}`;
+      if (item.type === 'summary') return `summary`;
+      return `shift-${item.data.id}`;
+  };
+
+  const getIndexFromHash = (hash: string) => {
+      const cleanHash = hash.replace('#', '');
+      if (!cleanHash || cleanHash === 'main') return -1; 
+      if (cleanHash === 'conclusion') return -2; 
+      if (cleanHash === 'thankyou') return -3; 
+      
+      const foundIndex = timeline.findIndex(item => {
+          if (item.type === 'layer') return `layer-${item.data.id}` === cleanHash;
+          if (item.type === 'summary') return `summary` === cleanHash;
+          return `shift-${item.data.id}` === cleanHash;
+      });
+
+      return foundIndex === -1 ? -1 : foundIndex;
+  };
+
+  const [viewState, setViewState] = useState<{ view: 'landing' | 'report' | 'conclusion' | 'thankyou', index: number }>(() => {
+      if (typeof window !== 'undefined') {
+          if ('scrollRestoration' in window.history) {
+              window.history.scrollRestoration = 'manual';
+          }
+          const idx = getIndexFromHash(window.location.hash);
+          if (idx === -3) return { view: 'thankyou', index: 0 };
+          if (idx === -2) return { view: 'conclusion', index: 0 };
+          if (idx !== -1) return { view: 'report', index: idx };
+      }
+      return { view: 'landing', index: 0 };
   });
-  const [isLoading, setIsLoading] = useState(true);
-  const [showTOC, setShowTOC] = useState(false);
-  const initialPrint = useMemo(() => getInitialPrintState(), []);
-  const [printMode, setPrintMode] = useState<PrintMode>(initialPrint.mode);
-  const [printSlideIdx, setPrintSlideIdx] = useState<number>(initialPrint.slideIdx);
-  const [pdfJob, setPdfJob] = useState<{ mode: PdfMode; slideIdx: number } | null>(null);
-  const [pdfProgress, setPdfProgress] = useState<{ current: number; total: number } | null>(null);
-  const [pdfError, setPdfError] = useState<string | null>(null);
-  const pdfRootRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const stageScaleRootRef = useRef<HTMLDivElement>(null);
 
-  const [lead, setLead] = useState<LeadState | null>(() => (typeof window === 'undefined' ? null : loadLead()));
-  const [leadGateOpen, setLeadGateOpen] = useState(false);
-  const [pendingExport, setPendingExport] = useState<{ mode: PdfMode; slideIdx: number } | null>(null);
-  const [showContent, setShowContent] = useState(false);
-  const [showContentCards, setShowContentCards] = useState(false);
-  const [contentCards, setContentCards] = useState<any[]>([]);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('aim-theme');
+        if (saved === 'light' || saved === 'dark') return saved;
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            return 'light';
+        }
+    }
+    return 'dark';
+  });
 
-  // Dynamic slides loading from JSON with fallback to hardcoded
-  const [slides, setSlides] = useState<SlideData[]>(SLIDES);
-  const [sections, setSections] = useState(SECTIONS);
+  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
-  const exportPassword = useMemo(() => getExportPassword(), []);
-
-  // Save slide position to localStorage whenever it changes
   useEffect(() => {
-    saveSlidePosition(currentSlideIdx);
-  }, [currentSlideIdx]);
+      localStorage.setItem('aim-theme', theme);
+      document.documentElement.setAttribute('data-theme', theme);
+      // Ensure body background matches theme to prevent black flickering during navigation
+      document.body.style.backgroundColor = theme === 'dark' ? '#0A0A0A' : '#F4F4F5';
+  }, [theme]);
 
-  // Load slides and sections from JSON
+  const [isNavVisible, setIsNavVisible] = useState(false);
+
+  // Update timeline index when language changes to keep user on same item
   useEffect(() => {
-    async function loadContent() {
-      setIsLoading(true);
-      try {
-        const locale = lang || 'en';
-        
-        // Load slides
-        const slidesResponse = await fetch(`/locales/${locale}/slides.json`);
-        if (!slidesResponse.ok) {
-          console.warn('JSON slides not found, using hardcoded content');
-          setIsLoading(false);
-          return;
-        }
-
-        const slidesData = await slidesResponse.json();
-        const loadedSlides = slidesData.slides || [];
-        
-        if (loadedSlides.length === 0) {
-          console.warn('Empty slides array in JSON, using hardcoded content');
-          setIsLoading(false);
-          return;
-        }
-
-        // Add sequential IDs
-        const slidesWithIds = loadedSlides.map((slide: SlideData, index: number) => ({
-          ...slide,
-          id: index + 1,
-        }));
-
-        setSlides(slidesWithIds);
-        console.log(`Loaded ${slidesWithIds.length} slides from JSON`);
-        
-        // Load sections
-        const sectionsResponse = await fetch(`/locales/${locale}/sections.json`);
-        if (sectionsResponse.ok) {
-          const sectionsData = await sectionsResponse.json();
-          if (sectionsData.sections) {
-            setSections(sectionsData.sections);
-            console.log(`Loaded ${sectionsData.sections.length} sections from JSON`);
-          }
-        }
-        
-        // Reset slide index if current index is out of bounds
-        if (currentSlideIdx >= slidesWithIds.length) {
-          setCurrentSlideIdx(0);
-        }
-
-        // Load content cards
-        const cardsResponse = await fetch(`/locales/${locale}/content-cards.json`);
-        if (cardsResponse.ok) {
-          const cardsData = await cardsResponse.json();
-          if (cardsData.cards) {
-            setContentCards(cardsData.cards);
-            console.log(`Loaded ${cardsData.cards.length} content cards`);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to load content from JSON:', error);
-        console.log('Using hardcoded content as fallback');
-      } finally {
-        setIsLoading(false);
+    if (viewState.view === 'report' && !loading) {
+      const currentItem = timeline[viewState.index];
+      if (!currentItem) {
+        // If current index is invalid, reset to first shift
+        setViewState({ view: 'report', index: 1 });
       }
     }
+  }, [lang, loading, timeline, viewState.view, viewState.index]);
 
-    loadContent();
-  }, [lang]);
+  useEffect(() => {
+      let targetHash = 'main';
+      if (viewState.view === 'report') targetHash = getHashFromIndex(viewState.index);
+      if (viewState.view === 'conclusion') targetHash = 'conclusion';
+      if (viewState.view === 'thankyou') targetHash = 'thankyou';
 
-  // On-screen fit: ensure each slide fits within the viewport stage (no clipping)
-  // by scaling down a tiny bit when content overflows.
-  useLayoutEffect(() => {
-    const stage = stageRef.current;
-    const root = stageScaleRootRef.current;
-    if (!stage || !root) return;
-
-    const applyScale = () => {
-      // Reset scale for accurate measurements
-      root.style.transformOrigin = 'top left';
-      root.style.transform = 'scale(1)';
-
-      const stageW = stage.clientWidth;
-      const stageH = stage.clientHeight;
-      const contentW = root.scrollWidth;
-      const contentH = root.scrollHeight;
-
-      if (!stageW || !stageH || !contentW || !contentH) return;
-
-      const pad = 8; // small safety padding
-      const scale = Math.min(1, (stageW - pad) / contentW, (stageH - pad) / contentH);
-      root.style.transform = scale < 1 ? `scale(${scale})` : 'scale(1)';
-    };
-
-    const raf = requestAnimationFrame(() => applyScale());
-    window.addEventListener('resize', applyScale);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', applyScale);
-    };
-  }, [currentSlideIdx, showTOC, printMode]);
-
-  const triggerPrint = useCallback((mode: PrintMode, slideIdx?: number) => {
-    if (mode === 'slide' && typeof slideIdx === 'number') setPrintSlideIdx(slideIdx);
-    setPrintMode(mode);
-
-    const prevTitle = document.title;
-    try {
-      document.title = buildExportTitle(mode, typeof slideIdx === 'number' ? slideIdx : currentSlideIdx);
-    } catch {
-      // no-op
-    }
-
-    const shouldRevert = !new URLSearchParams(window.location.search).has('print');
-    const onAfterPrint = () => {
-      try {
-        document.title = prevTitle;
-      } catch {
-        // no-op
+      const currentHash = window.location.hash.replace('#', '');
+      if (currentHash !== targetHash) {
+          try {
+              window.history.pushState(null, '', `#${targetHash}`);
+          } catch (e) {
+              window.location.hash = targetHash;
+          }
       }
-      if (!shouldRevert) return;
-      setPrintMode('off');
-    };
-    window.addEventListener('afterprint', onAfterPrint, { once: true });
+      setIsNavVisible(viewState.view !== 'landing');
+  }, [viewState, timeline]);
 
-    // wait for React render + layout
-    requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
-  }, [currentSlideIdx]);
-
-  const startPdfExport = useCallback((mode: PdfMode, slideIdx?: number) => {
-    const idx = typeof slideIdx === 'number' ? slideIdx : currentSlideIdx;
-    setPdfError(null);
-    setPdfJob({ mode, slideIdx: idx });
-  }, [currentSlideIdx]);
-
-  const requestPdfExport = useCallback((mode: PdfMode, slideIdx?: number) => {
-    const idx = typeof slideIdx === 'number' ? slideIdx : currentSlideIdx;
-    // Show lead gate to capture email before export
-    setPendingExport({ mode, slideIdx: idx });
-    setLeadGateOpen(true);
-  }, [currentSlideIdx]);
-
-  const submitLead = useCallback(async (info: LeadInfo) => {
-    const hasEmail = typeof info.email === 'string' && info.email.trim().length > 0;
-    const hasTelegram = typeof info.telegram === 'string' && info.telegram.trim().length > 0;
-
-    // Only persist lead if user actually provided contact info.
-    // This avoids localStorage noise + 400 spam from the dev middleware when skipping.
-    if (hasEmail || hasTelegram) {
-      const payload: LeadState = {
-        ...info,
-        capturedAt: new Date().toISOString(),
+  useEffect(() => {
+      const handlePopState = () => {
+          const idx = getIndexFromHash(window.location.hash);
+          if (idx === -3) setViewState({ view: 'thankyou', index: 0 });
+          else if (idx === -2) setViewState({ view: 'conclusion', index: 0 });
+          else if (idx !== -1) setViewState({ view: 'report', index: idx });
+          else setViewState({ view: 'landing', index: 0 });
       };
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+  }, [timeline]);
 
-      setLead(payload);
-      saveLead(payload);
+  const openReport = useCallback(() => setViewState({ view: 'report', index: 0 }), []);
+  const closeReport = useCallback(() => setViewState({ view: 'landing', index: 0 }), []);
+  const handleNavigate = useCallback((index: number) => setViewState({ view: 'report', index }), []);
 
-      // Best effort: store to local “DB” via dev server middleware
-      try {
-        await fetch('./api/leads', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...payload,
-            source: 'aim-annual-report-2025-deck',
-            slide: pendingExport?.slideIdx ?? currentSlideIdx,
-            mode: pendingExport?.mode ?? 'deck',
-          }),
-        });
-      } catch {
-        // no-op (still allow download)
+  const handleNext = useCallback(() => {
+      setViewState(prev => {
+          if (prev.view === 'landing') return { view: 'report', index: 0 };
+          if (prev.view === 'report') {
+              if (prev.index >= timeline.length - 1) return { view: 'conclusion', index: 0 };
+              return { ...prev, index: prev.index + 1 };
+          }
+          if (prev.view === 'conclusion') return { view: 'thankyou', index: 0 };
+          return prev;
+      });
+  }, [timeline.length]);
+
+  const handlePrev = useCallback(() => {
+      setViewState(prev => {
+          if (prev.view === 'report') {
+              if (prev.index > 0) return { ...prev, index: prev.index - 1 };
+              return { view: 'landing', index: 0 };
+          }
+          if (prev.view === 'conclusion') return { view: 'report', index: timeline.length - 1 };
+          if (prev.view === 'thankyou') return { view: 'conclusion', index: 0 };
+          return prev;
+      });
+  }, [timeline.length]);
+
+  const handleJumpToConclusion = useCallback(() => setViewState({ view: 'conclusion', index: 0 }), []);
+  const handleJumpToThankYou = useCallback(() => setViewState({ view: 'thankyou', index: 0 }), []);
+  
+  const handleIndexNavigate = useCallback((type: string, id?: string) => {
+      if (type === 'landing') closeReport();
+      else if (type === 'manifesto') handleJumpToConclusion();
+      else if (type === 'thankyou') handleJumpToThankYou();
+      else if (type === 'summary') {
+          const idx = timeline.findIndex(t => t.type === 'summary');
+          if (idx !== -1) setViewState({ view: 'report', index: idx });
+      } else if (type === 'layer') {
+          const idx = timeline.findIndex(t => t.type === 'layer' && t.data.id === id);
+          if (idx !== -1) setViewState({ view: 'report', index: idx });
+      } else if (type === 'shift') {
+          const idx = timeline.findIndex(t => t.type === 'shift' && t.data.id === id);
+          if (idx !== -1) setViewState({ view: 'report', index: idx });
       }
+  }, [timeline, closeReport, handleJumpToConclusion, handleJumpToThankYou]);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const isForward = e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.code === 'Space';
+      const isBackward = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
+      if ((isForward || isBackward) && viewState.view !== 'landing') e.preventDefault();
+      if (isForward) {
+          if (viewState.view === 'landing') {
+              if (e.key === 'ArrowRight' || e.key === 'Enter') openReport();
+          } else handleNext();
+      } else if (isBackward && viewState.view !== 'landing') handlePrev();
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [viewState.view, handleNext, handlePrev, openReport]);
+
+  useLayoutEffect(() => {
+    if (viewState.view !== 'landing') {
+        window.scrollTo(0, 0);
+        ScrollTrigger.refresh();
+    }
+  }, [viewState.view, viewState.index]);
+
+  const renderContent = () => {
+    // Show loading while shifts data is loading
+    if (loading && lang !== 'en') {
+      return (
+        <div className={`flex items-center justify-center min-h-screen ${theme === 'dark' ? 'bg-[#0A0A0A]' : 'bg-[#F4F4F5]'}`}>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626]"></div>
+        </div>
+      );
     }
 
-    setLeadGateOpen(false);
-    if (pendingExport) startPdfExport(pendingExport.mode, pendingExport.slideIdx);
-    setPendingExport(null);
-  }, [currentSlideIdx, pendingExport, startPdfExport]);
-
-  useEffect(() => {
-    if (!pdfJob) return;
-
-    let cancelled = false;
-    const run = async () => {
-      const slidesToExport = pdfJob.mode === 'deck' ? slides : [slides[pdfJob.slideIdx]];
-      setPdfProgress({ current: 0, total: slidesToExport.length });
-
-      try {
-        // wait for React render + layout
-        await new Promise<void>((r) => requestAnimationFrame(() => r()));
-        await new Promise<void>((r) => requestAnimationFrame(() => r()));
-        await new Promise((r) => setTimeout(r, 50));
-
-        const root = pdfRootRef.current;
-        if (!root) throw new Error('PDF export root not found');
-
-        const pages = Array.from(root.querySelectorAll<HTMLElement>('.pdf-export-page'));
-
-        // Auto-scale overflow content down to fit the fixed 16:9 export page.
-        // This prevents cropped content when some layouts overshoot 1600×900.
-        pages.forEach((page) => {
-          const scaleRoot = page.querySelector<HTMLElement>('.pdf-scale-root');
-          if (!scaleRoot) return;
-
-          scaleRoot.style.transform = '';
-          scaleRoot.style.transformOrigin = 'top left';
-
-          const pageW = page.clientWidth;
-          const pageH = page.clientHeight;
-          const contentW = scaleRoot.scrollWidth;
-          const contentH = scaleRoot.scrollHeight;
-
-          const safePad = 8; // px of breathing room to avoid edge clipping
-          const scale = Math.min(1, (pageW - safePad) / contentW, (pageH - safePad) / contentH);
-          if (scale < 1) scaleRoot.style.transform = `scale(${scale})`;
-        });
-
-        // Let layout settle after scaling
-        await new Promise<void>((r) => requestAnimationFrame(() => r()));
-
-        const filename = buildExportFilename(pdfJob.mode, pdfJob.slideIdx);
-
-        await exportElementsToPdf(pages, {
-          filename,
-          // Increase pixelRatio to avoid blurry raster text in PDF (esp. on early slides).
-          // Deck: 1600×900 → 3200×1800 (≈240 DPI on 13.33in × 7.5in pages)
-          // Slide: slightly higher for single exports.
-          pixelRatio: pdfJob.mode === 'deck' ? 2 : 2.6,
-          onProgress: (p) => {
-            if (cancelled) return;
-            setPdfProgress(p);
-          },
-        });
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
-        if (!cancelled) setPdfError(message);
-
-        // Fallback: open print dialog (still uses fixed 16:9 print layout)
-        triggerPrint(pdfJob.mode === 'deck' ? 'deck' : 'slide', pdfJob.slideIdx);
-      } finally {
-        if (!cancelled) {
-          setPdfJob(null);
-          setPdfProgress(null);
-        }
-      }
-    };
-
-    run();
-    return () => {
-      cancelled = true;
-    };
-  }, [pdfJob, triggerPrint]);
-
-  const nextSlide = useCallback(() => {
-    setCurrentSlideIdx((prev) => Math.min(prev + 1, slides.length - 1));
-  }, [slides.length]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentSlideIdx((prev) => Math.max(prev - 1, 0));
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is typing in an input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
-        return;
-      }
-
-      // Avoid stacking exports while one is running
-      if (pdfJob) return;
-
-      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        nextSlide();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        prevSlide();
-      } else if (e.key === 'Escape') {
-        setShowTOC(false);
-        setShowContent(false);
-      } else if ((e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') && !e.metaKey && !e.ctrlKey) {
-        // Support both English 't' and Russian 'е' (same key position)
-        // Ignore if Command/Ctrl is pressed to avoid conflicts with other shortcuts
-        e.preventDefault();
-        setShowTOC(prev => !prev);
-      } else if ((e.key === 's' || e.key === 'S' || e.key === 'ы' || e.key === 'Ы') && !e.metaKey && !e.ctrlKey) {
-        // Support both English 's' and Russian 'ы' (same key position)
-        // Ignore if Command/Ctrl is pressed to avoid conflicts with other shortcuts
-        e.preventDefault();
-        setShowContent(prev => !prev);
-      } else if (!e.metaKey && !e.ctrlKey && !e.altKey) {
-        const key = e.key.toLowerCase();
-        if (key === 'p' || key === 'з') {
-          e.preventDefault();
-          if (e.shiftKey) {
-            requestPdfExport('slide', currentSlideIdx);
-          } else {
-            requestPdfExport('deck');
-          }
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [nextSlide, prevSlide, currentSlideIdx, requestPdfExport, pdfJob]);
-
-  // Wheel/scroll navigation with simple throttling
-  useEffect(() => {
-    let lastWheelTime = 0;
-    let atEdgeBottom = false;
-    let atEdgeTop = false;
-    let edgeResetTimeout: ReturnType<typeof setTimeout>;
-
-    const handleWheel = (e: WheelEvent) => {
-      if (showTOC || showContent) return;
-      if (pdfJob) return;
-
-      const now = Date.now();
-      const container = stageRef.current;
-      if (!container) return;
-
-      const hasScrollableContent = container.scrollHeight > container.clientHeight;
-      const scrollingDown = e.deltaY > 0;
-      const scrollingUp = e.deltaY < 0;
-
-      // If no scrollable content, navigate slides with STRONG throttling
-      if (!hasScrollableContent) {
-        if (now - lastWheelTime < 1500) {
-          e.preventDefault();
-          return;
-        }
-        
-        e.preventDefault();
-        lastWheelTime = now;
-        
-        if (scrollingDown) {
-          nextSlide();
-        } else if (scrollingUp) {
-          prevSlide();
-        }
-        return;
-      }
-
-      // Has scrollable content - allow browser scrolling, NO slide navigation
-      // User can use SPACE/arrows to navigate from scrollable pages
-      return;
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      clearTimeout(edgeResetTimeout);
-    };
-  }, [nextSlide, prevSlide, showTOC, showContent, pdfJob]);
-
-  // Touch/swipe navigation for mobile
-  useEffect(() => {
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
-    let isSwiping = false;
-    let isVerticalSwipe = false;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      // Skip if menu/sources are open
-      if (showTOC || showContent) return;
-      
-      // Skip if PDF export is running
-      if (pdfJob) return;
-
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      isSwiping = false;
-      isVerticalSwipe = false;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (showTOC || showContent || pdfJob) return;
-      
-      touchEndX = e.touches[0].clientX;
-      touchEndY = e.touches[0].clientY;
-      
-      const deltaX = Math.abs(touchEndX - touchStartX);
-      const deltaY = Math.abs(touchEndY - touchStartY);
-      
-      // If horizontal swipe is dominant, prevent default scrolling
-      if (deltaX > deltaY && deltaX > 30) {
-        e.preventDefault();
-        isSwiping = true;
-        isVerticalSwipe = false;
-      } else if (deltaY > deltaX && deltaY > 50) {
-        // Vertical swipe detected
-        isVerticalSwipe = true;
-        isSwiping = false;
-      }
-    };
-
-    const handleTouchEnd = () => {
-      if (showTOC || showContent || pdfJob) return;
-
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
-      
-      // Require minimum swipe distance (50px)
-      const minSwipeDistance = 50;
-      
-      // Check if horizontal swipe is dominant
-      if (isSwiping && Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
-        if (deltaX > 0) {
-          // Swipe right → previous slide
-          prevSlide();
-        } else {
-          // Swipe left → next slide
-          nextSlide();
-        }
-      }
-      // Check if vertical swipe down at bottom of content
-      else if (isVerticalSwipe && deltaY < -100) {
-        // Strong swipe down detected
-        const container = stageRef.current;
-        if (container) {
-          const hasScrollableContent = container.scrollHeight > container.clientHeight;
-          // Only navigate to next slide if NO scrollable content
-          // On scrollable pages, vertical swipe should NOT navigate
-          if (!hasScrollableContent) {
-            nextSlide();
-          }
-        }
-      }
-      
-      isSwiping = false;
-    };
-
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
-    
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [nextSlide, prevSlide, showTOC, showContent, pdfJob]);
-
-  // Find current section
-  const currentSection = sections.find((section, idx) => {
-    const nextSection = sections[idx + 1];
-    return currentSlideIdx >= section.startSlide &&
-           (!nextSection || currentSlideIdx < nextSection.startSlide);
-  });
-
-  // Show loading state with skeleton
-  if (isLoading) {
-    return (
-      <div className="w-screen h-screen bg-[#FAFAFA] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 rounded-full bg-neutral-900 flex items-center justify-center animate-pulse">
-            <img
-              src={assetUrl('/assets/logo_rb.png')}
-              alt="AI Mindset"
-              className="h-5 w-auto"
+    if (viewState.view === 'thankyou') return <ThankYou theme={theme} onPrev={handlePrev} lang={lang} />;
+    if (viewState.view === 'conclusion') {
+        const footerBg = theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#FAFAFA]';
+        return (
+            <div className="w-full">
+                <ManifestoPage 
+                    onRestart={closeReport} 
+                    onNext={handleNext}
+                    onPrev={handlePrev}
+                    theme={theme} 
+                    lang={lang}
+                />
+                <div className={`h-40 ${footerBg}`}></div> 
+            </div>
+        );
+    }
+    if (viewState.view === 'manifesto') {
+        return (
+            <ManifestoPage 
+                onRestart={closeReport} 
+                onNext={handleNext}
+                onPrev={handlePrev}
+                theme={theme} 
+                lang={lang}
             />
-          </div>
-          <div className="text-neutral-400 font-mono text-xs uppercase tracking-widest">
-            Loading The Context Gap...
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Guard: show error if no slides or index out of bounds
-  if (slides.length === 0 || !slides[currentSlideIdx]) {
+        );
+    }
+    if (viewState.view === 'report') {
+        const currentItem = timeline[viewState.index];
+        if (!currentItem) return null;
+        if (currentItem.type === 'layer') return <LayerView data={currentItem.data as LayerData} onNext={handleNext} onPrev={handlePrev} onBack={closeReport} nextTitle={""} theme={theme} toggleTheme={toggleTheme} />;
+        if (currentItem.type === 'summary') return <SummaryView onNext={handleNext} onPrev={handlePrev} theme={theme} lang={lang} />;
+        return <ReportView onBack={closeReport} data={currentItem.data as ShiftData} onNext={handleNext} onPrev={handlePrev} isFirst={viewState.index === 0} isLast={viewState.index === timeline.length - 1} theme={theme} toggleTheme={toggleTheme} lang={lang} />;
+    }
     return (
-      <div className="w-screen h-screen bg-[#FAFAFA] flex items-center justify-center">
-        <div className="text-neutral-400 font-mono text-sm">No slides available</div>
-      </div>
+        <main className="w-full overflow-x-hidden">
+            <Hero lang={lang} />
+            <VariableTextSection lang={lang} />
+            <TectonicShifts onOpenReport={openReport} lang={lang} />
+            <div className={`h-10 ${theme === 'dark' ? 'bg-[#0A0A0A]' : 'bg-[#FAFAFA]'}`}></div>
+        </main>
     );
-  }
+  };
 
-  if (printMode !== 'off') {
-    const slidesToPrint = printMode === 'deck' ? slides : [slides[printSlideIdx]];
-    return <PrintDeck slides={slidesToPrint} />;
-  }
+  const globalBg = theme === 'dark' ? 'bg-[#0A0A0A]' : 'bg-[#F4F4F5]';
 
   return (
-    <div className="w-screen h-screen bg-[#FAFAFA] text-neutral-900 relative selection:bg-red-100">
-      <LeadGateModal
-        open={leadGateOpen}
-        defaultEmail={lead?.email}
-        defaultTelegram={lead?.telegram}
-        passwordRequired={exportPassword.length > 0}
-        expectedPassword={exportPassword}
-        passwordHint={exportPassword.length > 0 ? 'Ask AIM for the download password.' : undefined}
-        onCancel={() => {
-          setLeadGateOpen(false);
-          setPendingExport(null);
-        }}
-        onSubmit={submitLead}
-      />
-      <ContentOverlay 
-        isOpen={showContent} 
-        onClose={() => setShowContent(false)}
-        onNavigate={(slideIndex) => setCurrentSlideIdx(slideIndex)}
-        currentSlide={currentSlideIdx}
-        slides={slides}
-      />
-      {/* Hidden PDF render root (for true “Download PDF”, no print dialog) */}
-      {pdfJob && (
-        <MotionConfig reducedMotion="always">
-          <div className="pdf-export-root">
-            <div ref={pdfRootRef}>
-              {(pdfJob.mode === 'deck' ? slides : [slides[pdfJob.slideIdx]]).map((slide, idx) => (
-                <div key={`${slide.id}-${idx}`} className="pdf-export-page">
-                  <div className="pdf-scale-root">
-                    <Slide data={slide} index={pdfJob.mode === 'deck' ? idx : pdfJob.slideIdx} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </MotionConfig>
-      )}
-
-      {/* Export status */}
-      {pdfProgress && (
-        <div className="fixed top-16 right-4 z-[80] rounded-lg border border-neutral-200 bg-white/90 backdrop-blur px-3 py-2 text-xs font-mono text-neutral-700 shadow-sm no-print">
-          {t.exportingPdf} {pdfProgress.current}/{pdfProgress.total}
-        </div>
-      )}
-      {pdfError && (
-        <div className="fixed top-16 left-4 z-[80] max-w-[420px] rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-mono text-red-700 shadow-sm no-print">
-          {t.pdfExportFailed} {pdfError}
-        </div>
-      )}
-
-      {/* Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-neutral-100 z-50 no-print">
-        <motion.div
-          className="h-full bg-red-600"
-          animate={{ width: `${((currentSlideIdx + 1) / slides.length) * 100}%` }}
-          transition={{ duration: 0.5 }}
-        />
-      </div>
-
-      {/* Logo with dark circle background - smaller to avoid overlap, hidden on small mobile screens */}
-      <div className="fixed top-3 left-3 z-[60] no-print hidden sm:block">
-        <a 
-          href="https://aimindset.org" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="block"
-        >
-          <div className="w-8 h-8 rounded-full bg-neutral-900 flex items-center justify-center shadow-lg hover:bg-red-600 transition-colors overflow-hidden cursor-pointer">
-            <img
-              src={assetUrl('/assets/logo_rb.png')}
-              alt="AI Mindset"
-              className="h-5 w-auto"
-            />
-          </div>
-        </a>
-      </div>
-
-      {/* Quick PDF export + Content Navigation - responsive layout */}
-      <div className="fixed top-4 right-4 z-[60] flex items-center gap-2 no-print">
-        {/* Language switcher temporarily disabled for v1 release */}
-        <LanguageSwitcher />
-        <button
-          onClick={() => requestPdfExport('deck')}
-          disabled={!!pdfJob}
-          className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-white/90 backdrop-blur px-3 py-2 text-xs font-mono text-neutral-700 hover:border-red-200 hover:text-red-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Download deck PDF (P)"
-        >
-          <FileDown size={16} />
-          <span className="hidden md:inline">{t.deckPdf}</span>
-        </button>
-        <button
-          onClick={() => requestPdfExport('slide', currentSlideIdx)}
-          disabled={!!pdfJob}
-          className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-white/90 backdrop-blur px-3 py-2 text-xs font-mono text-neutral-700 hover:border-red-200 hover:text-red-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Download current slide PDF (Shift+P)"
-        >
-          <FileDown size={16} />
-          <span className="hidden md:inline">{t.slidePdf}</span>
-        </button>
-        <button
-          onClick={() => setShowContent(true)}
-          className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-white/90 backdrop-blur px-3 py-2 text-xs font-mono text-neutral-700 hover:border-red-200 hover:text-red-600 transition-colors shadow-sm"
-          title="Content Navigation (C)"
-        >
-          <LayoutGrid size={16} />
-          <span className="hidden md:inline">Content</span>
-        </button>
-      </div>
-
-      {/* Table of Contents Panel */}
-      <AnimatePresence>
-        {showTOC && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/20 z-[54]"
-              onClick={() => setShowTOC(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, x: 320 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 320 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="fixed top-0 right-0 h-full w-80 bg-white z-[55] shadow-2xl overflow-y-auto border-l border-neutral-200"
+    <div className={`${globalBg} min-h-screen transition-colors duration-500`}>
+        {/* Fixed Logo Header */}
+        <div className="fixed top-0 left-0 z-[200] p-4 md:p-6">
+            <a 
+                href="https://aimindset.org" 
+                target="_blank" 
+                rel="noreferrer"
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all hover:bg-white/5 ${theme === 'dark' ? 'text-white' : 'text-black'}`}
             >
-              <div className="p-6 pt-16">
-                <div className="flex items-center gap-3 mb-6">
-                  <h2 className="text-lg font-bold uppercase tracking-wider">{t.contents}</h2>
-                  <span className="text-xs font-mono text-neutral-400 bg-neutral-100 px-2 py-1 rounded">
-                    {currentSlideIdx + 1}/{slides.length}
-                  </span>
-                </div>
-                {sections.map((section, sIdx) => {
-                  const nextSectionStart = sections[sIdx + 1]?.startSlide ?? slides.length;
-                  const isCurrentSection = currentSlideIdx >= section.startSlide && currentSlideIdx < nextSectionStart;
-                  const slidesInSection = slides.slice(section.startSlide, nextSectionStart);
-
-                  return (
-                    <div key={sIdx} className="mb-5">
-                      <button
-                        onClick={() => {
-                          setCurrentSlideIdx(section.startSlide);
-                          setShowTOC(false);
-                        }}
-                        className={`text-xs font-mono uppercase tracking-widest mb-2 flex items-center gap-2 hover:text-red-600 transition-colors ${
-                          isCurrentSection ? 'text-red-600 font-bold' : 'text-neutral-500'
-                        }`}
-                      >
-                        <span className="w-5 h-5 rounded bg-neutral-100 flex items-center justify-center text-[10px]">
-                          {slidesInSection.length}
-                        </span>
-                        {section.title}
-                      </button>
-                      <div className="space-y-0.5">
-                        {slidesInSection.map((slide, idx) => {
-                          const slideIdx = section.startSlide + idx;
-                          const isActive = slideIdx === currentSlideIdx;
-                          return (
-                            <button
-                              key={slideIdx}
-                              onClick={() => {
-                                setCurrentSlideIdx(slideIdx);
-                                setShowTOC(false);
-                              }}
-                              className={`block w-full text-left py-1.5 px-3 text-sm rounded transition-all ${
-                                isActive
-                                  ? 'bg-red-50 text-red-600 border-l-2 border-red-600'
-                                  : 'hover:bg-neutral-50 border-l-2 border-transparent'
-                              }`}
-                            >
-                              <span className="text-neutral-400 font-mono text-xs mr-2">
-                                {String(slideIdx + 1).padStart(2, '0')}
-                              </span>
-                              <span className={isActive ? 'font-medium' : ''}>
-                                {slide.title}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-
-                {/* Keyboard shortcuts hint */}
-                <div className="mt-8 pt-4 border-t border-neutral-100">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          setShowTOC(false);
-                          requestPdfExport('deck');
-                        }}
-                        disabled={!!pdfJob}
-                        className="flex-1 rounded-md border border-neutral-200 bg-white px-3 py-2 text-xs font-mono text-neutral-700 hover:border-red-200 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {t.downloadDeckPdf}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowTOC(false);
-                          requestPdfExport('slide', currentSlideIdx);
-                        }}
-                        disabled={!!pdfJob}
-                        className="flex-1 rounded-md border border-neutral-200 bg-white px-3 py-2 text-xs font-mono text-neutral-700 hover:border-red-200 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {t.downloadSlidePdf}
-                      </button>
-                    </div>
-                    <p className="text-[11px] text-neutral-400 font-mono">
-                      {t.tip}
-                    </p>
-                  </div>
-                  <p className="text-xs text-neutral-400 font-mono">
-                    {t.shortcuts}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Main Slide Area */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSlideIdx}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          ref={stageRef}
-          className="w-full h-[calc(100vh-3.5rem)] min-h-[600px] overflow-y-auto pt-10 md:pt-0"
-        >
-          <div ref={stageScaleRootRef} className="w-full md:h-full">
-            <Slide data={slides[currentSlideIdx]} index={currentSlideIdx} />
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-white via-white/98 to-transparent z-40 flex items-end pb-3 px-6 no-print">
-        {/* Section indicator */}
-        <div className="text-neutral-400 font-mono text-[10px] uppercase tracking-widest min-w-[100px]">
-          {currentSection?.title || 'INTRO'}
+                <AIMindsetLogo className="w-8 h-8" color={theme === 'dark' ? 'white' : 'black'} />
+                <span className="font-mono text-sm font-bold tracking-wide hidden md:inline">MINDSET</span>
+            </a>
         </div>
-
-        {/* Slide dots - centered, grouped by context gap, layers, and other sections */}
-        <div className="flex-1 flex justify-center items-center gap-0.5 h-full">
-          {(() => {
-            const groups: { label: string; slides: number[]; type: 'context-gap' | 'layer' | 'section' }[] = [];
-            
-            // Intro pages FIRST: hero-scroll landing + 11 tectonic shifts divider
-            const introSlides: number[] = [];
-            const heroSlide = slides.findIndex(s => s.layout === 'hero-scroll');
-            const shiftsSlide = slides.findIndex(s => s.title?.toLowerCase().includes('11 tectonic shifts'));
-            
-            if (heroSlide >= 0) introSlides.push(heroSlide);
-            if (shiftsSlide >= 0 && shiftsSlide !== heroSlide) introSlides.push(shiftsSlide);
-            
-            if (introSlides.length > 0) {
-              groups.push({ label: 'Intro', slides: introSlides.sort((a, b) => a - b), type: 'section' });
-            }
-            
-            // Story scroll (context gap explanation) - skip if already in intro
-            const contextGapSlide = slides.findIndex(s => s.layout === 'story-scroll');
-            if (contextGapSlide >= 0 && !introSlides.includes(contextGapSlide)) {
-              groups.push({ label: 'Context Gap', slides: [contextGapSlide], type: 'context-gap' });
-            }
-            
-            // Groups: Layers (each layer divider + its shifts)
-            const layerDividers = slides.map((s, i) => ({ slide: s, index: i }))
-              .filter(({ slide }) => slide.title?.toLowerCase().includes('layer') && slide.visual === 'SECTION_DIVIDER');
-            
-            layerDividers.forEach(({ slide, index }, layerIdx) => {
-              const layerSlides = [index];
-              const nextLayerIdx = layerDividers[layerIdx + 1]?.index ?? slides.length;
-              for (let i = index + 1; i < nextLayerIdx; i++) {
-                const s = slides[i];
-                if (s.title?.toLowerCase().includes('shift') || s.layout === 'shift-scroll') {
-                  layerSlides.push(i);
-                }
-              }
-              groups.push({ label: slide.title || `Layer ${layerIdx + 1}`, slides: layerSlides, type: 'layer' });
-            });
-            
-            // Remaining pages (field signals, about, thank you, etc)
-            const usedSlides = new Set(groups.flatMap(g => g.slides));
-            const remainingSlides: number[] = [];
-            for (let i = 0; i < slides.length; i++) {
-              if (!usedSlides.has(i)) {
-                remainingSlides.push(i);
-              }
-            }
-            if (remainingSlides.length > 0) {
-              groups.push({ label: 'Pages', slides: remainingSlides, type: 'section' });
-            }
-            
-            return groups.map((group, gIdx) => (
-              <div key={gIdx} className="flex items-center justify-center group/section relative h-full">
-                {gIdx > 0 && <div className="w-3 h-px bg-neutral-300 mx-1.5 flex-shrink-0" />}
-                {/* Group label on hover */}
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/section:opacity-100 transition-opacity pointer-events-none z-50">
-                  <div className={`text-[10px] font-mono px-2 py-1 rounded whitespace-nowrap uppercase tracking-wider ${
-                    group.type === 'context-gap' ? 'bg-red-600 text-white' :
-                    group.type === 'layer' ? 'bg-neutral-800 text-white' :
-                    'bg-neutral-900 text-white'
-                  }`}>
-                    {group.label}
-                  </div>
-                </div>
-                {group.slides.map(slideIdx => {
-                  const slide = slides[slideIdx];
-                  if (!slide) return null;
-                  
-                  const isContextGap = group.type === 'context-gap';
-                  const isLayerDivider = slide.title?.toLowerCase().includes('layer') && slide.visual === 'SECTION_DIVIDER';
-                  const isShift = slide.title?.toLowerCase().includes('shift') || slide.layout === 'shift-scroll';
-                  const isSectionDivider = slide.visual === 'SECTION_DIVIDER' && !isLayerDivider;
-
-                  return (
-                    <div key={slideIdx} className="relative group/dot flex items-center justify-center h-full">
-                      <button
-                        onClick={() => setCurrentSlideIdx(slideIdx)}
-                        className={`transition-all flex-shrink-0 hover:scale-125 ${
-                          isContextGap
-                            ? `w-3 h-3 rounded-sm mx-0.5 ${
-                                slideIdx === currentSlideIdx
-                                  ? 'bg-red-600 scale-125 ring-2 ring-white shadow-lg'
-                                  : 'bg-red-400 hover:bg-red-500'
-                              }`
-                            : isLayerDivider
-                              ? `w-2.5 h-2.5 rounded-sm mx-0.5 ${
-                                  slideIdx === currentSlideIdx
-                                    ? 'bg-neutral-800 scale-125 ring-2 ring-white shadow-md'
-                                    : 'bg-neutral-600 hover:bg-neutral-700'
-                                }`
-                              : isShift
-                                ? `w-2 h-2 rounded-full mx-0.5 ${
-                                    slideIdx === currentSlideIdx
-                                      ? 'bg-red-600 scale-125 ring-1 ring-white'
-                                      : 'bg-red-400 hover:bg-red-500'
-                                  }`
-                                : isSectionDivider
-                                  ? `w-2 h-2 rounded-sm mx-0.5 ${
-                                      slideIdx === currentSlideIdx
-                                        ? 'bg-neutral-800 scale-125'
-                                        : 'bg-neutral-400 hover:bg-neutral-500'
-                                    }`
-                                  : `w-1.5 h-1.5 rounded-full mx-0.5 ${
-                                      slideIdx === currentSlideIdx
-                                        ? 'bg-red-600 scale-150'
-                                        : 'bg-neutral-300 hover:bg-neutral-400'
-                                    }`
-                        }`}
-                      />
-                      {/* Individual slide tooltip */}
-                      <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover/dot:opacity-100 transition-opacity pointer-events-none z-50">
-                        <div className="bg-neutral-900 text-white text-[10px] font-mono px-2 py-1 rounded whitespace-nowrap max-w-[200px] truncate">
-                          {slide.title}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ));
-          })()}
-        </div>
-
-        {/* Navigation controls */}
-        <div className="flex items-center gap-2 min-w-[80px] justify-end">
-          <button
-            onClick={prevSlide}
-            disabled={currentSlideIdx === 0}
-            className="p-1.5 rounded hover:bg-neutral-100 transition-colors disabled:opacity-30"
-          >
-            <ChevronLeft size={18} className="text-neutral-600" />
-          </button>
-          <button
-            onClick={nextSlide}
-            disabled={currentSlideIdx === slides.length - 1}
-            className="p-1.5 rounded hover:bg-neutral-100 transition-colors disabled:opacity-30"
-          >
-            <ChevronRight size={18} className="text-neutral-600" />
-          </button>
-        </div>
-      </div>
-
-      {/* Click zones for navigation - SMALLER, only at edges */}
-      <div
-        className="fixed top-0 left-0 w-16 h-[calc(100%-3.5rem)] z-30 cursor-w-resize group no-print"
-        onClick={prevSlide}
-      >
-        <div className="absolute inset-y-0 left-0 w-full flex items-center justify-start pl-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <ChevronLeft size={24} className="text-neutral-300" />
-        </div>
-      </div>
-      <div
-        className="fixed top-0 right-0 w-16 h-[calc(100%-3.5rem)] z-30 cursor-e-resize group no-print"
-        onClick={nextSlide}
-      >
-        <div className="absolute inset-y-0 right-0 w-full flex items-center justify-end pr-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <ChevronRight size={24} className="text-neutral-300" />
-        </div>
-      </div>
-
-      {/* Content Cards Navigation */}
-      <ContentCards
-        isOpen={showContentCards}
-        onClose={() => setShowContentCards(false)}
-        onNavigate={(slideIndex: number) => setCurrentSlideIdx(slideIndex)}
-        cards={contentCards}
-        slides={slides}
-      />
-
+        
+        {renderContent()}
+        <IndexNavigation onNavigate={handleIndexNavigate} theme={theme} toggleTheme={toggleTheme} lang={lang} setLang={setLang} showThemeToggle={viewState.view !== 'landing'} />
+        <TimelineNav timeline={timeline} currentIndex={viewState.view === 'report' ? viewState.index : 0} viewState={viewState.view} onNavigate={handleNavigate} onNavigateToConclusion={handleJumpToConclusion} onNavigateToLanding={closeReport} onNavigateToThankYou={handleJumpToThankYou} theme={theme} visible={isNavVisible} />
     </div>
   );
-};
-
-const App: React.FC = () => (
-  <LanguageProvider>
-    <AppContent />
-  </LanguageProvider>
-);
-
-export default App;
+}
