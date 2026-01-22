@@ -1,14 +1,10 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import { gsap, ScrollTrigger, MotionPathPlugin } from '../lib/gsap-config';
 import { ShiftData } from './shiftsData';
 import { ShiftMetaphor } from './ShiftMetaphor';
 import { AIMindsetLogo } from './AIMindsetLogo';
 import { OpenGraphPreview } from './OpenGraphPreview';
 import { useI18n } from '../hooks/useI18n';
-
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 const BLOCKED_DOMAINS = [
   'youtube.com',
@@ -429,16 +425,53 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
       )}
 
       {/* NAVIGATION SECTION */}
-      <section className={`relative py-24 px-4 border-t ${borderMain} ${bgMain}`}>
-          <div className="max-w-4xl mx-auto flex justify-between">
-              <button onClick={onPrev} className={`group flex items-center gap-4 px-6 py-4 border ${borderMain} hover:border-[#DC2626] transition-all`}>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M15 19l-7-7 7-7"/></svg>
-                  <span className="font-mono text-xs uppercase tracking-widest">{prevLabel || i18n?.ui.prev || "Back"}</span>
-              </button>
-              <button onClick={onNext} className="group flex items-center gap-4 px-10 py-4 bg-[#DC2626] text-white hover:bg-red-700 transition-all shadow-xl">
-                  <span className="font-mono text-xs font-bold uppercase tracking-widest">{nextLabel || i18n?.ui.next || "Next"}</span>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M9 5l7 7-7 7"/></svg>
-              </button>
+      <section className={`relative py-32 px-4 md:px-10 border-t ${borderMain} ${bgMain}`}>
+          <div className="max-w-7xl mx-auto flex justify-between items-center gap-8">
+              {/* PREVIOUS BUTTON */}
+              {!isFirst && prevLabel && (
+                <button 
+                  onClick={onPrev} 
+                  className={`group flex items-center gap-4 hover:opacity-70 transition-opacity`}
+                >
+                  <div className={`w-12 h-12 rounded-full border ${borderMain} flex items-center justify-center flex-shrink-0`}>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path d="M15 19l-7-7 7-7"/>
+                    </svg>
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className={`font-mono text-[10px] tracking-widest ${textSecondary} mb-1 lowercase`}>
+                      {i18n?.ui.prev || "previous"}
+                    </span>
+                    <span className={`font-sans text-base font-semibold ${textMain} max-w-[200px] md:max-w-[300px] truncate lowercase`}>
+                      {prevLabel}
+                    </span>
+                  </div>
+                </button>
+              )}
+              
+              {isFirst && <div></div>}
+              
+              {/* NEXT BUTTON */}
+              {!isLast && nextLabel && (
+                <button 
+                  onClick={onNext} 
+                  className="group flex items-center gap-4 hover:opacity-70 transition-opacity ml-auto"
+                >
+                  <div className="flex flex-col items-end">
+                    <span className={`font-mono text-[10px] tracking-widest ${textSecondary} mb-1 lowercase`}>
+                      {i18n?.ui.next || "next"}
+                    </span>
+                    <span className={`font-sans text-base font-semibold ${textMain} max-w-[200px] md:max-w-[300px] truncate text-right lowercase`}>
+                      {nextLabel}
+                    </span>
+                  </div>
+                  <div className="w-14 h-14 rounded-full bg-[#DC2626] flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </button>
+              )}
           </div>
       </section>
 

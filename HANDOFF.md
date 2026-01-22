@@ -78,7 +78,6 @@ Deployment:
 
 ### File Structure
 ```
-2026/ai-main-with-history/
 ├── components/          # React components
 │   ├── Hero.tsx
 │   ├── TectonicShiftsAnimation.tsx
@@ -138,8 +137,8 @@ Location: .github/workflows/deploy.yml
 Trigger: Push to main branch
 Process:
   1. Checkout code
-  2. Install dependencies (working-directory: ./2026/ai-main-with-history)
-  3. Build (npm run build - includes RU content generation)
+  2. Install dependencies (in project root)
+  3. Build (npm run build - includes multi-language content generation)
   4. Deploy to GitHub Pages
 ```
 
@@ -418,8 +417,8 @@ Domains that show OG preview instead of iframe embed:
 4. Commit and push to main
 
 ### To Update Russian Content
-1. Edit `2026/ai-main-with-history/content/slides.ru.md`
-2. Run `npm run content:ru` to regenerate JSON
+1. Edit `content/slides.ru.md`
+2. Run `npm run content` to regenerate JSON for all languages
 3. Test locally: `npm run dev`
 4. Commit and push to main
 
@@ -453,7 +452,7 @@ This is not just a report - it's a paired map of Machines ↔ Humans, showing th
 ```bash
 # Clone repo
 git clone https://github.com/eppelas/aim-report.git
-cd aim-report/2026/ai-main-with-history
+cd aim-report
 
 # Install dependencies
 npm install
@@ -494,7 +493,9 @@ npm run preview
 - `components/ReportView.tsx` - Shift rendering, evidence blocks
 - `hooks/useShiftsData.ts` - Content loading, language handling
 - `hooks/useI18n.ts` - UI translations
-- `scripts/parse-ru-content.js` - RU content parser
+- `scripts/parse-content.js` - Multi-language content parser (RU, BY, RO)
+- `lib/gsap-config.ts` - Centralized GSAP configuration
+- `lib/updateMetaTags.ts` - Dynamic SEO meta tags helper
 
 ---
 

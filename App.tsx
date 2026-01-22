@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useState, useEffect, useMemo, useCallback } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from './lib/gsap-config';
 import { Hero } from './components/Hero';
 import { TectonicShifts } from './components/TectonicShiftsAnimation';
 import { VariableTextSection } from './components/VariableTextSection';
@@ -14,11 +13,16 @@ import { ThankYou } from './components/ThankYou';
 import { ManifestoPage } from './components/ManifestoPage/Index';
 import { AIMindsetLogo } from './components/AIMindsetLogo';
 import { useShiftsData } from './hooks/useShiftsData';
-
-gsap.registerPlugin(ScrollTrigger);
+import { updateMetaTags } from './lib/updateMetaTags';
 
 export default function App() {
-  const [lang, setLang] = useState<'en' | 'ru' | 'by' | 'ro'>('en');
+  const [lang, setLang] = useState<'en' | 'ru' | 'by' | 'ro'>(() => {
+    if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('aim-language');
+        if (saved === 'en' || saved === 'ru' || saved === 'by' || saved === 'ro') return saved;
+    }
+    return 'en';
+  });
   const { shifts, layers, loading } = useShiftsData(lang);
 
   const timeline = useMemo<TimelineItem[]>(() => {
@@ -105,6 +109,57 @@ export default function App() {
       // Ensure body background matches theme to prevent black flickering during navigation
       document.body.style.backgroundColor = theme === 'dark' ? '#0A0A0A' : '#F4F4F5';
   }, [theme]);
+
+  useEffect(() => {
+      localStorage.setItem('aim-language', lang);
+  }, [lang]);
+
+  // Update meta tags based on current view
+  useEffect(() => {
+    if (viewState.view === 'landing') {
+      updateMetaTags({
+        title: 'AIM Annual Report 2025',
+        description: 'A comprehensive analysis of the divergence between machine capability and human adaptation across Foundation, Cognition, Interface, and Humanity layers.',
+        url: 'https://eppelas.github.io/aim-report/'
+      });
+    } else if (viewState.view === 'report' && timeline[viewState.index]) {
+      const currentItem = timeline[viewState.index];
+      
+      if (currentItem.type === 'layer') {
+        const layer = currentItem.data as LayerData;
+        updateMetaTags({
+          title: `Layer ${layer.id}: ${layer.title} | AIM Report 2025`,
+          description: `${layer.subtitle} ${layer.desc}`,
+          url: `https://eppelas.github.io/aim-report/#layer-${layer.id}`
+        });
+      } else if (currentItem.type === 'shift') {
+        const shift = currentItem.data as ShiftData;
+        updateMetaTags({
+          title: `Shift ${shift.id}: ${shift.subtitle || shift.title} | AIM Report 2025`,
+          description: shift.context || shift.gap.desc.substring(0, 155),
+          url: `https://eppelas.github.io/aim-report/#shift-${shift.id}`
+        });
+      } else if (currentItem.type === 'summary') {
+        updateMetaTags({
+          title: 'Executive Summary | AIM Report 2025',
+          description: 'Key insights and conclusions from the 11 tectonic shifts analysis of AI and human adaptation.',
+          url: 'https://eppelas.github.io/aim-report/#summary'
+        });
+      }
+    } else if (viewState.view === 'conclusion') {
+      updateMetaTags({
+        title: 'The Manifesto | AIM Report 2025',
+        description: 'Our vision for bridging the gap between machine capability and human adaptation.',
+        url: 'https://eppelas.github.io/aim-report/#manifesto'
+      });
+    } else if (viewState.view === 'thankyou') {
+      updateMetaTags({
+        title: 'Thank You | AIM Report 2025',
+        description: 'Created collaboratively with the AI Mindset Labs community.',
+        url: 'https://eppelas.github.io/aim-report/#thankyou'
+      });
+    }
+  }, [viewState, timeline]);
 
   const [isNavVisible, setIsNavVisible] = useState(false);
 
@@ -257,9 +312,33 @@ export default function App() {
     if (viewState.view === 'report') {
         const currentItem = timeline[viewState.index];
         if (!currentItem) return null;
+        
+        // Get prev/next slide titles
+        const prevItem = viewState.index > 0 ? timeline[viewState.index - 1] : null;
+        const nextItem = viewState.index < timeline.length - 1 ? timeline[viewState.index + 1] : null;
+        
+        const getPrevTitle = () => {
+          if (!prevItem) return '';
+          if (prevItem.type === 'layer') return (prevItem.data as LayerData).title;
+          if (prevItem.type === 'shift') return (prevItem.data as ShiftData).subtitle || (prevItem.data as ShiftData).title;
+          if (prevItem.type === 'summary') return lang === 'ru' ? 'ИСПОЛНИТЕЛЬНОЕ РЕЗЮМЕ' : 'EXECUTIVE SUMMARY';
+          return '';
+        };
+        
+        const getNextTitle = () => {
+          if (!nextItem) return '';
+          if (nextItem.type === 'layer') return (nextItem.data as LayerData).title;
+          if (nextItem.type === 'shift') return (nextItem.data as ShiftData).subtitle || (nextItem.data as ShiftData).title;
+          if (nextItem.type === 'summary') return lang === 'ru' ? 'ИСПОЛНИТЕЛЬНОЕ РЕЗЮМЕ' : 'EXECUTIVE SUMMARY';
+          return '';
+        };
+        
+        const prevLabel = getPrevTitle();
+        const nextLabel = getNextTitle();
+        
         if (currentItem.type === 'layer') return <LayerView data={currentItem.data as LayerData} onNext={handleNext} onPrev={handlePrev} onBack={closeReport} nextTitle={""} theme={theme} toggleTheme={toggleTheme} />;
         if (currentItem.type === 'summary') return <SummaryView onNext={handleNext} onPrev={handlePrev} theme={theme} lang={lang} />;
-        return <ReportView onBack={closeReport} data={currentItem.data as ShiftData} onNext={handleNext} onPrev={handlePrev} isFirst={viewState.index === 0} isLast={viewState.index === timeline.length - 1} theme={theme} toggleTheme={toggleTheme} lang={lang} />;
+        return <ReportView onBack={closeReport} data={currentItem.data as ShiftData} onNext={handleNext} onPrev={handlePrev} isFirst={viewState.index === 0} isLast={viewState.index === timeline.length - 1} theme={theme} toggleTheme={toggleTheme} lang={lang} prevLabel={prevLabel} nextLabel={nextLabel} />;
     }
     return (
         <main className="w-full overflow-x-hidden">

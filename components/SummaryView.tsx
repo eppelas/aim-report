@@ -1,10 +1,7 @@
 import React, { useLayoutEffect, useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '../lib/gsap-config';
 import { ShiftMetaphor } from './ShiftMetaphor';
 import { useI18n } from '../hooks/useI18n';
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface SummaryViewProps {
   layer?: any;

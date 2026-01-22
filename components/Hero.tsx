@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
+import { gsap } from '../lib/gsap-config';
 import { useI18n } from '../hooks/useI18n';
 
 interface HeroProps {

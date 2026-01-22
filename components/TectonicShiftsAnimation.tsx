@@ -1,9 +1,6 @@
 import React, { useLayoutEffect, useRef, useState, useEffect, useMemo } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '../lib/gsap-config';
 import { useI18n } from '../hooks/useI18n';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // --- 1. OPTIMIZED CORE GEOMETRY ---
 const CoreGeometry = React.memo(({ color, shape }: { color: string, shape: 'square' | 'circle' }) => {

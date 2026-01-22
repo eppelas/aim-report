@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef, useEffect } from 'react';
-import gsap from 'gsap';
+import { gsap } from '../lib/gsap-config';
 import { LayerData } from './shiftsData';
 
 interface LayerViewProps {

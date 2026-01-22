@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useLayoutEffect, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '../../lib/gsap-config';
 import { ManifestoPageProps } from './types';
 import { ProtocolCard } from './ProtocolCard';
 import { EcoVisual } from './EcoVisuals';

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import { gsap } from '../../lib/gsap-config';
 import { layers, shifts } from '../shiftsData';
 import { ShiftMetaphor } from '../ShiftMetaphor';
 

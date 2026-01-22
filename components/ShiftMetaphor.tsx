@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import gsap from 'gsap';
+import { gsap } from '../lib/gsap-config';
 
 interface ShiftMetaphorProps {
   id: string;

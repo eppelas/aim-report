@@ -1,10 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '../lib/gsap-config';
 import { useI18n } from '../hooks/useI18n';
-
-// Register globally
-gsap.registerPlugin(ScrollTrigger);
 
 interface VariableTextSectionProps {
   lang?: 'en' | 'ru' | 'by' | 'ro';
