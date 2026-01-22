@@ -23,6 +23,7 @@ interface ReportViewProps {
 export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, onPrev, isFirst, isLast, theme, toggleTheme, nextLabel, prevLabel }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedSource, setSelectedSource] = useState<any | null>(null);
+  const [selectedStat, setSelectedStat] = useState<any | null>(null);
   const isDark = theme === 'dark';
 
   const plate1Ref = useRef<SVGRectElement>(null);
@@ -231,8 +232,12 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {data.stats.map((stat, idx) => (
-                      <div key={idx} className={`group text-left w-full ${isDark ? 'bg-neutral-900/30' : 'bg-white/50'} border ${isDark ? 'border-white/5' : 'border-black/5'} p-6 rounded-xl h-[160px] md:h-[300px] flex flex-col justify-between transition-colors shadow-lg`}>
-                          <span className={`font-mono text-[10px] md:text-xs ${textSecondary} uppercase group-hover:text-[#DC2626]`}>{stat.label}</span>
+                      <div 
+                          key={idx} 
+                          onClick={() => stat.url && setSelectedStat(stat)}
+                          className={`group text-left w-full ${isDark ? 'bg-neutral-900/30' : 'bg-white/50'} border ${isDark ? 'border-white/5 hover:border-[#DC2626]/50' : 'border-black/5 hover:border-[#DC2626]/50'} p-6 rounded-xl h-[160px] md:h-[300px] flex flex-col justify-between transition-all shadow-lg ${stat.url ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
+                      >
+                          <span className={`font-mono text-[10px] md:text-xs ${textSecondary} uppercase group-hover:text-[#DC2626] transition-colors`}>{stat.label}</span>
                           <div className="flex items-center justify-center h-full"><span className={`text-4xl md:text-7xl font-black ${textMain}`}>{stat.value}</span></div>
                           <p className={`text-xs md:text-sm font-mono ${textSecondary}`}>{stat.desc}</p>
                       </div>
@@ -332,6 +337,40 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                         <iframe src={selectedSource.url} className="w-full h-full border-0" title={selectedSource.title} sandbox="allow-same-origin allow-scripts allow-popups allow-forms" />
                     ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-100 p-10 text-center"><h2 className="text-3xl font-bold mb-4 text-black">{selectedSource.title}</h2><p className="max-w-md text-neutral-600">{selectedSource.desc}</p></div>
+                    )}
+                 </div>
+             </div>
+         </div>
+      )}
+
+      {/* STAT MODAL */}
+      {selectedStat && (
+         <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+             <div className="absolute inset-0 bg-black/95 backdrop-blur-md" onClick={() => setSelectedStat(null)}></div>
+             <div className="relative w-full max-w-6xl h-[90vh] bg-[#0A0A0A] border border-neutral-800 rounded-xl overflow-hidden flex flex-col shadow-2xl z-10">
+                 <div className="flex justify-between items-center p-4 border-b border-white/10 bg-neutral-900 shrink-0">
+                    <div className="flex gap-4 items-center overflow-hidden">
+                        <div className="w-8 h-8 flex-shrink-0 bg-[#DC2626] flex items-center justify-center rounded text-white font-bold text-xs">{selectedStat.label}</div>
+                        <div className="flex flex-col overflow-hidden">
+                            <span className="text-white font-bold truncate">{selectedStat.value} - {selectedStat.label}</span>
+                            <span className="text-neutral-500 text-xs font-mono truncate">{selectedStat.desc}</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        {selectedStat.url && <a href={selectedStat.url} target="_blank" rel="noreferrer" className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white text-black rounded-md text-[10px] font-bold uppercase hover:bg-neutral-200 transition-colors">Open Full</a>}
+                        <button onClick={() => setSelectedStat(null)} className="p-2 text-neutral-400 hover:text-white hover:bg-white/10 rounded-full transition-colors">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+                 </div>
+                 <div className="flex-1 bg-white relative">
+                    {selectedStat.url ? (
+                        <iframe src={selectedStat.url} className="w-full h-full border-0" title={selectedStat.desc} sandbox="allow-same-origin allow-scripts allow-popups allow-forms" />
+                    ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-100 p-10 text-center">
+                            <h2 className="text-3xl font-bold mb-4 text-black">{selectedStat.value}</h2>
+                            <p className="max-w-md text-neutral-600">{selectedStat.desc}</p>
+                        </div>
                     )}
                  </div>
              </div>
