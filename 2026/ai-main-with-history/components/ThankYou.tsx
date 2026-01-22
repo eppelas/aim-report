@@ -100,17 +100,6 @@ export const ThankYou: React.FC<ThankYouProps> = ({ theme = 'dark', onPrev }) =>
                      </span>
                  </a>
             </div>
-
-            {/* 4. BACK BUTTON */}
-            <div className="thank-content flex justify-center w-full mb-12">
-                 <button 
-                    onClick={onPrev}
-                    className={`px-10 py-5 border ${isDark ? 'border-neutral-800 text-neutral-500' : 'border-neutral-300 text-neutral-600'} font-mono text-xs uppercase tracking-[0.3em] hover:text-[#DC2626] hover:border-[#DC2626] transition-all flex items-center gap-3`}
-                 >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                    Back to Report
-                 </button>
-            </div>
         </div>
         
         {/* BOTTOM: FOOTER */}
