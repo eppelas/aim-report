@@ -5,11 +5,36 @@ import { ManifestoPageProps } from './types';
 import { ProtocolCard } from './ProtocolCard';
 import { EcoVisual } from './EcoVisuals';
 
+const BLOCKED_DOMAINS = [
+  'youtube.com',
+  'telegram.me',
+  'intention.aimindset.org',
+  'spiridonov.aimindset.org',
+  'ivanov.aimindset.org',
+  'nature.com',
+  'wired.com',
+  'fortune.com'
+];
+
+const isUrlBlocked = (url: string): boolean => {
+  if (!url) return false;
+  try {
+    const urlObj = new URL(url);
+    return BLOCKED_DOMAINS.some(domain => urlObj.hostname.includes(domain));
+  } catch {
+    return false;
+  }
+};
+
 export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext, onPrev, theme = 'dark' }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const protocolsRef = useRef<HTMLDivElement>(null);
   const ecoGridRef = useRef<HTMLDivElement>(null);
+  const [iframeError, setIframeError] = useState(false);
+  const [ogData, setOgData] = useState<any>(null);
+  const [ogLoading, setOgLoading] = useState(false);
+  const ogCache = useRef<Record<string, any>>({});
   
   const isDark = theme === 'dark';
 
@@ -34,6 +59,48 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext,
   // Micro-Browser State
   const [browserUrl, setBrowserUrl] = useState<string | null>(null);
   const [browserTitle, setBrowserTitle] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadOgData = async (url: string) => {
+      if (ogCache.current[url]) {
+        setOgData(ogCache.current[url]);
+        setOgLoading(false);
+        return;
+      }
+
+      setOgLoading(true);
+      setOgData(null);
+      try {
+        const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+        if (data.status === 'success') {
+          const ogResult = {
+            title: data.data.title,
+            description: data.data.description,
+            image: data.data.image?.url || data.data.logo?.url,
+            url: data.data.url,
+            author: data.data.author,
+            date: data.data.date,
+            publisher: data.data.publisher
+          };
+          ogCache.current[url] = ogResult;
+          setOgData(ogResult);
+        }
+      } catch (error) {
+        console.error('Failed to fetch OG data:', error);
+      } finally {
+        setOgLoading(false);
+      }
+    };
+
+    const shouldShowOg = browserUrl && (iframeError || isUrlBlocked(browserUrl));
+    if (shouldShowOg) {
+      loadOgData(browserUrl);
+    } else {
+      setOgData(null);
+      setOgLoading(false);
+    }
+  }, [iframeError, browserUrl]);
 
   const handleHeroMouseMove = (e: React.MouseEvent) => {
       const { clientX, clientY, currentTarget } = e;
@@ -107,7 +174,7 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext,
     { id: 'spiridonov', type: 'philo', title: 'Pragmatic Romanticism', desc: 'Defense against cold logic.', url: 'https://spiridonov.aimindset.org', span: 'col-span-1' },
     { id: 'founder', type: 'media', title: 'Founder OS', desc: 'Mental health firewalls on YouTube.', url: 'https://youtube.com/@aimindsetlabs', span: 'col-span-1' },
     { id: 'ark', type: 'ark', title: 'AI ARK Knowledge System', desc: 'Comprehensive knowledge architecture for the AI age.', url: 'https://aimindsetspace.substack.com/p/ai-ark-knowledge-system', span: 'md:col-span-2' },
-    { id: 'claude', type: 'code', title: 'Claude 3.5 Guide', desc: 'Practical guides from community.', url: 'https://telegram.me/ai_mind_set/282', span: 'col-span-1' },
+    { id: 'gemini', type: 'code', title: 'Gemini 3.0 Guide', desc: 'Practical guides from community.', url: 'https://telegram.me/ai_mind_set/282', span: 'col-span-1' },
     { id: 'telegram', type: 'community', title: '@ai_mind_set', desc: 'Daily signals & field notes.', url: 'https://t.me/ai_mind_set', span: 'md:col-span-1 lg:col-span-1' },
   ];
 
@@ -140,7 +207,55 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext,
                         </div>
                     </div>
                     <div className="flex-1 bg-white relative">
-                        <iframe src={browserUrl} className="w-full h-full border-0" title={browserTitle || "Browser"} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                        {iframeError || isUrlBlocked(browserUrl) ? (
+                            <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-50 p-10 overflow-y-auto">
+                                {ogLoading ? (
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626]"></div>
+                                ) : ogData ? (
+                                    <div className="max-w-2xl w-full">
+                                        {ogData.image && (
+                                            <div className="mb-6 rounded-lg overflow-hidden">
+                                                <img src={ogData.image} alt={ogData.title} className="w-full h-64 object-cover" />
+                                            </div>
+                                        )}
+                                        <h2 className="text-2xl font-bold mb-3 text-black">{ogData.title || 'Untitled'}</h2>
+                                        {(ogData.author || ogData.publisher || ogData.date) && (
+                                            <div className="flex flex-wrap gap-2 mb-4 text-sm text-neutral-500">
+                                                {ogData.author && <span>{ogData.author}</span>}
+                                                {ogData.publisher && <span>• {ogData.publisher}</span>}
+                                                {ogData.date && <span>• {new Date(ogData.date).toLocaleDateString()}</span>}
+                                            </div>
+                                        )}
+                                        <p className="text-base mb-6 text-neutral-600 leading-relaxed">{ogData.description || 'No description available'}</p>
+                                        <button 
+                                            onClick={() => window.open(browserUrl, '_blank')} 
+                                            className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors"
+                                        >
+                                            Open Full Article
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="text-center">
+                                        <p className="text-neutral-600 mb-6">Could not load preview</p>
+                                        <button 
+                                            onClick={() => window.open(browserUrl, '_blank')} 
+                                            className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors"
+                                        >
+                                            Open Link
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <iframe 
+                                src={browserUrl} 
+                                className="w-full h-full border-0" 
+                                title={browserTitle || "Browser"} 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowFullScreen
+                                onError={() => setIframeError(true)}
+                            ></iframe>
+                        )}
                     </div>
                 </div>
             </div>

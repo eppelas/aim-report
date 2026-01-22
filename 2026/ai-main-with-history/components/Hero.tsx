@@ -62,9 +62,12 @@ export const Hero: React.FC = () => {
      }
   }, [tilt]);
 
-  // Trigger global scroll via event dispatch if button is clicked
+  // Scroll to next section smoothly
   const handleButtonClick = () => {
-      window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Space' }));
+      window.scrollTo({
+          top: window.innerHeight,
+          behavior: 'smooth'
+      });
   };
 
   return (

@@ -5,8 +5,31 @@ import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { ShiftData } from './shiftsData';
 import { ShiftMetaphor } from './ShiftMetaphor';
 import { AIMindsetLogo } from './AIMindsetLogo';
+import { OpenGraphPreview } from './OpenGraphPreview';
+import { useI18n } from '../hooks/useI18n';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+const BLOCKED_DOMAINS = [
+  'youtube.com',
+  'telegram.me',
+  'intention.aimindset.org',
+  'spiridonov.aimindset.org',
+  'ivanov.aimindset.org',
+  'nature.com',
+  'wired.com',
+  'fortune.com'
+];
+
+const isUrlBlocked = (url: string): boolean => {
+  if (!url) return false;
+  try {
+    const urlObj = new URL(url);
+    return BLOCKED_DOMAINS.some(domain => urlObj.hostname.includes(domain));
+  } catch {
+    return false;
+  }
+};
 
 interface ReportViewProps {
   onBack: () => void;
@@ -19,13 +42,19 @@ interface ReportViewProps {
   prevLabel?: string;
   theme: 'dark' | 'light';
   toggleTheme: () => void;
+  lang?: 'en' | 'ru' | 'by' | 'ro';
 }
 
-export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, onPrev, isFirst, isLast, theme, toggleTheme, nextLabel, prevLabel }) => {
+export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, onPrev, isFirst, isLast, theme, toggleTheme, nextLabel, prevLabel, lang = 'en' }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedSource, setSelectedSource] = useState<any | null>(null);
   const [selectedStat, setSelectedStat] = useState<any | null>(null);
   const [iframeError, setIframeError] = useState<boolean>(false);
+  const [showOgPreview, setShowOgPreview] = useState<string | null>(null);
+  const [ogData, setOgData] = useState<any>(null);
+  const [ogLoading, setOgLoading] = useState(false);
+  const ogCache = useRef<Record<string, any>>({});
+  const i18n = useI18n(lang);
   const isDark = theme === 'dark';
 
   const plate1Ref = useRef<SVGRectElement>(null);
@@ -35,6 +64,51 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
   const mousePos = useRef({ x: 0, y: 0 }); 
   const plate1Pos = useRef({ x: 0, y: 0 });
   const plate2Pos = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const loadOgData = async (url: string) => {
+      if (ogCache.current[url]) {
+        setOgData(ogCache.current[url]);
+        setOgLoading(false);
+        return;
+      }
+
+      setOgLoading(true);
+      setOgData(null);
+      try {
+        const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+        if (data.status === 'success') {
+          const ogResult = {
+            title: data.data.title,
+            description: data.data.description,
+            image: data.data.image?.url || data.data.logo?.url,
+            url: data.data.url,
+            author: data.data.author,
+            date: data.data.date,
+            publisher: data.data.publisher,
+            logo: data.data.logo?.url
+          };
+          ogCache.current[url] = ogResult;
+          setOgData(ogResult);
+        }
+      } catch (error) {
+        console.error('Failed to fetch OG data:', error);
+      } finally {
+        setOgLoading(false);
+      }
+    };
+
+    const currentUrl = selectedSource?.url || selectedStat?.url;
+    const shouldShowOg = currentUrl && (iframeError || isUrlBlocked(currentUrl));
+
+    if (shouldShowOg) {
+      loadOgData(currentUrl);
+    } else {
+      setOgData(null);
+      setOgLoading(false);
+    }
+  }, [iframeError, selectedSource, selectedStat]);
 
   const machinePosRef = useRef({ x: 250, y: 150 }); 
   const humanPosRef = useRef({ x: 750, y: 350 });
@@ -99,7 +173,33 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
   const bgBlendMode = isDark ? 'mix-blend-screen opacity-40' : 'mix-blend-multiply opacity-20';
   const gridColor = isDark ? "#333" : "#000"; 
 
-  const handleOpenSource = (item: any) => setSelectedSource(item);
+  const prefetchOgData = async (url: string) => {
+    if (!url || ogCache.current[url] || !isUrlBlocked(url)) return;
+    
+    try {
+      const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+      const data = await response.json();
+      if (data.status === 'success') {
+        const ogResult = {
+          title: data.data.title,
+          description: data.data.description,
+          image: data.data.image?.url || data.data.logo?.url,
+          url: data.data.url,
+          author: data.data.author,
+          date: data.data.date,
+          publisher: data.data.publisher
+        };
+        ogCache.current[url] = ogResult;
+      }
+    } catch (error) {
+      // Silent fail for prefetch
+    }
+  };
+
+  const handleOpenSource = (source: any) => {
+     setSelectedSource(source);
+     setIframeError(false);
+  };
 
   const getTitleClass = (text: string) => {
       const length = text.length;
@@ -237,6 +337,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                       <div 
                           key={idx} 
                           onClick={() => { if (stat.url) { setIframeError(false); setSelectedStat(stat); } }}
+                          onMouseEnter={() => stat.url && prefetchOgData(stat.url)}
                           className={`group text-left w-full ${isDark ? 'bg-neutral-900/30' : 'bg-white/50'} border ${isDark ? 'border-white/5 hover:border-[#DC2626]/50' : 'border-black/5 hover:border-[#DC2626]/50'} p-6 rounded-xl h-[160px] md:h-[300px] flex flex-col justify-between transition-all shadow-lg ${stat.url ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
                       >
                           <span className={`font-mono text-[10px] md:text-xs ${textSecondary} uppercase group-hover:text-[#DC2626] transition-colors`}>{stat.label}</span>
@@ -258,7 +359,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                       <h3 className="font-mono text-[#DC2626] text-xs uppercase tracking-widest font-bold mb-8">Research & Evidence</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {data.evidence.map((item, idx) => (
-                              <button key={idx} onClick={() => handleOpenSource({ ...item, type: "Evidence", author: "AIM Lab" })} className={`evidence-card group block w-full text-left p-8 rounded-lg border ${borderMain} ${bgCard} hover:border-[#DC2626] transition-all shadow-md`}>
+                              <button 
+                                  key={idx} 
+                                  onClick={() => handleOpenSource({ ...item, type: "Evidence", author: "AIM Lab" })} 
+                                  onMouseEnter={() => item.url && prefetchOgData(item.url)}
+                                  className={`evidence-card group block w-full text-left p-8 rounded-lg border ${borderMain} ${bgCard} hover:border-[#DC2626] transition-all shadow-md`}>
                                   <div className="flex items-center gap-3 mb-4">
                                       <AIMindsetLogo className="w-8 h-8 flex-shrink-0" color={isDark ? 'white' : 'black'} />
                                       <span className="font-mono text-xs text-neutral-500 tracking-wide">[ai mindset]</span>
@@ -273,7 +378,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   {data.sources.map((source) => (
-                      <div key={source.id} onClick={() => handleOpenSource(source)} className={`group flex flex-col justify-between p-5 ${bgCard} border ${borderMain} hover:border-[#DC2626] transition-colors rounded cursor-pointer ${getGridClass(source.type)}`}>
+                      <div 
+                          key={source.id} 
+                          onClick={() => handleOpenSource(source)} 
+                          onMouseEnter={() => source.url && prefetchOgData(source.url)}
+                          className={`group flex flex-col justify-between p-5 ${bgCard} border ${borderMain} hover:border-[#DC2626] transition-colors rounded cursor-pointer ${getGridClass(source.type)}`}>
                           <div className="mb-4">
                               <div className={`font-mono text-[9px] ${textSecondary} uppercase tracking-widest mb-2`}>{source.type}</div>
                               <span className={`text-sm md:text-lg font-bold leading-tight block ${textMain}`}>{source.title}</span>
@@ -317,10 +426,10 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
           <div className="max-w-4xl mx-auto flex justify-between">
               <button onClick={onPrev} className={`group flex items-center gap-4 px-6 py-4 border ${borderMain} hover:border-[#DC2626] transition-all`}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M15 19l-7-7 7-7"/></svg>
-                  <span className="font-mono text-xs uppercase tracking-widest">{prevLabel || "Back"}</span>
+                  <span className="font-mono text-xs uppercase tracking-widest">{prevLabel || i18n?.ui.prev || "Back"}</span>
               </button>
               <button onClick={onNext} className="group flex items-center gap-4 px-10 py-4 bg-[#DC2626] text-white hover:bg-red-700 transition-all shadow-xl">
-                  <span className="font-mono text-xs font-bold uppercase tracking-widest">{nextLabel || "Next"}</span>
+                  <span className="font-mono text-xs font-bold uppercase tracking-widest">{nextLabel || i18n?.ui.next || "Next"}</span>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M9 5l7 7-7 7"/></svg>
               </button>
           </div>
@@ -334,24 +443,48 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                  <div className="flex justify-between items-center p-4 border-b border-white/10 bg-neutral-900 shrink-0">
                     <div className="flex gap-4 items-center overflow-hidden"><div className="w-8 h-8 flex-shrink-0 bg-[#DC2626] flex items-center justify-center rounded text-white font-bold">{selectedSource.type ? selectedSource.type[0] : 'S'}</div><div className="flex flex-col overflow-hidden"><span className="text-white font-bold truncate">{selectedSource.title}</span><span className="text-neutral-500 text-xs font-mono uppercase tracking-widest truncate">{selectedSource.author}</span></div></div>
                     <div className="flex items-center gap-4">
-                        {selectedSource.url && <a href={selectedSource.url} target="_blank" rel="noreferrer" className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white text-black rounded-md text-[10px] font-bold uppercase hover:bg-neutral-200 transition-colors">Open Full</a>}
+                        {selectedSource.url && <a href={selectedSource.url} target="_blank" rel="noreferrer" className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white text-black rounded-md text-[10px] font-bold uppercase hover:bg-neutral-200 transition-colors">{i18n?.ui.openFull || 'Open Full'}</a>}
                         <button onClick={() => setSelectedSource(null)} className="p-2 text-neutral-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                     </div>
                  </div>
                  <div className="flex-1 bg-white relative">
-                    {iframeError || !selectedSource.url ? (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-100 p-10 text-center gap-6">
-                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                                <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            </div>
-                            <div>
-                                <h2 className="text-2xl font-bold mb-2 text-black">Cannot Display Content</h2>
-                                <p className="max-w-md text-neutral-600 mb-4">This website doesn't allow embedding. Click below to open in a new tab.</p>
-                            </div>
-                            {selectedSource.url && (
-                                <a href={selectedSource.url} target="_blank" rel="noreferrer" className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors">
-                                    Open in New Tab
-                                </a>
+                    {!selectedSource.url || iframeError || isUrlBlocked(selectedSource.url) ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-50 p-10 overflow-y-auto">
+                            {ogLoading ? (
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626]"></div>
+                            ) : ogData ? (
+                                <div className="max-w-2xl w-full">
+                                    {ogData.image && (
+                                        <div className="mb-6 rounded-lg overflow-hidden">
+                                            <img src={ogData.image} alt={ogData.title} className="w-full h-64 object-cover" />
+                                        </div>
+                                    )}
+                                    <h2 className="text-2xl font-bold mb-3 text-black">{ogData.title || 'Untitled'}</h2>
+                                    {(ogData.author || ogData.publisher || ogData.date) && (
+                                        <div className="flex flex-wrap gap-2 mb-4 text-sm text-neutral-500">
+                                            {ogData.author && <span>{ogData.author}</span>}
+                                            {ogData.publisher && <span>• {ogData.publisher}</span>}
+                                            {ogData.date && <span>• {new Date(ogData.date).toLocaleDateString()}</span>}
+                                        </div>
+                                    )}
+                                    <p className="text-base mb-6 text-neutral-600 leading-relaxed">{ogData.description || 'No description available'}</p>
+                                    <button 
+                                        onClick={() => window.open(selectedSource.url, '_blank')} 
+                                        className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors"
+                                    >
+                                        {i18n?.ui.openFullArticle || 'Open Full Article'}
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="text-center">
+                                    <p className="text-neutral-600 mb-6">{i18n?.ui.couldNotLoadPreview || 'Could not load preview'}</p>
+                                    <button 
+                                        onClick={() => window.open(selectedSource.url, '_blank')} 
+                                        className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors"
+                                    >
+                                        {i18n?.ui.openLink || 'Open Link'}
+                                    </button>
+                                </div>
                             )}
                         </div>
                     ) : (
@@ -382,26 +515,50 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        {selectedStat.url && <a href={selectedStat.url} target="_blank" rel="noreferrer" className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white text-black rounded-md text-[10px] font-bold uppercase hover:bg-neutral-200 transition-colors">Open Full</a>}
+                        {selectedStat.url && <a href={selectedStat.url} target="_blank" rel="noreferrer" className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white text-black rounded-md text-[10px] font-bold uppercase hover:bg-neutral-200 transition-colors">{i18n?.ui.openFull || 'Open Full'}</a>}
                         <button onClick={() => setSelectedStat(null)} className="p-2 text-neutral-400 hover:text-white hover:bg-white/10 rounded-full transition-colors">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </button>
                     </div>
                  </div>
                  <div className="flex-1 bg-white relative">
-                    {iframeError || !selectedStat.url ? (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-100 p-10 text-center gap-6">
-                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                                <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            </div>
-                            <div>
-                                <h2 className="text-2xl font-bold mb-2 text-black">Cannot Display Content</h2>
-                                <p className="max-w-md text-neutral-600 mb-4">This website doesn't allow embedding. Click below to open in a new tab.</p>
-                            </div>
-                            {selectedStat.url && (
-                                <a href={selectedStat.url} target="_blank" rel="noreferrer" className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors">
-                                    Open in New Tab
-                                </a>
+                    {!selectedStat.url || iframeError || isUrlBlocked(selectedStat.url) ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-50 p-10 overflow-y-auto">
+                            {ogLoading ? (
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626]"></div>
+                            ) : ogData ? (
+                                <div className="max-w-2xl w-full">
+                                    {ogData.image && (
+                                        <div className="mb-6 rounded-lg overflow-hidden">
+                                            <img src={ogData.image} alt={ogData.title} className="w-full h-64 object-cover" />
+                                        </div>
+                                    )}
+                                    <h2 className="text-2xl font-bold mb-3 text-black">{ogData.title || 'Untitled'}</h2>
+                                    {(ogData.author || ogData.publisher || ogData.date) && (
+                                        <div className="flex flex-wrap gap-2 mb-4 text-sm text-neutral-500">
+                                            {ogData.author && <span>{ogData.author}</span>}
+                                            {ogData.publisher && <span>• {ogData.publisher}</span>}
+                                            {ogData.date && <span>• {new Date(ogData.date).toLocaleDateString()}</span>}
+                                        </div>
+                                    )}
+                                    <p className="text-base mb-6 text-neutral-600 leading-relaxed">{ogData.description || 'No description available'}</p>
+                                    <button 
+                                        onClick={() => window.open(selectedStat.url, '_blank')} 
+                                        className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors"
+                                    >
+                                        {i18n?.ui.openFullArticle || 'Open Full Article'}
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="text-center">
+                                    <p className="text-neutral-600 mb-6">{i18n?.ui.couldNotLoadPreview || 'Could not load preview'}</p>
+                                    <button 
+                                        onClick={() => window.open(selectedStat.url, '_blank')} 
+                                        className="px-6 py-3 bg-[#DC2626] text-white rounded-lg font-bold hover:bg-red-700 transition-colors"
+                                    >
+                                        {i18n?.ui.openLink || 'Open Link'}
+                                    </button>
+                                </div>
                             )}
                         </div>
                     ) : (
@@ -416,6 +573,10 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
                  </div>
              </div>
          </div>
+      )}
+
+      {showOgPreview && (
+         <OpenGraphPreview url={showOgPreview} onClose={() => setShowOgPreview(null)} theme={theme} />
       )}
     </div>
   );

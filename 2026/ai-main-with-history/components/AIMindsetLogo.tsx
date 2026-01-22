@@ -8,7 +8,7 @@ interface AIMindsetLogoProps {
 }
 
 export const AIMindsetLogo: React.FC<AIMindsetLogoProps> = ({ className = "w-8 h-8", color = 'white' }) => {
-  const logoSrc = color === 'white' ? logoWhite : logoBlack;
+  const logoSrc = color === 'white' ? '/logo_rb.png' : '/logo.png';
   
   return (
     <img src={logoSrc} alt="AI Mindset" className={className} />

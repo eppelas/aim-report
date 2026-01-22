@@ -344,7 +344,7 @@ export const shifts: ShiftData[] = [
       { label: "Churn", value: "50%", desc: "Increase in code churn from AI-generated code (GitClear)", url: "https://www.gitclear.com/" }
     ],
     evidence: [
-      { title: "Coding with Claude 3.5", desc: "Practical guides from community on Cursor + Claude Code workflows. Field stories: 'vibe-coded real prototypes. shipped in 30 minutes what stalled 1.5 months.'", url: "https://telegram.me/ai_mind_set/282" },
+      { title: "Coding with Gemini 3.0", desc: "Practical guides from community on Gemini workflows. Field stories: 'vibe-coded real prototypes. shipped in 30 minutes what stalled 1.5 months.'", url: "https://telegram.me/ai_mind_set/282" },
       { title: "Pragmatic Romanticism", desc: "Why pragmatic romanticism is the only defense against cold machine logic. Reclaiming craft and authorship.", url: "https://spiridonov.aimindset.org" }
     ],
     voices: [

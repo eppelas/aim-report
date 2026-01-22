@@ -1,0 +1,15 @@
+{
+  "ui": {
+    "openFull": "Open Full",
+    "openFullArticle": "Open Full Article",
+    "openLink": "Open Link",
+    "close": "Close",
+    "next": "Next",
+    "prev": "Previous",
+    "back": "Back",
+    "index": "Index",
+    "preview": "Preview",
+    "loading": "Loading...",
+    "couldNotLoadPreview": "Could not load preview"
+  }
+}
