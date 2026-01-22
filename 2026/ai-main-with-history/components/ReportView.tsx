@@ -23,7 +23,9 @@ const BLOCKED_DOMAINS = [
   'theverge.com',
   'techcrunch.com',
   'iea.org',
-  'mckinsey.com'
+  'mckinsey.com',
+  'substack.com',
+  'ivanov.aimindset.org'
 ];
 
 const isUrlBlocked = (url: string): boolean => {
