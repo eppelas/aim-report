@@ -1,0 +1,33 @@
+{
+  "navigation": {
+    "next": "Далее",
+    "prev": "Назад",
+    "backToReport": "Вернуться к отчету",
+    "landing": "Главная",
+    "summary": "Резюме",
+    "manifesto": "Манифест",
+    "thankYou": "Спасибо"
+  },
+  "buttons": {
+    "openFull": "Открыть полностью",
+    "readFullArticle": "Читать статью",
+    "openLink": "Открыть ссылку",
+    "showPreview": "Показать превью",
+    "close": "Закрыть"
+  },
+  "labels": {
+    "keyStats": "Ключевые статистики",
+    "research": "Исследования и факты",
+    "voices": "Голоса сообщества",
+    "sources": "Источники и ссылки",
+    "theGap": "Разрыв",
+    "machineVector": "Вектор машин",
+    "humanReaction": "Реакция людей"
+  },
+  "messages": {
+    "previewNotAvailable": "Превью недоступно",
+    "cannotEmbed": "Этот сайт не разрешает встраивание. Посмотрите превью или откройте напрямую.",
+    "cannotDisplay": "Не удается показать контент",
+    "loading": "Загрузка..."
+  }
+}

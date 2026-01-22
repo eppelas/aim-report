@@ -1,0 +1,33 @@
+{
+  "navigation": {
+    "next": "Next",
+    "prev": "Previous",
+    "backToReport": "Back to Report",
+    "landing": "Landing",
+    "summary": "Summary",
+    "manifesto": "Manifesto",
+    "thankYou": "Thank You"
+  },
+  "buttons": {
+    "openFull": "Open Full",
+    "readFullArticle": "Read Full Article",
+    "openLink": "Open Link",
+    "showPreview": "Show Preview",
+    "close": "Close"
+  },
+  "labels": {
+    "keyStats": "Key Stats",
+    "research": "Research & Evidence",
+    "voices": "Community Voices",
+    "sources": "Sources & References",
+    "theGap": "The Gap",
+    "machineVector": "The Machine Vector",
+    "humanReaction": "The Human Reaction"
+  },
+  "messages": {
+    "previewNotAvailable": "Preview Not Available",
+    "cannotEmbed": "This website cannot be embedded. View article preview or open directly.",
+    "cannotDisplay": "Cannot Display Content",
+    "loading": "Loading..."
+  }
+}
