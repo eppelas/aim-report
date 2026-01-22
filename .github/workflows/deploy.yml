@@ -26,17 +26,20 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: '2026/ai-main-with-history/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
+        working-directory: ./2026/ai-main-with-history
 
       - name: Build
         run: npm run build
+        working-directory: ./2026/ai-main-with-history
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./2026/ai-main-with-history/dist
 
   deploy:
     environment:
