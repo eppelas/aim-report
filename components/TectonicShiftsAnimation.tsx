@@ -36,7 +36,7 @@ const CoreGeometry = React.memo(({ color, shape }: { color: string, shape: 'squa
 
         {/* Inner Filled Core - RESTORED RED STROKE FOR SQUARE */}
         {isSquare ? (
-            <rect x="-60" y="-60" width="120" height="120" fill="rgba(0,0,0,0.8)" stroke={color} strokeWidth="2" />
+            <rect x="-60" y="-60" width="120" height="120" fill="transparent" stroke={color} strokeWidth="2" />
         ) : (
             <circle r="60" fill="rgba(0,0,0,0.5)" stroke="#fff" strokeWidth="1" />
         )}
@@ -149,12 +149,33 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
   }, []);
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     const rect = e.currentTarget.getBoundingClientRect();
-    const progress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    if (containerRef.current) {
-        const start = containerRef.current.offsetTop;
-        const distance = isMobileLayout ? 7000 : 10000;
-        window.scrollTo({ top: start + (progress * distance), behavior: 'smooth' });
+    const clickProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    
+    const triggers = ScrollTrigger.getAll();
+    const st = triggers.find(t => t.vars.trigger === containerRef.current);
+    if (st) {
+      const targetScroll = st.start + clickProgress * (st.end - st.start);
+      // INSTANT jump using ScrollTrigger.scroll() - bypasses scrub animation
+      st.scroll(targetScroll);
+    }
+  };
+
+  const handleProgressTouch = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    const touch = e.touches[0] || e.changedTouches[0];
+    if (!touch) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const touchProgress = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+    
+    const triggers = ScrollTrigger.getAll();
+    const st = triggers.find(t => t.vars.trigger === containerRef.current);
+    if (st) {
+      const targetScroll = st.start + touchProgress * (st.end - st.start);
+      window.scrollTo({ top: targetScroll, behavior: 'auto' });
     }
   };
 
@@ -213,10 +234,11 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
       const allTexts = [textIntersectRef.current, textMomentRef.current, textDivergeRef.current, textCreatingRef.current, textGapTitleRef.current, textGapDescRef.current, textBridgeRef.current, textLayersRef.current, textManifestoRef.current, textShiftsRef.current, textReportRef.current];
       gsap.set(allTexts, { autoAlpha: 0 });
       
+      gsap.set(textIntersectRef.current, { scale: 0.5 });
       gsap.set(textMomentRef.current, { y: 100 });
       gsap.set(textLayersRef.current, { x: -50 }); 
       gsap.set(textBridgeRef.current, { y: -50 }); 
-      gsap.set(textDivergeRef.current, { y: -120, scale: 0.8, opacity: 0 });
+      gsap.set(textDivergeRef.current, { y: 0, scale: 0.8, opacity: 0 });
       gsap.set(textManifestoRef.current, { y: 20, opacity: 0 });
       gsap.set(btnReportRef.current, { autoAlpha: 0, y: 50 }); 
       gsap.set(navInstructionsRef.current, { autoAlpha: 0, y: 50 });
@@ -253,6 +275,25 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
          if (circles.length > 0) gsap.to(circles, { scale: 1.4, opacity: 0.3, duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut", stagger: 0.5 });
       }
 
+      // --- MOBILE: Pre-draw grid when section enters viewport ---
+      if (isMobile) {
+        ScrollTrigger.create({
+          trigger: containerRef.current,
+          start: 'top bottom',
+          end: 'top top',
+          scrub: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            vPaths.forEach((path: SVGPathElement) => {
+              path.style.strokeDashoffset = String(1500 - (progress * 1500));
+            });
+            hPaths.forEach((path: SVGPathElement) => {
+              path.style.strokeDashoffset = String(1500 - (progress * 1500));
+            });
+          }
+        });
+      }
+
       // --- MAIN TIMELINE ---
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -260,7 +301,7 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
           start: 'top top',
           end: isMobile ? '+=7000' : '+=10000', 
           pin: true,
-          scrub: 2, 
+          scrub: 0.3, 
           anticipatePin: 1,
           onUpdate: (self) => {
              if (progressBarRef.current) progressBarRef.current.style.transform = `scaleX(${self.progress})`;
@@ -268,9 +309,9 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
         }
       });
 
-      // PHASE 1: MOMENT
-      tl.to([...vPaths, ...hPaths], { strokeDashoffset: 0, duration: 0.3, ease: "power1.out" }, 0);
-      tl.to(textIntersectRef.current, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "power2.out" }, 0);
+      // PHASE 1: MOMENT - Grid draws FIRST, then text appears
+      tl.to([...vPaths, ...hPaths], { strokeDashoffset: 0, duration: isMobile ? 0.01 : 0.5, ease: "power1.out" }, 0);
+      tl.to(textIntersectRef.current, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "power2.out" }, isMobile ? 0 : 0.3);
       
       tl.to(textIntersectRef.current, { y: -220, opacity: 0.5, scale: 0.8, duration: t.separateDur, ease: "power2.inOut" }, t.separateStart);
       tl.to(textMomentRef.current, { autoAlpha: 1, scale: 1, y: 220, duration: t.momentDur, ease: "power2.out" }, t.momentIn);
@@ -280,16 +321,16 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
       // PHASE 2: DIVERGE (FIXED)
       const divergeTime = t.divergeStart; 
       // Force autoAlpha to 1 to ensure visibility
-      tl.to(textDivergeRef.current, { autoAlpha: 1, opacity: 0.5, scale: 0.8, y: -120, duration: t.divergeDur, ease: "power2.out" }, divergeTime);
+      tl.to(textDivergeRef.current, { autoAlpha: 1, opacity: 0.5, scale: 0.8, y: 0, duration: t.divergeDur, ease: "power2.out" }, divergeTime);
       tl.to(coreLeftRef.current, { x: -20, scale: 1, opacity: 1, duration: t.divergeDur, ease: "power2.out" }, divergeTime);
       tl.to(coreRightRef.current, { x: 20, scale: 1, opacity: 1, duration: t.divergeDur, ease: "power2.out" }, divergeTime);
       tl.to(svgContainerRef.current, { scale: 0.9, duration: 2, ease: "sine.inOut" }, divergeTime);
       
-      // Delayed Exit for Diverge - Extended duration to keep it visible
-      tl.to(textDivergeRef.current, { autoAlpha: 0, filter: "blur(10px)", scale: 0.9, duration: 0.5 }, divergeTime + t.divergeDur + 2.0);
+      // Delayed Exit for Diverge - move up and fade out
+      tl.to(textDivergeRef.current, { autoAlpha: 0, y: -150, filter: "blur(10px)", scale: 0.9, duration: 0.8 }, divergeTime + t.divergeDur + 1.5);
 
-      // PHASE 2.5: CREATING
-      const creatingTime = divergeTime + t.gapAfterDiverge + 1.5; 
+      // PHASE 2.5: CREATING - starts AFTER diverge fully exits
+      const creatingTime = divergeTime + t.divergeDur + 3.0; 
       tl.to(textCreatingRef.current, { autoAlpha: 1, scale: 1, duration: 0.8, ease: "power2.out" }, creatingTime);
       tl.to(textCreatingRef.current, { autoAlpha: 0, y: -30, duration: 0.5 }, creatingTime + 1.2);
 
@@ -437,13 +478,15 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
     <section 
       id="pinned-svg-section"
       ref={containerRef} 
-      className="relative w-full h-screen bg-[#0A0A0A] overflow-hidden flex items-center justify-center perspective-[1000px] opacity-0 invisible"
+      className="relative w-full h-screen bg-[#0A0A0A] overflow-hidden flex items-center justify-center perspective-[1000px]"
       style={{ perspective: '1000px' }} 
       onTouchStart={() => triggerHaptic('light')}
     >
       <div 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 md:translate-x-0 md:bottom-10 md:left-10 w-40 h-4 md:h-2 bg-neutral-900/50 hover:bg-neutral-900 backdrop-blur-sm rounded-full overflow-hidden z-50 cursor-pointer transition-all duration-300 hover:scale-105"
+        className="absolute bottom-24 left-4 md:bottom-10 md:left-10 w-32 md:w-40 h-3 md:h-2 bg-neutral-900/50 hover:bg-neutral-900 backdrop-blur-sm rounded-full overflow-hidden z-[100] cursor-pointer transition-all duration-300 hover:scale-105"
         onClick={handleProgressClick}
+        onTouchStart={handleProgressTouch}
+        onTouchMove={handleProgressTouch}
       >
         <div ref={progressBarRef} className="h-full bg-[#DC2626] w-full origin-left transform scale-x-0" />
       </div>
@@ -557,7 +600,7 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
         </div>
 
         <div ref={textCreatingRef} className="absolute text-center z-50 will-change-transform">
-           <p className="vf-anim text-[15vw] md:text-[3vw] text-[#DC2626] font-black tracking-tighter drop-shadow-[0_4px_4px_rgba(0,0,0,1)] bg-black/60 backdrop-blur-sm px-4 rounded" style={{"--wght": 900} as React.CSSProperties}>Creating...</p>
+           <p className="vf-anim text-[15vw] md:text-[3vw] text-[#DC2626] font-black tracking-tighter drop-shadow-[0_4px_4px_rgba(0,0,0,1)] bg-black/30 backdrop-blur-sm px-4 rounded" style={{"--wght": 900} as React.CSSProperties}>Creating...</p>
         </div>
 
         <div ref={textGapTitleRef} className="absolute text-center w-full px-4 top-[20%] md:top-[30%] z-50 flex flex-col items-center will-change-transform">
@@ -567,7 +610,7 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
         </div>
 
         {/* UPDATED: TECHNICAL TERMINAL STYLE FOR DESCRIPTION - MOVED LOWER */}
-        <div ref={textGapDescRef} className="absolute text-center w-full px-4 z-50 top-[60%] md:top-auto md:bottom-[10%] max-w-4xl will-change-transform">
+        <div ref={textGapDescRef} className="absolute text-center w-full px-4 z-50 top-[40%] md:top-auto md:bottom-[10%] max-w-4xl will-change-transform">
            <div className="relative inline-block border border-white/10 bg-black/80 backdrop-blur-md rounded px-6 py-4">
              {/* Decorative Corners */}
              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/40"></div>
@@ -585,17 +628,17 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
 
         {/* UPDATED: HIGH IMPACT HIERARCHY FOR BRIDGE */}
         <div ref={textBridgeRef} className="absolute flex flex-col items-center justify-center w-full px-4 z-50 will-change-transform">
-           <p className="font-mono text-xs md:text-sm text-[#DC2626] uppercase tracking-[0.3em] mb-4 bg-red-950/30 border border-red-900/50 px-4 py-1 rounded-full">
+           <p className="font-mono text-[8px] md:text-sm text-[#DC2626] uppercase tracking-[0.3em] mb-2 md:mb-4 bg-red-950/30 border border-red-900/50 px-2 md:px-4 py-0.5 md:py-1 rounded-full">
               Status Update: Critical
            </p>
-           <h2 className="text-[5vw] md:text-[4vw] font-bold text-white leading-none tracking-tighter mb-2">
+           <h2 className="text-[8vw] md:text-[5vw] font-bold text-white leading-none tracking-tighter mb-2">
              THE GAP THAT WE SEE IN
            </h2>
-           <h2 className="text-[8vw] md:text-[7vw] font-black text-transparent leading-[0.85] tracking-tighter uppercase font-sans" style={{ WebkitTextStroke: "1px white", "--wght": 900 } as React.CSSProperties}>
+           <h2 className="text-[16vw] md:text-[8vw] font-black text-transparent leading-[0.85] tracking-tighter uppercase font-sans text-center" style={{ WebkitTextStroke: "1px white", "--wght": 900 } as React.CSSProperties}>
              {i18n?.tectonic.title.toUpperCase() || '11 TECTONIC SHIFTS'}
            </h2>
            <p className="font-mono text-sm text-neutral-500 mt-4 tracking-widest uppercase">
-              of the AI World
+              of the AI World in 2025
            </p>
         </div>
 
@@ -603,7 +646,7 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
             <div className="w-full max-w-7xl px-2 md:px-6 flex items-start gap-12 pointer-events-auto">
                 
                 <div className="flex flex-col gap-3 w-full max-w-full md:max-w-[450px]">
-                   <h3 className="text-[4vw] font-bold text-white mb-8 leading-none tracking-tighter mix-blend-overlay font-sans">
+                   <h3 className="text-[6vw] md:text-[4vw] font-bold text-white mb-6 md:mb-8 leading-none tracking-tighter mix-blend-overlay font-sans">
                      In 4 Layers:
                    </h3>
                    {layersData.map((layer) => (
@@ -615,19 +658,19 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
                          }}
                          onMouseEnter={() => !isMobileLayout && setHoveredLayer(layer.id)}
                          onMouseLeave={() => !isMobileLayout && setHoveredLayer(null)}
-                         className={`layer-row group flex items-center gap-6 p-4 md:p-6 border transition-all duration-300 cursor-pointer rounded-r-xl
+                         className={`layer-row group flex items-center gap-4 md:gap-6 p-3 md:p-6 border transition-all duration-300 cursor-pointer rounded-r-xl
                             ${(hoveredLayer === layer.id || selectedLayer === layer.id) 
                               ? 'border-red-600/50 bg-red-950/80 md:bg-red-950/30' 
                               : 'border-white/10 bg-neutral-900 md:bg-black/20 hover:bg-white/5'} 
                          `}
                       >
-                         <span className={`font-mono text-sm tracking-widest w-8 transition-colors ${(hoveredLayer === layer.id || selectedLayer === layer.id) ? 'text-[#DC2626]' : 'text-neutral-500'}`}>0{layer.id}</span>
+                         <span className={`font-mono text-base md:text-sm tracking-widest w-8 transition-colors ${(hoveredLayer === layer.id || selectedLayer === layer.id) ? 'text-[#DC2626]' : 'text-neutral-500'}`}>0{layer.id}</span>
                          <div className="flex flex-col gap-1">
-                            <span className={`text-xl md:text-2xl font-bold tracking-wide transition-colors ${(hoveredLayer === layer.id || selectedLayer === layer.id) ? 'text-white' : 'text-neutral-300'}`}>
+                            <span className={`text-2xl md:text-2xl font-bold tracking-wide transition-colors ${(hoveredLayer === layer.id || selectedLayer === layer.id) ? 'text-white' : 'text-neutral-300'}`}>
                                 {layer.title}
                             </span>
                             <div className="flex justify-between items-center w-full pr-4">
-                                <span className="text-neutral-500 text-xs uppercase tracking-widest group-hover:text-neutral-400 transition-colors font-mono">
+                                <span className="text-neutral-500 text-sm md:text-xs uppercase tracking-widest group-hover:text-neutral-400 transition-colors font-mono">
                                     {layer.subtitle}
                                 </span>
                             </div>
@@ -872,11 +915,15 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
                )}
 
                {isMobileLayout && (
-                  <div className="flex flex-col items-center gap-3">
-                     <div className="flex gap-4">
-                        <svg className="w-6 h-6 animate-pulse text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                  <div className="flex flex-col items-center gap-2">
+                     <div className="relative w-12 h-6 flex items-center justify-center overflow-hidden">
+                        <div className="absolute animate-pulse">
+                           <svg className="w-5 h-5 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              <path d="M5 12h14M13 5l7 7-7 7"/>
+                           </svg>
+                        </div>
                      </div>
-                     <span className="text-[10px] uppercase tracking-widest font-mono text-white">Swipe / Touch</span>
+                     <span className="text-[10px] uppercase tracking-widest font-mono text-white/60">Scroll / Swipe</span>
                   </div>
                )}
             </div>

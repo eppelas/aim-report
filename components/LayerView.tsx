@@ -22,11 +22,16 @@ export const LayerView: React.FC<LayerViewProps> = ({ data, onNext, onPrev, onBa
         const ctx = gsap.context(() => {
             // SVG Animations - SLOWED DOWN (3-4x slower) for ambient feel
             if (data.metaphor === 'globe') {
-                gsap.to(".radar-scan", { rotation: 360, transformOrigin: "50px 50px", duration: 15, repeat: -1, ease: "linear" });
-                gsap.to(".rotate-slow", { rotation: 360, transformOrigin: "50px 50px", duration: 80, repeat: -1, ease: "linear" });
-                gsap.to([".arc-rotate-1", ".arc-rotate-3"], { rotation: -360, transformOrigin: "50px 50px", duration: 100, repeat: -1, ease: "linear" });
-                gsap.to(".arc-rotate-2", { rotation: 360, transformOrigin: "50px 50px", duration: 90, repeat: -1, ease: "linear" });
-                gsap.to(".pulse-fast", { scale: 1.3, opacity: 0.4, transformOrigin: "50px 50px", duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut" });
+                const radarScan = document.querySelector(".radar-scan");
+                const arcRotate1 = document.querySelector(".arc-rotate-1");
+                const arcRotate2 = document.querySelector(".arc-rotate-2");
+                const arcRotate3 = document.querySelector(".arc-rotate-3");
+                const pulseFast = document.querySelector(".pulse-fast");
+                
+                if (radarScan) gsap.to(radarScan, { rotation: 360, transformOrigin: "50px 50px", duration: 15, repeat: -1, ease: "linear" });
+                if (arcRotate1 || arcRotate3) gsap.to([arcRotate1, arcRotate3].filter(Boolean), { rotation: -360, transformOrigin: "50px 50px", duration: 100, repeat: -1, ease: "linear" });
+                if (arcRotate2) gsap.to(arcRotate2, { rotation: 360, transformOrigin: "50px 50px", duration: 90, repeat: -1, ease: "linear" });
+                if (pulseFast) gsap.to(pulseFast, { scale: 1.3, opacity: 0.4, transformOrigin: "50px 50px", duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut" });
             } 
             else if (data.metaphor === 'neural') {
                 gsap.to(".neural-pulse", { scale: 1.5, opacity: 0, transformOrigin: "center", duration: 6, repeat: -1, ease: "sine.out", stagger: 1.5 });
@@ -118,37 +123,36 @@ export const LayerView: React.FC<LayerViewProps> = ({ data, onNext, onPrev, onBa
                 </svg>
              </div>
 
-             <div ref={textRef} className="relative z-10 text-center max-w-4xl px-6 w-full">
-                
-                <div className="flex flex-col items-center mb-12">
-                    <span className="font-mono text-[#DC2626] text-xs md:text-sm tracking-[0.3em] uppercase mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-[#DC2626] rounded-full"></span>
+             {/* CONTENT */}
+             <div ref={textRef} className="relative z-10 flex flex-col items-center justify-center px-6 text-center pt-32 md:pt-0">
+                <div className="mb-12">
+                    <span className="inline-block font-mono text-xs text-[#DC2626] font-bold px-3 py-1 border border-[#DC2626]/30 bg-[#DC2626]/10 rounded mb-6 uppercase tracking-widest">
                         Layer {data.id}: Analysis
                     </span>
-                    <div className="w-full max-w-2xl border-t border-white/10 mb-8"></div>
                     
-                    <h1 className={`text-3xl md:text-5xl font-light ${textMain} leading-tight mb-6`}>
-                        {data.subtitle}
+                    <h1 className={`text-6xl md:text-8xl font-black uppercase tracking-tighter mb-8 ${textMain}`}>
+                        {data.title}
                     </h1>
                     
                     <p className={`font-mono text-base md:text-xl text-neutral-500 max-w-xl mx-auto leading-relaxed`}>
-                        {data.desc}
+                        <span className="block">{data.subtitle}</span>
+                        <span className="block">{data.desc.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold text-white">{part}</strong> : part)}</span>
                     </p>
                 </div>
 
-                <div className="flex flex-col items-center gap-6 mt-12 max-w-lg mx-auto text-left">
+                <div className="flex flex-col items-center gap-6 mt-6 md:mt-12 max-w-lg mx-auto text-left">
                     <div className="flex items-center gap-2 w-full">
                         <svg className="w-4 h-4 text-[#DC2626]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         <span className="font-mono text-xs text-[#DC2626] uppercase tracking-widest">The Constraint</span>
                     </div>
                     <div className={`pl-6 border-l-2 border-[#DC2626]`}>
                         <p className={`text-xl md:text-2xl font-bold ${textMain} leading-tight`}>
-                            {data.constraint}
+                            {data.constraint.split('**').map((part, i) => i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part)}
                         </p>
                     </div>
                 </div>
                 
-                <div className="flex justify-center gap-4 mt-20">
+                <div className="flex justify-center gap-4 mt-10 md:mt-20 mb-32">
                      {onPrev && (
                          <button onClick={onPrev} className={`px-6 py-3 border ${isDark ? 'border-neutral-800 text-neutral-500' : 'border-neutral-300 text-neutral-600'} hover:text-[#DC2626] hover:border-[#DC2626] transition-all font-mono text-xs uppercase tracking-widest`}>
                              Back

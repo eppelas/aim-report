@@ -55,52 +55,41 @@ export const IndexOverlay: React.FC<IndexOverlayProps> = ({ isOpen, onClose, onN
                 y: (e.clientY / window.innerHeight) * 2 - 1
             };
         };
-        window.addEventListener('mousemove', handleMouseMove);
 
-        // Animation Loop
-        let rafId: number;
         const animate = () => {
-            // Target positions - Very small amplitude ("barely react")
-            const amp = 15; // pixels
-            const target1X = mousePos.current.x * -amp; 
-            const target1Y = mousePos.current.y * -(amp/2);
-            const target2X = mousePos.current.x * amp;
-            const target2Y = mousePos.current.y * (amp/2);
-
-            // Interpolation - Ultra slow
-            const ease = 0.02;
-            pos1.current.x += (target1X - pos1.current.x) * ease;
-            pos1.current.y += (target1Y - pos1.current.y) * ease;
+            pos1.current.x += (mousePos.current.x - pos1.current.x) * 0.05;
+            pos1.current.y += (mousePos.current.y - pos1.current.y) * 0.05;
+            pos2.current.x += (mousePos.current.x * -0.5 - pos2.current.x) * 0.03;
+            pos2.current.y += (mousePos.current.y * -0.5 - pos2.current.y) * 0.03;
             
-            pos2.current.x += (target2X - pos2.current.x) * ease;
-            pos2.current.y += (target2Y - pos2.current.y) * ease;
-
-            // Apply transforms
-            if (plate1Ref.current) {
-                plate1Ref.current.setAttribute('transform', `translate(${pos1.current.x}, ${pos1.current.y}) rotate(15)`);
-            }
-            if (plate2Ref.current) {
-                plate2Ref.current.setAttribute('transform', `translate(${pos2.current.x}, ${pos2.current.y}) rotate(-5)`);
-            }
-            rafId = requestAnimationFrame(animate);
+            if (plate1Ref.current) gsap.set(plate1Ref.current, { x: pos1.current.x, y: pos1.current.y });
+            if (plate2Ref.current) gsap.set(plate2Ref.current, { x: pos2.current.x, y: pos2.current.y });
+            
+            requestAnimationFrame(animate);
         };
-        animate();
+
+        window.addEventListener('mousemove', handleMouseMove);
+        const rafId = requestAnimationFrame(animate);
 
         // GSAP Enter Animations
         const ctx = gsap.context(() => {
-            gsap.fromTo(overlayRef.current, 
-                { opacity: 0 }, 
-                { opacity: 1, duration: 0.3, ease: "power2.out" }
-            );
-            gsap.fromTo(contentRef.current, 
-                { scale: 0.95, opacity: 0 }, 
-                { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)", delay: 0.1 }
-            );
-            gsap.fromTo(".toc-anim", 
-                { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, stagger: 0.02, duration: 0.4, ease: "power2.out", delay: 0.2 }
-            );
-        });
+            if (contentRef.current) {
+                gsap.set(contentRef.current, { autoAlpha: 0, y: 30 });
+                gsap.to(contentRef.current, { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" });
+                
+                // Simple fade in for items - use gsap.to instead of gsap.from to avoid visibility issues
+                const isMobile = window.innerWidth < 768;
+                const items = contentRef.current.querySelectorAll('.toc-anim');
+                gsap.set(items, { opacity: 0, y: 10 });
+                gsap.to(items, { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: isMobile ? 0.2 : 0.3, 
+                    stagger: isMobile ? 0.01 : 0.02,
+                    ease: "power2.out"
+                });
+            }
+        }, overlayRef);
 
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
@@ -133,7 +122,7 @@ export const IndexOverlay: React.FC<IndexOverlayProps> = ({ isOpen, onClose, onN
 
     return (
         <div 
-            className={`fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 cursor-pointer`}
+            className={`fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-8 cursor-pointer`}
             onClick={onClose} // Closing when clicking the padding/backdrop area
         >
             {/* Backdrop */}
@@ -177,10 +166,10 @@ export const IndexOverlay: React.FC<IndexOverlayProps> = ({ isOpen, onClose, onN
                     </div>
                     <button 
                         onClick={onClose}
-                        className={`group flex items-center gap-2 px-3 py-1.5 border ${borderMain} rounded hover:bg-[#DC2626] hover:border-[#DC2626] transition-all bg-transparent`}
+                        className={`group flex items-center gap-2 px-5 md:px-3 py-3 md:py-1.5 border ${borderMain} rounded hover:bg-[#DC2626] hover:border-[#DC2626] transition-all bg-transparent`}
                     >
-                        <span className={`font-mono text-[10px] font-bold uppercase ${textMain} group-hover:text-white`}>Close</span>
-                        <svg className={`w-3 h-3 ${textMain} group-hover:text-white`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        <span className={`font-mono text-xs md:text-[10px] font-bold uppercase ${textMain} group-hover:text-white`}>Close</span>
+                        <svg className={`w-4 h-4 md:w-3 md:h-3 ${textMain} group-hover:text-white`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
 
@@ -227,22 +216,19 @@ export const IndexOverlay: React.FC<IndexOverlayProps> = ({ isOpen, onClose, onN
                                         <div 
                                             key={shift.id}
                                             onClick={(e) => { e.stopPropagation(); handleNavClick('shift', shift.id); }}
-                                            className={`toc-anim relative h-32 p-4 ${cardBg} border ${borderMain} ${cardShadow} ${cardHover} rounded-lg cursor-pointer transition-all group overflow-hidden flex flex-col justify-between`}
+                                            className={`toc-anim relative h-32 p-4 ${cardBg} border ${borderMain} ${cardShadow} ${cardHover} rounded-lg cursor-pointer transition-all group flex flex-col justify-between`}
+                                            style={{ overflow: 'clip' }}
                                         >
                                             {/* Top Right Visual - passing hoverTrigger=true to enforce hover-only animation */}
-                                            <div className="absolute -right-4 -bottom-4 w-24 h-24 opacity-20 group-hover:opacity-100 transition-all duration-300 grayscale group-hover:grayscale-0 pointer-events-auto">
-                                                <svg width="100%" height="100%" viewBox="-60 -60 120 120" className="overflow-visible">
+                                            <div className="absolute right-0 bottom-0 w-16 h-16 md:w-20 md:h-20 opacity-20 group-hover:opacity-100 transition-all duration-300 grayscale group-hover:grayscale-0 pointer-events-none">
+                                                <svg width="100%" height="100%" viewBox="-60 -60 120 120" className="overflow-hidden">
                                                      <ShiftMetaphor id={shift.id} isDark={isDark} hoverTrigger={true} />
                                                 </svg>
                                             </div>
 
                                             <div className="relative z-10 pointer-events-none">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <span className="font-mono text-[9px] text-[#DC2626] font-bold border border-[#DC2626]/20 bg-[#DC2626]/5 px-1.5 py-0.5 rounded">
-                                                        {shift.id}
-                                                    </span>
-                                                </div>
-                                                <h3 className={`text-sm font-bold uppercase leading-tight ${textMain} pr-8 group-hover:text-[#DC2626] transition-colors`}>
+                                                <span className="font-mono text-[#DC2626] text-xs font-bold mb-2 block">{shift.id}</span>
+                                                <h3 className={`text-base md:text-sm font-bold uppercase leading-tight ${textMain} pr-8 group-hover:text-[#DC2626] transition-colors`}>
                                                     {shift.title}
                                                 </h3>
                                             </div>

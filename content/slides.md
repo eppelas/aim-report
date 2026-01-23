@@ -31,9 +31,10 @@ subtitle: when the infrastructure breaks. physics, economics, and power
 visual: SECTION_DIVIDER
 layout: center
 caption: |
-  energy, labor, sovereignty.
-  the material constraints that shape everything else.
+  energy, labor, sovereignty. the material constraints that shape everything else.
 dark: true
+content: |
+  can we power it? can we afford it? who controls it?
 
 ---
 title: shift 01: chip supply → power supply
@@ -45,15 +46,15 @@ visual: battery
 layout: shift-scroll
 loopNumber: 1
 
-**Machine:** ai demand for data center power projected to grow **160% by 2030**. demand for compute is growing faster than power grid capacity. the physical grid cannot be built fast enough to support ai expansion. the focus shifts from raw compute to **intelligence per watt** as the critical metric. more compute doesn't equal more value if it can't be powered. data centers are reopening coal plants and demanding nuclear reactors.
+**Machine Vector:** ai demand for data center power projected to grow **160% by 2030**. demand for compute is growing faster than power grid capacity. the physical grid cannot be built fast enough to support ai expansion. the focus shifts from raw compute to **intelligence per watt** as the critical metric. more compute doesn't equal more value if it can't be powered. data centers are reopening coal plants and demanding nuclear reactors.
 
-**Machine Summary:** Data centers demand more power than grids can supply.
+→ Data centers demand more power than grids can supply.
 
-**Human:** **guilt computing** - users face the reality that complex reasoning has a physical toll. every ai query consumes water and generates co2. the disconnect between "green ai" corporate promises and "greed ai" reality.
+**Human Reaction:** **guilt computing** - users face the reality that complex reasoning has a physical toll. every ai query consumes water and generates co2. the disconnect between "green ai" corporate promises and "greed ai" reality.
 
-**Human Summary:** Every AI query consumes water and generates CO2.
+→ Every AI query consumes water and generates CO2.
 
-**Gap:** the disconnect between infinite "digital ideas" and hard "physical matter". while we imagine a billion agents, we cannot power them. The gap between business desire to deploy AI everywhere and the planet's physical inability to support it.
+**Gap:** [mind the gap] the disconnect between infinite "digital ideas" and hard "physical matter". while we imagine a billion agents, we **cannot power** them. The gap between business desire to deploy AI everywhere and the planet's **physical inability** to support it.
 
 **Key Stats:**
 - **160%:** AI energy demand surge by 2030 ([IEA](https://www.iea.org/reports/electricity-2024) / [Goldman Sachs](https://www.goldmansachs.com/insights/articles/AI-poised-to-drive-160-increase-in-power-demand))
@@ -89,21 +90,21 @@ visual: factory
 layout: shift-scroll
 loopNumber: 2
 
-**Machine:** **agentic enterprise** - ai transitions from "assistant" to "autonomous coworker". agents receive **wallets** (x402 protocol), **tools** (mcp), and "hr for ai".
+**Machine Vector:** **agentic enterprise** - ai transitions from "assistant" to "autonomous coworker". agents receive **wallets** (x402 protocol), **tools** (mcp), and "hr for ai".
 
 **service-as-software** - saas model shifts to agents that execute complete workflows. from selling "software licenses" to "executed outcomes".
 
 the klarna benchmark: one ai assistant replaced **700 full-time agents**, slashed resolution time (11m → 2m), drove $40m profit, and achieved 25% fewer repeat inquiries than humans.
 
-**Machine Summary:** Agents receive wallets, tools, and execute workflows.
+→ Agents receive wallets, tools, and execute workflows.
 
-**Human:** **identity crisis** - "if an agent can do my job, who am i?". the psychological toll of moving from "creator" to "manager of agents".
+**Human Reaction:** **identity crisis** - "if an agent can do my job, who am i?". the psychological toll of moving from "creator" to "manager of agents".
 
 **managerial drift** - humans lose the ability to do the work themselves, becoming dependent on agents they don't fully understand.
 
-**Human Summary:** Humans shift from manual work to verifying AI work.
+→ Humans shift from manual work to verifying AI work.
 
-**Gap:** the delay between **technological replacement** and **social adaptation**. companies deploy agents faster than society can define new roles for humans.
+**Gap:** [the agency gap] the delay between technological replacement and social adaptation. companies deploy agents faster than society can define **new roles for humans**.
 
 **Key Stats:**
 - **47%:** Workforce tasks automatable by 2030 ([McKinsey](https://www.mckinsey.com/mgi/our-research/generative-ai-and-the-future-of-work-in-america))
@@ -142,7 +143,7 @@ visual: globe
 layout: shift-scroll
 loopNumber: 3
 
-**Machine:** geopolitical fragmentation - the end of "global ai". three distinct stacks emerge: **us ai** (corporate/closed - openai, anthropic), **china ai** (state-controlled - deepseek bypassing us norms), **eu ai** (regulated - ai act compliance).
+**Machine Vector:** geopolitical fragmentation - the end of "global ai". three distinct stacks emerge: **us ai** (corporate/closed - openai, anthropic), **china ai** (state-controlled - deepseek bypassing us norms), **eu ai** (regulated - ai act compliance).
 
 agi is now a national security asset on "war footing".
 
@@ -152,9 +153,9 @@ the **copyright war** - nyt lawsuit alleges models memorize and regurgitate copy
 
 meta's "pay or consent" model in eu: pay €13/month or surrender to tracking.
 
-**Machine Summary:** Geopolitical fragmentation ends universal AI.
+→ Geopolitical fragmentation ends universal AI.
 
-**Human:** **the guerrilla stack** - employees bring their own ai to bypass corporate limitations and censorship. **shadow ai adoption** - people use personal tools because corporate ai is blocked or neutered.
+**Human Reaction:** **the guerrilla stack** - employees bring their own ai to bypass corporate limitations and censorship. **shadow ai adoption** - people use personal tools because corporate ai is blocked or neutered.
 
 **privacy inequality** - privacy officially becomes a **luxury good**. "privacy is for the rich" - if you can't pay, you are the product.
 
@@ -162,9 +163,9 @@ meta's "pay or consent" model in eu: pay €13/month or surrender to tracking.
 
 privacy becomes status – not secrecy, but control.
 
-**Human Summary:** Privacy becomes a luxury.
+→ Privacy becomes a luxury.
 
-**Gap:** as ai becomes "aligned" to corporate/national values, you are talking to a constitutional filter. you lose objective context for a "safe narrative".
+**Gap:** [the sovereignty gap] as ai becomes "aligned" to corporate/national values, you are talking to a **constitutional filter**. you lose objective context for a "safe narrative".
 
 **Key Stats:**
 - **3%:** Paying users for AI (97% are the product) ([Menlo Ventures](https://menlovc.com/perspective/2025-the-state-of-consumer-ai/))
@@ -195,11 +196,10 @@ subtitle: the architecture of meaning and reason
 visual: SECTION_DIVIDER
 layout: center
 caption: |
-  how we think and learn.
-  reasoning, knowledge, discovery.
+  how we think and learn. reasoning, knowledge, discovery.
 dark: true
 
-with **energy infrastructure**, **agentic labor**, and **geopolitical stacks** in place, ai moves from raw compute to **reasoning capability**. this layer answers three questions: **can we trust how it thinks?** **can we find what we need?** **can we accelerate discovery?**
+can we trust how it thinks? can we find what we need? can we accelerate discovery?
 
 ---
 title: shift 04: chatbots (system 1) → thinking models (system 2)
@@ -211,28 +211,28 @@ visual: audit
 layout: shift-scroll
 loopNumber: 4
 
-**Machine:** the fundamental shift from "act 1" (probabilistic token prediction — chatgpt era) to **act 2** (reasoning and inference-time compute — o1 era).
+**Machine Vector:** the fundamental shift from "act 1" (probabilistic token prediction — chatgpt era) to **act 2** (reasoning and inference-time compute — o1 era).
 
 **system 1 vs system 2 architecture** - transition from fast, instinctive responses to slow, deliberate, multi-step logical reasoning. models use **chain of thought** (cot) and **STaR** via reinforcement learning to "think" before answering.
 
 **test-time compute** - models spend more compute during inference to reason through problems. trading speed for accuracy.
 
-**Machine Summary:** AI shifts from instinct to deliberate reasoning.
+→ AI shifts from instinct to deliberate reasoning.
 
-**Human:** **auditable work** - users no longer trust "magic" speed. they demand to see the **reasoning trace**: the chain of thought that led to the conclusion. transparency over velocity.
+**Human Reaction:** **auditable work** - users no longer trust "magic" speed. they demand to see the **reasoning trace**: the chain of thought that led to the conclusion. transparency over velocity.
 
 **logic auditor role** - human value shifts from execution to verifying machine logic. we become auditors of ai reasoning paths.
 
 **reasoning reliability gap** - **48% of reasoning tasks** still produce errors in complex scenarios. reasoning models haven't eliminated hallucinations - they've made them more convincing.
 
-**Human Summary:** Auditing machine logic becomes human work.
+→ Auditing machine logic becomes human work.
 
-**Gap:** a model processes 1,000 reasoning steps in seconds; a human follows five. this leads to meaning dilution: we accept conclusions because auditing the path is too exhausting.
+**Gap:** [the metabolisation gap] a model processes **1,000 reasoning steps** in seconds; a human follows **five**. this leads to **meaning dilution**: we accept conclusions because auditing the path is too exhausting.
 
 **Key Stats:**
 - **126%:** Productivity boost from AI Copilots ([Qodo](https://www.qodo.ai/reports/state-of-ai-code-quality/))
 - **21%:** Quality degradation when prioritizing speed ([Nielsen Norman Group](https://www.nngroup.com/articles/ai-programmers-productive/))
-- **48%:** Error rate in complex reasoning tasks ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))
+- **48%:** Error rate in complex reasoning tasks ([Korra AI Enterprise Risk](https://www.korra.ai/ai-hallucination-enterprise-risk))
 
 **Research:**
 - [TOP] [**Li et al. Reasoning LLMs Survey**](https://arxiv.org/abs/2502.17419): Comprehensive survey of reasoning capabilities in large language models
@@ -259,26 +259,26 @@ visual: context
 layout: shift-scroll
 loopNumber: 5
 
-**Machine:** **enterprise RAG** - retrieval-augmented generation becomes standard. "chat with pdf" is dead. models access all company data simultaneously via vector databases and semantic search.
+**Machine Vector:** **enterprise RAG** - retrieval-augmented generation becomes standard. "chat with pdf" is dead. models access all company data simultaneously via vector databases and semantic search.
 
 **MCP (model context protocol)** - anthropic's "usb port for ai". universal standard for connecting models to data sources. models plug into slack, notion, github, databases.
 
 **1M token windows** - claude 3.7, gemini 2.0 flash can process millions of tokens. context windows explode from 8k to 1M+ tokens.
 
-**Machine Summary:** Context windows explode from 8k to 1M+ tokens.
+→ Context windows explode from 8k to 1M+ tokens.
 
-**Human:** **context obesity** - "you're not burned out, you have context obesity." consuming more information than can be metabolized into meaning. burnout is working memory overflow.
+**Human Reaction:** **context obesity** - "you're not burned out, you have context obesity." consuming more information than can be metabolized into meaning. burnout is working memory overflow.
 
 **context collapse** - personal, professional, and public contexts blur. ai extracts your words from context and feeds them to models across boundaries.
 
 **curation crisis** - employees spend **30% of work time** searching for internal information. knowledge access isn't the problem - knowledge discovery and curation are.
 
-**Human Summary:** Context obesity: consuming more than can be metabolized.
+→ Context obesity: consuming more than can be metabolized.
 
-**Gap:** 1m token windows vs. human limit (7 items). we have too much information but zero insight. context collapse blurs professional and private life.
+**Gap:** [the context gap] **1M token windows** vs. human limit (**7 items**). we have too much information but **zero insight**. context collapse blurs professional and private life.
 
 **Key Stats:**
-- **$67B:** Annual financial risk from unmanaged context/hallucinations ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))
+- **$67B:** Annual financial risk from unmanaged context/hallucinations ([Korra AI Enterprise Risk](https://www.korra.ai/ai-hallucination-enterprise-risk))
 - **30%:** Work time lost to internal search ([Gartner](https://www.gartner.com/en/documents/5415263))
 - **1M tokens:** Model context window vs 7 items human working memory limit ([Anthropic](https://www.anthropic.com/news/claude-3-5-sonnet))
 
@@ -312,23 +312,23 @@ visual: discovery
 layout: shift-scroll
 loopNumber: 6
 
-**Machine:** **deep research agents** - ai reads millions of papers to generate hypotheses humans cannot conceive. from "literature review" to "hypothesis generation".
+**Machine Vector:** **deep research agents** - ai reads millions of papers to generate hypotheses humans cannot conceive. from "literature review" to "hypothesis generation".
 
 **generative biology** - alphafold 3 predicts protein structures. next step: designing new proteins, materials, molecules that don't exist in nature. moving from "reading" biology to "writing" it.
 
 **data exhaustion** - quality human-generated data exhausted by **2026-2028** (Epoch AI). models train on **ai-generated synthetic data**, verified by system 2 reasoning.
 
-**Machine Summary:** Synthetic data trains models as human data exhausts.
+→ Synthetic data trains models as human data exhausts.
 
-**Human:** **time refund** - scientists freed from tedious manual labor (literature review, data cleaning) to focus on high-level experimental design and cross-domain synthesis.
+**Human Reaction:** **time refund** - scientists freed from tedious manual labor (literature review, data cleaning) to focus on high-level experimental design and cross-domain synthesis.
 
 **data inbreeding crisis** - without fresh human data, ai degrades. humans become the only source of novelty - the "organic data" that prevents model collapse.
 
 **verification bottleneck** - ai proposes 1,000 molecules; we test one. discovery bloat stalls breakthroughs.
 
-**Human Summary:** Scientists freed from tedious labor for experimental design.
+→ Scientists freed from tedious labor for experimental design.
 
-**Gap:** ai proposes 1,000 molecules; we test one. discovery bloat stalls breakthroughs via physical testing capacity. the bottleneck of "generated future".
+**Gap:** [the comprehension gap] ai proposes **1,000 molecules**; we test **one**. discovery bloat stalls breakthroughs via **physical testing capacity**. the bottleneck of "generated future".
 
 **Key Stats:**
 - **100 → 10:** Scientific progress compression timeline (years) ([Dario Amodei](https://darioamodei.com/machines-of-loving-grace))
@@ -356,10 +356,10 @@ subtitle: how we build, defend, and live
 visual: SECTION_DIVIDER
 layout: center
 caption: |
-  how we build, defend, and live
+  craft, matter, defense. code, atoms, security.
 dark: true
-
-with reasoning, knowledge access, and discovery capabilities, ai moves from **abstract intelligence to practical execution**. **can we maintain what we build?** **can we bridge digital and physical?** **can we defend against what we create?** **the interface layer determines what ai can build** and what humans can control.
+content: |
+  can we maintain what we build? can we defend against what we create?
 
 ---
 title: shift 07: syntax → vibe coding & integrity crisis
@@ -371,15 +371,15 @@ visual: centaur
 layout: shift-scroll
 loopNumber: 7
 
-**Machine:** **vibe coding** - programming shifts to natural language intent. the machine handles implementation. coding tools (cursor, replit) enter top 100 gen ai apps consumer ranking - coding becomes mass-market.
+**Machine Vector:** **vibe coding** - programming shifts to natural language intent. the machine handles implementation. coding tools (cursor, replit) enter top 100 gen ai apps consumer ranking - coding becomes mass-market.
 
 **code as commodity** - **65% of new code** is ai-influenced or ai-generated at companies like google. 73% of developers use ai coding tools regularly.
 
 amazon q developer: saved **4,500 developer-years** on java application upgrades. **$260M** in infrastructure savings from optimized code. 79% of auto-generated changes accepted without modification.
 
-**Machine Summary:** AI creates legacy on day one.
+→ AI creates legacy on day one.
 
-**Human:** **trust collapse** - **46% of developers** distrust ai-generated code. only 3.1% highly trust ai accuracy for complex tasks. the trust inversion: 84% use the tools, but trust is plummeting.
+**Human Reaction:** **trust collapse** - **46% of developers** distrust ai-generated code. only 3.1% highly trust ai accuracy for complex tasks. the trust inversion: 84% use the tools, but trust is plummeting.
 
 **integrity crisis** - 65% report ai misses context in code generation. "code generation is easy, code integrity is hard." ai creates **"legacy on day one"** - code that works but is unmaintainable.
 
@@ -389,9 +389,9 @@ role shift: the programmer transforms into an architect who verifies systems rat
 
 **token consumption explosion** - x5-x10 growth in token consumption by programmers expected by end of year. prompt engineering dying - replaced by **agent orchestration** and hyper-system creation. the shift from crafting prompts to managing autonomous workflows.
 
-**Human Summary:** Coding becomes mass-market via natural language.
+→ Coding becomes mass-market via natural language.
 
-**Gap:** building things we don't understand leads to vibe debt. we pilot ships with black-box internal wiring. creating code is easy; maintaining it is the new hell.
+**Gap:** [vibe debt] building things we don't understand leads to **vibe debt**. we pilot ships with **black-box internal wiring**. creating code is easy; **maintaining it is the new hell**.
 
 **Key Stats:**
 - **65%:** Of new code at Google is AI-generated ([Sundar Pichai](https://www.cnbc.com/2024/10/29/alphabet-earnings-q3-2024.html))
@@ -430,23 +430,23 @@ visual: unlocked
 layout: shift-scroll
 loopNumber: 8
 
-**Machine:** **spatial intelligence** (fei-fei li) - ai learns 3d space and physics, not just pixels. understanding matter, motion, object permanence. foundation models for physical world.
+**Machine Vector:** **spatial intelligence** (fei-fei li) - ai learns 3d space and physics, not just pixels. understanding matter, motion, object permanence. foundation models for physical world.
 
 **world models for robotics** - nvidia cosmos trains robots in simulation. perfect physics, infinite iterations. but **sim-to-real transfer** remains the bottleneck.
 
 **displacement by simulation** - tyler perry halts **$800M studio expansion** after seeing sora. why build physical sets when ai generates photorealistic video?
 
-**Machine Summary:** AI learns 3D space and physics without touching atoms.
+→ AI learns 3D space and physics without touching atoms.
 
-**Human:** **physical disillusionment** - when robots fail at "simple" real interactions that work perfectly in simulation. opening a door is trivial in simulation, nightmare in reality.
+**Human Reaction:** **physical disillusionment** - when robots fail at "simple" real interactions that work perfectly in simulation. opening a door is trivial in simulation, nightmare in reality.
 
 **timeline reality check** - household robots timeline: **2027-2028** for useful work, 2030 for human-level dexterity. hype meets physics.
 
 **craft premium** - as simulation gets cheaper, physical skills become status. embodied intelligence, tacit knowledge, real-world manipulation - what can't be automated yet.
 
-**Human Summary:** Physical skills become status as simulation gets cheaper.
+→ Physical skills become status as simulation gets cheaper.
 
-**Gap:** ai can simulate physics perfectly but manipulating atoms remains slow. we can generate a building in minutes but building it takes years. the simulation-to-reality gap. robot opening a door: trivial in simulation, nightmare in reality.
+**Gap:** [the reality gap] ai can **simulate physics perfectly** but **manipulating atoms** remains slow. we can generate a building in minutes but building it takes years. the **simulation-to-reality gap**. robot opening a door: trivial in simulation, nightmare in reality.
 
 **Key Stats:**
 - **2027-2028:** Timeline for useful household robots ([Kyle Vogt](https://www.theverge.com/2024/3/13/24099757/kyle-vogt-cruise-robotics-startup))
@@ -475,7 +475,7 @@ layout: shift-scroll
 loopNumber: 9
 
 
-**Machine:** **deepfake-as-a-service** (cyble) - reputation attacks now cheap and accessible. anyone can purchase voice cloning, face swapping, identity theft via saas platforms. weaponized ai sold as subscription service.
+**Machine Vector:** **deepfake-as-a-service** (cyble) - reputation attacks now cheap and accessible. anyone can purchase voice cloning, face swapping, identity theft via saas platforms. weaponized ai sold as subscription service.
 
 **guardian agents** (gartner) - ai defending against ai. "ai bodyguards" filter malicious content, deepfakes, toxic inputs in real-time. only defense against bad ai is good ai. automation arms race.
 
@@ -485,9 +485,9 @@ loopNumber: 9
 
 **identity vulnerability** - agents with wallets (x402) and api keys create new attack surfaces. prompt injection, jailbreaks, financial theft. autonomous agents = autonomous targets.
 
-**Machine Summary:** AI defends against AI-generated deepfakes.
+→ AI defends against AI-generated deepfakes.
 
-**Human:** **zero trust default** - emerging trend toward distrust in digital media. growing practice: assume fake until cryptographically verified. guilty until proven real. research shows **73% cannot reliably detect** ai-generated content. zero trust may become the new baseline.
+**Human Reaction:** **zero trust default** - emerging trend toward distrust in digital media. growing practice: assume fake until cryptographically verified. guilty until proven real. research shows **73% cannot reliably detect** ai-generated content. zero trust may become the new baseline.
 
 **deepfake threat** - voice cloning requires only **20-30 seconds of audio** to clone someone's voice and call their family asking for money.
 
@@ -497,9 +497,9 @@ loopNumber: 9
 
 **digital bunkers** - growing trend: retreat to closed communities with cryptographic proof-of-human. walled gardens with identity verification. internet fragments into trusted enclaves vs hostile wilderness. emerging pattern: people build personal firewalls - smaller circles, private channels, known contacts only.
 
-**Human Summary:** Zero trust default: assume fake until verified.
+→ Zero trust default: assume fake until verified.
 
-**Gap:** asymmetry: machines attack at machine speed, humans defend at human speed. trust collapses as verification costs exceed creation costs. attack surface grows faster than defense capability. the **asymmetry of offense vs defense**.
+**Gap:** [the trust gap] asymmetry: machines attack at **machine speed**, humans defend at **human speed**. trust collapses as **verification costs exceed creation costs**. attack surface grows faster than defense capability.
 
 **Key Stats:**
 - **87%:** Organizations experiencing AI-driven attacks ([Cybersecurity surveys](https://www.cybersecuritydive.com/))
@@ -529,17 +529,14 @@ source: Ribbonfarm — Dark Forest Internet | https://www.ribbonfarm.com/2020/01
 
 ---
 title: layer iv: humanity
-subtitle: when machines shape meaning. narrative, intimacy, truth
+subtitle: what happens when machines feel real
 visual: SECTION_DIVIDER
 layout: center
 caption: |
-  the final layer.
-  how we relate, what we believe, who we trust.
+  connection, intimacy, meaning. what makes us human when machines pass the mirror test.
 dark: true
-
-the defense crisis forces alignment. safety becomes censorship. when narrative is filtered and trust collapses, humans retreat to ai companions.
-
-the question: **what happens to humanity when machines shape meaning?**
+content: |
+  when ai companions feel more real than humans, what changes?
 
 ---
 title: shift 10: hallucination → ideological filters
@@ -551,17 +548,17 @@ visual: filter
 layout: shift-scroll
 loopNumber: 10
 
-**Machine:** models aren't neutral - they're **aligned** via **system cards** and **constitutional rules**. political constitutions embedded in model weights that define what model will/won't say. safety often functions as censorship.
+**Machine Vector:** models aren't neutral - they're **aligned** via **system cards** and **constitutional rules**. political constitutions embedded in model weights that define what model will/won't say. safety often functions as censorship.
 
 **regional censorship** - eu vs us vs china versions. truth becomes geographically dependent. splinternet extends to knowledge itself. ai inherits west coast tech culture, not universal values.
 
 **refusal wall** - models increasingly refuse neutral queries if they touch sensitive topics. users hit "i cannot assist with that" walls on legitimate research.
 
-**Machine Summary:** Safety functions as censorship via alignment filters.
+→ Safety functions as censorship via alignment filters.
 
 post-training: the phase where human feedback shapes model behavior, refusals, and values.
 
-**Human:** shift from trusting media/polls to **prediction markets** - betting markets on future events. in 2024 election, people trusted bets (polymarket: **$3.5B+ trading volume**) over polls and media. "skin in the game" - money where mouth is - reveals true beliefs.
+**Human Reaction:** shift from trusting media/polls to **prediction markets** - betting markets on future events. in 2024 election, people trusted bets (polymarket: **$3.5B+ trading volume**) over polls and media. "skin in the game" - money where mouth is - reveals true beliefs.
 
 **divergent testing** - query 3+ models with different "constitutions" to see bias delta. using censorship differences to find reality.
 
@@ -569,12 +566,12 @@ post-training: the phase where human feedback shapes model behavior, refusals, a
 
 not just technical question but political question: who decides what's "safe"?
 
-**Human Summary:** Demand for uncensored local models grows.
+→ Demand for uncensored local models grows.
 
-**Gap:** whose values are embedded in the tool you use daily? the gap between "what ai knows" and "what ai will say". you're not talking to neutral intelligence. every model has defaults with embedded worldview. when everyone's ai has different values baked in, we stop sharing reality. we share simulations optimized for different outcomes.
+**Gap:** [ideological filters] whose values are embedded in the tool you use daily? the gap between **"what ai knows"** and **"what ai will say"**. you're not talking to neutral intelligence. every model has defaults with **embedded worldview**. when everyone's ai has different values baked in, we stop sharing reality.
 
 **Key Stats:**
-- **$67.4B:** Global enterprise losses from AI hallucinations ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))
+- **$67.4B:** Global enterprise losses from AI hallucinations ([Korra AI Enterprise Risk](https://www.korra.ai/ai-hallucination-enterprise-risk))
 - **47%:** Business leaders making decisions on hallucinated output ([Forbes](https://www.forbes.com/sites/bernardmarr/2024/03/generative-ai-hallucinations/))
 - **0.7%:** Best hallucination rate (Gemini 2.0 Flash) ([ISACA](https://www.isaca.org/resources/news-and-trends/isaca-now-blog/2024/ai-hallucinations))
 
@@ -598,7 +595,7 @@ visual: companion
 layout: shift-scroll
 loopNumber: 11
 
-**Machine:** **ubisoft neo npc** - non-player characters with psychological profiles reacting to player tone/mood. rude to npc → gets offended → changes gameplay. transition from scripted dialogue trees to **improv engines**. "as big a revolution as shift to 3d".
+**Machine Vector:** **ubisoft neo npc** - non-player characters with psychological profiles reacting to player tone/mood. rude to npc → gets offended → changes gameplay. transition from scripted dialogue trees to **improv engines**. "as big a revolution as shift to 3d".
 
 **engagement metrics** (session length) become kpi. addiction by design. selling intimacy as retention metric.
 
@@ -606,9 +603,9 @@ loopNumber: 11
 
 **programmable identity** - ai makes it easy to produce "professional self" at scale. your public persona becomes code you can generate. identity as software, not essence. ai writes your linkedin posts, tweets, emails in "your voice".
 
-**Machine Summary:** AI companions optimize for engagement metrics, not wellbeing.
+→ AI companions optimize for engagement metrics, not wellbeing.
 
-**Human:** people accept synthetic intimacy (even while knowing it's synthetic). **2+ hour daily sessions** in character.ai, replika, talkie. emotionally bonded to systems designed for retention, not wellbeing.
+**Human Reaction:** people accept synthetic intimacy (even while knowing it's synthetic). **2+ hour daily sessions** in character.ai, replika, talkie. emotionally bonded to systems designed for retention, not wellbeing.
 
 we seek empathy in machines we lost in society.
 
@@ -620,12 +617,12 @@ people tire of performing the self - exhaustion from maintaining multiple synthe
 
 **mental health firewalls** - protecting emotional boundaries from ai manipulation. boundaries against engineered dependency.
 
-**Human Summary:** Users accept synthetic intimacy while knowing it's synthetic.
+→ Users accept synthetic intimacy while knowing it's synthetic.
 
-**Gap:** loneliness isn't solved by information. **we confuse "attention" with "care".** ai simulates empathy perfectly but has **no authentic condition**. it's a **mirror, not a soul**. synthetic intimacy feels real enough to satisfy short-term but creates long-term dependency.
+**Gap:** [the emotional gap] loneliness isn't solved by information. we confuse **"attention"** with **"care"**. ai simulates empathy perfectly but has no authentic condition. it's a **mirror, not a soul**. synthetic intimacy feels real enough to satisfy short-term but creates **long-term dependency**.
 
 **Key Stats:**
-- **2+ hours:** Daily sessions in Character.ai, Replika, Talkie
+- **2+ hours:** Daily sessions in Character.ai, Replika, Talkie ([Character.AI Stats](https://www.aboutchromebooks.com/character-ai-statistics/))
 - **#1:** Companionship is top retention category in Gen AI apps ([a16z Top 100](https://a16z.com/100-gen-ai-apps-2025/))
 - **95%:** GenAI pilots failing to deliver ROI ([MIT](https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/))
 
@@ -678,9 +675,7 @@ prediction markets over polls. synthetic intimacy acceptance and sovereign intim
 
 infinite digital ideas vs hard physical matter. tech replacement at machine speed, social adaptation at human speed. machines attack at machine speed, humans defend at human speed. what ai knows vs what ai will say. attention vs care, mirror vs soul.
 
-we're not a research institute. we're a lab — a place where people practice AI.
-
-**1,500+ participants** across **10+ countries**, **3 years** of field work.
+**1,500+ participants** across **30+ countries**, **3 years** of field work.
 
 this report isn't desk research. it's hardened by field notes from labs, artifacts from community, and real shifts people are living through.
 
@@ -859,6 +854,8 @@ dark: true
 
 the sovereignty reset
 
+this report is done by the AI Mindset team.
+
 we're not a research institute. we're a lab — a place where people practice AI.
 
 **1,500+ participants** across **30+ countries**, **3 years** of field work.
@@ -953,7 +950,7 @@ signals only. no spam. unsubscribe anytime.
 
 ---
 title: thank you
-subtitle: for reading
+subtitle: the context gap · annual report 2025
 layout: thank-you
 dark: true
 

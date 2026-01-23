@@ -200,7 +200,7 @@ export const TimelineNav: React.FC<NavigationProps> = ({
       if (!item) return "";
       if (item.type === 'layer') return `LAYER ${item.data.id}: ${item.data.title}`;
       if (item.type === 'summary') return "SUMMARY";
-      return `${item.data.id}. ${item.data.title}`;
+      return item.data.title.toUpperCase();
   };
 
   const handleNodeClick = (nodeIndex: number) => {
@@ -261,7 +261,7 @@ export const TimelineNav: React.FC<NavigationProps> = ({
 
       <div className="relative w-full h-full flex items-center justify-between z-10 px-0 pointer-events-none">
          {groupedNodes.map((group, groupIndex) => (
-             <div key={groupIndex} className="flex items-center gap-1 md:gap-2 pointer-events-auto">
+             <div key={groupIndex} className={`flex items-center gap-1 md:gap-2 ${visible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
                  {group.nodes.map((node) => {
                      const i = node.index;
                      const type = node.type;

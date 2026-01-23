@@ -4,16 +4,16 @@
       "id": "01",
       "layerId": "I",
       "layerTitle": "FUNDAȚIE",
-      "title": "plafonul energetic",
-      "subtitle": "schimbarea 01: de la cost - la limitele infrastructurii",
+      "title": "schimbarea 01: de la cost - la limitele infrastructurii",
+      "subtitle": "plafonul energetic",
       "context": "fără energie suficientă, implementarea ia se oprește. pentru agenți, modele raționante și noi descoperiri e nevoie de energie.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -23,16 +23,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "160%",
-          "label": "AI energy demand surge by 2030 ([IEA](https://www.iea.org/reports/electricity-2024) / [Goldman Sachs](https://www.goldmansachs.com/insights/articles/AI-poised-to-drive-160-increase-in-power-demand))"
+          "desc": "AI energy demand surge by 2030",
+          "url": "https://www.iea.org/reports/electricity-2024"
         },
         {
+          "label": "",
           "value": "40x",
-          "label": "Gap: $500B infrastructure vs $12B consumer spend ([Menlo Ventures](https://menlovc.com/perspective/2025-the-state-of-consumer-ai/) / [Goldman Sachs](https://www.goldmansachs.com/insights/articles/why-ai-companies-may-invest-more-than-500-billion-in-2026))"
+          "desc": "Gap: $500B infrastructure vs $12B consumer spend",
+          "url": "https://menlovc.com/perspective/2025-the-state-of-consumer-ai/"
         },
         {
+          "label": "",
           "value": "$7T",
-          "label": "Total AI infrastructure requirement ([McKinsey](https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-cost-of-compute-a-7-trillion-dollar-race-to-scale-data-centers) / Sam Altman)"
+          "desc": "Total AI infrastructure requirement",
+          "url": "https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-cost-of-compute-a-7-trillion-dollar-race-to-scale-data-centers"
         }
       ],
       "researchTop": [
@@ -81,16 +87,16 @@
       "id": "02",
       "layerId": "I",
       "layerTitle": "FUNDAȚIE",
-      "title": "deplasare (muncă agentică)",
-      "subtitle": "schimbarea 02: copilot → coleg autonom",
+      "title": "schimbarea 02: copilot → coleg autonom",
+      "subtitle": "deplasare (muncă agentică)",
       "context": "când infrastructura energetică se stabilizează, modelele pot scala. modelele inteligente devin agenți.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -100,12 +106,16 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "47%",
-          "label": "Workforce tasks automatable by 2030 ([McKinsey](https://www.mckinsey.com/mgi/our-research/generative-ai-and-the-future-of-work-in-america))"
+          "desc": "Workforce tasks automatable by 2030",
+          "url": "https://www.mckinsey.com/mgi/our-research/generative-ai-and-the-future-of-work-in-america"
         },
         {
+          "label": "",
           "value": "$46k",
-          "label": "Cost to replace a human with an agent ([Ark Invest](https://ark-invest.com/big-ideas-2025/))"
+          "desc": "Cost to replace a human with an agent",
+          "url": "https://ark-invest.com/big-ideas-2025/"
         }
       ],
       "researchTop": [
@@ -174,6 +184,11 @@
           "tag": "from tool to participant",
           "text": "from 'ai as smart assistant' to 'ai as full participant in the process'",
           "author": "Yakov Vasiliev, AI Strategy × Product Architecture"
+        },
+        {
+          "tag": "from consumer to builder",
+          "text": "business coach → ai chatbot developer. \"vibe-coded prototypes, shipped in 30 minutes what stalled 1.5 months",
+          "author": "Natalya Savenkova, Project Lead → Product Automation"
         }
       ]
     },
@@ -181,16 +196,16 @@
       "id": "03",
       "layerId": "I",
       "layerTitle": "FUNDAȚIE",
-      "title": "suveranitate (dezbinarea internetului)",
-      "subtitle": "schimbarea 03: deschidere globală → stive fragmentate",
+      "title": "schimbarea 03: deschidere globală → stive fragmentate",
+      "subtitle": "suveranitate (dezbinarea internetului)",
       "context": "când agenții ating banii, instituțiile cer reguli. munca agentică face ia un activ strategic.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -200,16 +215,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "3%",
-          "label": "Paying users for AI (97% are the product) ([Menlo Ventures](https://menlovc.com/perspective/2025-the-state-of-consumer-ai/))"
+          "desc": "Paying users for AI",
+          "url": "https://menlovc.com/perspective/2025-the-state-of-consumer-ai/"
         },
         {
+          "label": "",
           "value": "€13/mo",
-          "label": "Meta's privacy price in Europe ([Wired](https://www.wired.com/story/meta-facebook-pay-for-privacy-europe/))"
+          "desc": "Meta's privacy price in Europe",
+          "url": "https://www.wired.com/story/meta-facebook-pay-for-privacy-europe/"
         },
         {
+          "label": "",
           "value": "90%",
-          "label": "Companies with \"Shadow AI\" usage ([MIT/Fortune](https://fortune.com/2025/08/19/shadow-ai-economy-mit-study-genai-divide-llm-chatbots/))"
+          "desc": "Companies with \"Shadow AI\" usage",
+          "url": "https://fortune.com/2025/08/19/shadow-ai-economy-mit-study-genai-divide-llm-chatbots/"
         }
       ],
       "researchTop": [
@@ -263,16 +284,16 @@
       "id": "04",
       "layerId": "II",
       "layerTitle": "GÂNDIRE",
-      "title": "raționament",
-      "subtitle": "schimbarea 04: chatbots (sistem 1) → modele gânditoare (sistem 2)",
+      "title": "schimbarea 04: chatbots (sistem 1) → modele gânditoare (sistem 2)",
+      "subtitle": "raționament",
       "context": "stratul fundamental e complet. AI trece de la răspunsuri instinctive la gândire deliberată. actul doi sequoia.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -282,16 +303,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "126%",
-          "label": "Productivity boost from AI Copilots ([Qodo](https://www.qodo.ai/reports/state-of-ai-code-quality/))"
+          "desc": "Productivity boost from AI Copilots",
+          "url": "https://www.qodo.ai/reports/state-of-ai-code-quality/"
         },
         {
+          "label": "",
           "value": "21%",
-          "label": "Quality degradation when prioritizing speed ([Nielsen Norman Group](https://www.nngroup.com/articles/ai-programmers-productive/))"
+          "desc": "Quality degradation when prioritizing speed",
+          "url": "https://www.nngroup.com/articles/ai-programmers-productive/"
         },
         {
+          "label": "",
           "value": "48%",
-          "label": "Error rate in complex reasoning tasks ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))"
+          "desc": "Error rate in complex reasoning tasks",
+          "url": "https://www.korra.ai/ai-hallucination-enterprise-risk"
         }
       ],
       "researchTop": [
@@ -335,16 +362,16 @@
       "id": "05",
       "layerId": "II",
       "layerTitle": "GÂNDIRE",
-      "title": "cunoaștere (memorie)",
-      "subtitle": "schimbarea 05: acumulare informație → filtrare context",
+      "title": "schimbarea 05: acumulare informație → filtrare context",
+      "subtitle": "cunoaștere (memorie)",
       "context": "modelele de raționament nu pot gândi în vid. au nevoie de context maxim - date corporative, documente, conversații.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -354,16 +381,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "$67B",
-          "label": "Annual financial risk from unmanaged context/hallucinations ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))"
+          "desc": "Annual financial risk from unmanaged context/hallucinations",
+          "url": "https://www.korra.ai/ai-hallucination-enterprise-risk"
         },
         {
+          "label": "",
           "value": "30%",
-          "label": "Work time lost to internal search ([Gartner](https://www.gartner.com/en/documents/5415263))"
+          "desc": "Work time lost to internal search",
+          "url": "https://www.gartner.com/en/documents/5415263"
         },
         {
+          "label": "",
           "value": "1M tokens",
-          "label": "Model context window vs 7 items human working memory limit ([Anthropic](https://www.anthropic.com/news/claude-3-5-sonnet))"
+          "desc": "Model context window vs 7 items human working memory limit",
+          "url": "https://www.anthropic.com/news/claude-3-5-sonnet"
         }
       ],
       "researchTop": [
@@ -429,16 +462,16 @@
       "id": "06",
       "layerId": "II",
       "layerTitle": "GÂNDIRE",
-      "title": "descoperire (știință generativă)",
-      "subtitle": "schimbarea 06: căutare informație → generare ipoteze",
+      "title": "schimbarea 06: căutare informație → generare ipoteze",
+      "subtitle": "descoperire (știință generativă)",
       "context": "când AI primește acces la cercetare la scară, citește milioane de articole peste noapte. descoperiri la viteza mașinii.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -448,16 +481,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "100 → 10",
-          "label": "Scientific progress compression timeline (years) ([Dario Amodei](https://darioamodei.com/machines-of-loving-grace))"
+          "desc": "Scientific progress compression timeline",
+          "url": "https://darioamodei.com/machines-of-loving-grace"
         },
         {
+          "label": "",
           "value": "78%",
-          "label": "Improvement in research speed with AI tools ([StackOverflow Developer Survey](https://survey.stackoverflow.co/2024))"
+          "desc": "Improvement in research speed with AI tools",
+          "url": "https://survey.stackoverflow.co/2024"
         },
         {
+          "label": "",
           "value": "2026-2028",
-          "label": "Human data exhaustion timeline ([Epoch AI](https://epochai.org/blog/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data))"
+          "desc": "Human data exhaustion timeline",
+          "url": "https://epochai.org/blog/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data"
         }
       ],
       "researchTop": [
@@ -501,16 +540,16 @@
       "id": "07",
       "layerId": "III",
       "layerTitle": "INTERFAȚĂ",
-      "title": "măiestrie (sfârșitul sintaxei)",
-      "subtitle": "schimbarea 07: sintaxă → vibe coding & criză de integritate",
+      "title": "schimbarea 07: sintaxă → vibe coding & criză de integritate",
+      "subtitle": "măiestrie (sfârșitul sintaxei)",
       "context": "când agenții pot orchestra fluxuri de lucru, coding-ul devine cel mia ușor domeniu de automatizat.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -520,16 +559,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "65%",
-          "label": "Of new code at Google is AI-generated ([Sundar Pichai](https://www.cnbc.com/2024/10/29/alphabet-earnings-q3-2024.html))"
+          "desc": "Of new code at Google is AI-generated",
+          "url": "https://www.cnbc.com/2024/10/29/alphabet-earnings-q3-2024.html"
         },
         {
+          "label": "",
           "value": "46%",
-          "label": "Developers distrust AI code quality ([GitClear](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality))"
+          "desc": "Developers distrust AI code quality",
+          "url": "https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality"
         },
         {
+          "label": "",
           "value": "50%",
-          "label": "Increase in code churn from AI-generated code ([GitClear](https://www.gitclear.com/))"
+          "desc": "Increase in code churn from AI-generated code",
+          "url": "https://www.gitclear.com/"
         }
       ],
       "researchTop": [
@@ -605,16 +650,16 @@
       "id": "08",
       "layerId": "III",
       "layerTitle": "INTERFAȚĂ",
-      "title": "realitate (corp)",
-      "subtitle": "schimbarea 08: simulare digitală → inteligență fizică",
+      "title": "schimbarea 08: simulare digitală → inteligență fizică",
+      "subtitle": "realitate (corp)",
       "context": "când AI are date despre lumea fizică, o poate simula. AI învață fizică fără a atinge atomii.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -624,12 +669,16 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "2027-2028",
-          "label": "Timeline for useful household robots ([Kyle Vogt](https://www.theverge.com/2024/3/13/24099757/kyle-vogt-cruise-robotics-startup))"
+          "desc": "Timeline for useful household robots",
+          "url": "https://www.theverge.com/2024/3/13/24099757/kyle-vogt-cruise-robotics-startup"
         },
         {
+          "label": "",
           "value": "$800M",
-          "label": "Tyler Perry studio expansion halted after Sora demo ([Hollywood Reporter](https://www.hollywoodreporter.com/business/business-news/tyler-perry-ai-alarm-1235833276/))"
+          "desc": "Tyler Perry studio expansion halted after Sora demo",
+          "url": "https://www.hollywoodreporter.com/business/business-news/tyler-perry-ai-alarm-1235833276/"
         }
       ],
       "researchTop": [
@@ -657,16 +706,16 @@
       "id": "09",
       "layerId": "III",
       "layerTitle": "INTERFAȚĂ",
-      "title": "apărare (pădure întunecată)",
-      "subtitle": "schimbarea 09: cybersecurity → război cognitiv",
+      "title": "schimbarea 09: cybersecurity → război cognitiv",
+      "subtitle": "apărare (pădure întunecată)",
       "context": "când simularea e ieftină, realitatea sintetică devine armă. deepfake-urile costă aproape zero.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -676,28 +725,40 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "87%",
-          "label": "Organizations experiencing AI-driven attacks ([Cybersecurity surveys](https://www.cybersecuritydive.com/))"
+          "desc": "Organizations experiencing AI-driven attacks",
+          "url": "https://www.cybersecuritydive.com/"
         },
         {
+          "label": "",
           "value": "85%",
-          "label": "Organizations attacked with deepfakes ([Deepstrike](https://deepstrike.io/blog/deepfake-statistics-2025))"
+          "desc": "Organizations attacked with deepfakes",
+          "url": "https://deepstrike.io/blog/deepfake-statistics-2025"
         },
         {
+          "label": "",
           "value": "1,265%",
-          "label": "AI-driven phishing increase ([CrowdStrike](https://www.crowdstrike.com/))"
+          "desc": "AI-driven phishing increase",
+          "url": "https://www.crowdstrike.com/"
         },
         {
+          "label": "",
           "value": "$25.6M",
-          "label": "Single deepfake fraud loss ([All About AI](https://www.allaboutai.com/resources/ai-statistics/ai-cyberattack/))"
+          "desc": "Single deepfake fraud loss",
+          "url": "https://www.allaboutai.com/resources/ai-statistics/ai-cyberattack/"
         },
         {
+          "label": "",
           "value": "10x",
-          "label": "Increase in deepfake identity attacks 2024-2025 ([Industry reports](https://deepstrike.io/))"
+          "desc": "Increase in deepfake identity attacks 2024-2025",
+          "url": "https://deepstrike.io/"
         },
         {
+          "label": "",
           "value": "97%",
-          "label": "Cybersecurity professionals fear AI-driven incidents ([Surveys](https://www.cybersecuritydive.com/))"
+          "desc": "Cybersecurity professionals fear AI-driven incidents",
+          "url": "https://www.cybersecuritydive.com/"
         }
       ],
       "researchTop": [
@@ -751,16 +812,16 @@
       "id": "10",
       "layerId": "IV",
       "layerTitle": "UMANITATE",
-      "title": "narativ (aliniere ca și cenzură)",
-      "subtitle": "schimbarea 10: halucinație → filtre ideologice",
+      "title": "schimbarea 10: halucinație → filtre ideologice",
+      "subtitle": "narativ (aliniere ca și cenzură)",
       "context": "criza apărării forțează aliniere. securitatea devine cenzură.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -770,16 +831,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "$67.4B",
-          "label": "Global enterprise losses from AI hallucinations ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))"
+          "desc": "Global enterprise losses from AI hallucinations",
+          "url": "https://www.korra.ai/ai-hallucination-enterprise-risk"
         },
         {
+          "label": "",
           "value": "47%",
-          "label": "Business leaders making decisions on hallucinated output ([Forbes](https://www.forbes.com/sites/bernardmarr/2024/03/generative-ai-hallucinations/))"
+          "desc": "Business leaders making decisions on hallucinated output",
+          "url": "https://www.forbes.com/sites/bernardmarr/2024/03/generative-ai-hallucinations/"
         },
         {
+          "label": "",
           "value": "0.7%",
-          "label": "Best hallucination rate (Gemini 2.0 Flash) ([ISACA](https://www.isaca.org/resources/news-and-trends/isaca-now-blog/2024/ai-hallucinations))"
+          "desc": "Best hallucination rate",
+          "url": "https://www.isaca.org/resources/news-and-trends/isaca-now-blog/2024/ai-hallucinations"
         }
       ],
       "researchTop": [
@@ -823,16 +890,16 @@
       "id": "11",
       "layerId": "IV",
       "layerTitle": "UMANITATE",
-      "title": "intimitate (prieteni de vânzare)",
-      "subtitle": "schimbarea 11: instrument → companion emoțional",
+      "title": "schimbarea 11: instrument → companion emoțional",
+      "subtitle": "intimitate (prieteni de vânzare)",
       "context": "când AI se adaptează prea bine, se transformă din instrument în companion.",
       "machineCol": {
-        "label": "TEHNOLOGIE",
+        "label": "VECTOR MAȘINĂ",
         "title": "Ce se construiește",
         "desc": ""
       },
       "humanCol": {
-        "label": "UMAN",
+        "label": "REACȚIE UMANĂ",
         "title": "Cum se adaptează oamenii",
         "desc": ""
       },
@@ -842,16 +909,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "2+ hours",
-          "label": "Daily sessions in Character.ai, Replika, Talkie"
+          "desc": "Daily sessions in Character.ai, Replika, Talkie",
+          "url": "https://www.aboutchromebooks.com/character-ai-statistics/"
         },
         {
+          "label": "",
           "value": "#1",
-          "label": "Companionship is top retention category in Gen AI apps ([a16z Top 100](https://a16z.com/100-gen-ai-apps-2025/))"
+          "desc": "Companionship is top retention category in Gen AI apps",
+          "url": "https://a16z.com/100-gen-ai-apps-2025/"
         },
         {
+          "label": "",
           "value": "95%",
-          "label": "GenAI pilots failing to deliver ROI ([MIT](https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/))"
+          "desc": "GenAI pilots failing to deliver ROI",
+          "url": "https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/"
         }
       ],
       "researchTop": [
@@ -908,44 +981,44 @@
       "id": "I",
       "title": "FUNDAȚIE",
       "subtitle": "când infrastructura se prăbușește. fizică, economie și putere.",
-      "desc": "",
-      "constraint": "putem asigura energia? ne putem permite? cine controlează? resurse energetice, forță de muncă, independență. constrângeri materiale care creează baza.",
+      "desc": "resurse energetice, forță de muncă, independență.\nconstrângeri materiale care creează baza.",
+      "constraint": "",
       "metaphor": "globe"
     },
     {
       "id": "II",
       "title": "COGNIȚIE",
       "subtitle": "arhitectura sensului și raționamentului",
-      "desc": "cu **infrastructură energetică**, **muncă agentică** și **stive geopolitice** la locul lor, ia trece de la calcul brut la **capacitate de raționament**. acest strat răspunde la trei întrebări: **putem avea încredere în cum gândește?** **putem verifica logica sa?** **putem accelera descoperirile?**",
-      "constraint": "cum gândim și învățăm. raționament, cunoaștere, descoperire.",
+      "desc": "cum gândim și învățăm.\nraționament, cunoaștere, descoperire.",
+      "constraint": "cu **infrastructură energetică**, **muncă agentică** și **stive geopolitice** la locul lor, ia trece de la calcul brut la **capacitate de raționament**. acest strat răspunde la trei întrebări: **putem avea încredere în cum gândește?** **putem verifica logica sa?** **putem accelera descoperirile?**",
       "metaphor": "globe"
     },
     {
       "id": "III",
       "title": "INTERFAȚĂ",
       "subtitle": "cum construim, apărăm și trăim",
-      "desc": "cu raționament, acces la cunoaștere și capacități de descoperire, ia se mișcă de la **inteligență abstractă la execuție practică**. **putem menține ce construim?** **putem conecta digitalul și fizicul?** **ne putem apăra de ceea ce creăm?**",
-      "constraint": "cum construim, apărăm și trăim",
+      "desc": "cum construim, apărăm și trăim",
+      "constraint": "cu raționament, acces la cunoaștere și capacități de descoperire, ia se mișcă de la **inteligență abstractă la execuție practică**. **putem menține ce construim?** **putem conecta digitalul și fizicul?** **ne putem apăra de ceea ce creăm?**",
       "metaphor": "globe"
     },
     {
       "id": "IV",
       "title": "UMANITATE",
       "subtitle": "când mașinile modelează sensul. narativ, intimitate, adevăr",
-      "desc": "criza apărării forțează aliniere. securitatea devine cenzură. când narativul e filtrat și încrederea colapsează, oamenii se retrag la companioni ia.",
-      "constraint": "stratul final. cum ne conectăm, în ce credem, cui avem încredere.",
+      "desc": "stratul final.\ncum ne conectăm, în ce credem, cui avem încredere.",
+      "constraint": "criza apărării forțează aliniere. securitatea devine cenzură. când narativul e filtrat și încrederea colapsează, oamenii se retrag la companioni ia.",
       "metaphor": "globe"
     }
   ],
   "manifesto": {
     "title": "manifest",
     "subtitle": "deci... ce urmează?",
-    "content": "resetarea suveranității\nnu suntem institut de cercetare. suntem laborator — un loc unde oamenii practică AI.\n**1,500+ participanți** în **30+ țări**, **3 ani** de muncă în teren.\nacest raport nu e cercetare de birou. e întărit cu note de teren din laboratoare, artefacte din comunitate și schimbări reale pe care le trăiesc oamenii.\n**contextul:**\nmajoritatea discursului despre ia se întâmplă la extreme:\n**hype utopic** de la consultanță. **panică existențială** de la media. **obsesie optimizare** de la tech leaders.\nviitorul umanității e scris de tehnologi și capitaliști care privesc lumea de sus în jos.\n**noi umplem vidul.**\ntratăm **constrângerile adaptării umane** la fel de serios ca accelerarea tehnologică. în timp ce ia comprimă 100 ani de știință într-un deceniu, oferim **manualul pentru ființa umană ca să nu se ardă în proces.**\n**protocoale:**\nviața noastră funcționează pe configurație. la ce spui da fără să gândești. ce te întrerupe. să trecem de la \"o să încerc\" la \"am default-uri\".\n**nivel 01 - simplu (începe aici):**\nobservă când accepți output AI fără să gândești.\nsalvează o idee offline. scrie de mână.\noprește o notificare. recuperează 10 minute.\nclarifică-ți gândirea înainte să întrebi AI.\npune pe pauză înainte să ai încredere în output.\n**nivel 02 - mediu (construiește obiceiuri):**\ncreează o bază personală de cunoștințe pentru un domeniu.\ntestează 3 modele pe aceeași întrebare să vezi bias.\nimplementează un filtru contextual.\navertizează generația în vârstă despre informația sintetică.\npractică analog: apeluri, scriere de mână.\n**nivel 03 - avansat (construiește sisteme):**\nimplementează agenți gardieni.\nstabilește \"strângeri de mână secrete\" familiale.\nconstruiește fluxuri local-first.\nauditează trasee de raționament.\nrefuză antrenarea pe datele tale.\n**nivel 04 - profund (structural):**\ntreci de la Creator la Consigliere.\nprețuiește tacit knowledge.\npractică testare divergentă.\nnu putem închide toate decalajele, dar măcar putem fi conștienți de ele și acționa în consecință.\n**ecosistemul nostru:**\n→ [**ivanov.aimindset.org**](https://ivanov.aimindset.org) — IFS + AI: apărarea psihicului\n→ [**intention.aimindset.org**](https://intention.aimindset.org) — Intention OS: gestionarea atenției când contextul explodează\n→ [**spiridonov.aimindset.org**](https://spiridonov.aimindset.org) — apărare prin romantism pragmatic\n→ [**AI ARK knowledge system**](https://aimindsetspace.substack.com/p/ai-ark-knowledge-system) — arhitectură comprehensivă de cunoaștere\n→ [**Founder OS YouTube**](https://youtube.com/@aimindsetlabs) — firewall-uri sănătate mentală\n→ [**Coding with Gemini**](https://telegram.me/ai_mind_set/282) — ghiduri practice\n→ [**@ai_mind_set**](https://t.me/ai_mind_set) — semnale zilnice & note de teren\n**rămâi conectat:**\ndacă acest artefact te-a ajutat să numești frecarea — nu pierde firul.\n→ [**abonează-te pe substack**](https://aimindsetspace.substack.com) — următoarele resetări, note de teren, template-uri, deschideri lab\ndoar semnale. fără spam. dezabonare oricând."
+    "content": "resetarea suveranității\n\nnu suntem institut de cercetare. suntem laborator — un loc unde oamenii practică AI.\n\n**1,500+ participanți** în **30+ țări**, **3 ani** de muncă în teren.\n\nacest raport nu e cercetare de birou. e întărit cu note de teren din laboratoare, artefacte din comunitate și schimbări reale pe care le trăiesc oamenii.\n\n**contextul:**\n\nmajoritatea discursului despre ia se întâmplă la extreme:\n\n**hype utopic** de la consultanță. **panică existențială** de la media. **obsesie optimizare** de la tech leaders.\n\nviitorul umanității e scris de tehnologi și capitaliști care privesc lumea de sus în jos.\n\n**noi umplem vidul.**\n\ntratăm **constrângerile adaptării umane** la fel de serios ca accelerarea tehnologică. în timp ce ia comprimă 100 ani de știință într-un deceniu, oferim **manualul pentru ființa umană ca să nu se ardă în proces.**\n\n**protocoale:**\n\nviața noastră funcționează pe configurație. la ce spui da fără să gândești. ce te întrerupe. să trecem de la \"o să încerc\" la \"am default-uri\".\n\n**nivel 01 - simplu (începe aici):**\n\nobservă când accepți output AI fără să gândești.\n\nsalvează o idee offline. scrie de mână.\n\noprește o notificare. recuperează 10 minute.\n\nclarifică-ți gândirea înainte să întrebi AI.\n\npune pe pauză înainte să ai încredere în output.\n\n**nivel 02 - mediu (construiește obiceiuri):**\n\ncreează o bază personală de cunoștințe pentru un domeniu.\n\ntestează 3 modele pe aceeași întrebare să vezi bias.\n\nimplementează un filtru contextual.\n\navertizează generația în vârstă despre informația sintetică.\n\npractică analog: apeluri, scriere de mână.\n\n**nivel 03 - avansat (construiește sisteme):**\n\nimplementează agenți gardieni.\n\nstabilește \"strângeri de mână secrete\" familiale.\n\nconstruiește fluxuri local-first.\n\nauditează trasee de raționament.\n\nrefuză antrenarea pe datele tale.\n\n**nivel 04 - profund (structural):**\n\ntreci de la Creator la Consigliere.\n\nprețuiește tacit knowledge.\n\npractică testare divergentă.\n\nnu putem închide toate decalajele, dar măcar putem fi conștienți de ele și acționa în consecință.\n\n**ecosistemul nostru:**\n\n→ [**ivanov.aimindset.org**](https://ivanov.aimindset.org) — IFS + AI: apărarea psihicului\n\n→ [**intention.aimindset.org**](https://intention.aimindset.org) — Intention OS: gestionarea atenției când contextul explodează\n\n→ [**spiridonov.aimindset.org**](https://spiridonov.aimindset.org) — apărare prin romantism pragmatic\n\n→ [**AI ARK knowledge system**](https://aimindsetspace.substack.com/p/ai-ark-knowledge-system) — arhitectură comprehensivă de cunoaștere\n\n→ [**Founder OS YouTube**](https://youtube.com/@aimindsetlabs) — firewall-uri sănătate mentală\n\n→ [**Coding with Gemini**](https://telegram.me/ai_mind_set/282) — ghiduri practice\n\n→ [**@ai_mind_set**](https://t.me/ai_mind_set) — semnale zilnice & note de teren\n\n**rămâi conectat:**\n\ndacă acest artefact te-a ajutat să numești frecarea — nu pierde firul.\n\n→ [**abonează-te pe substack**](https://aimindsetspace.substack.com) — următoarele resetări, note de teren, template-uri, deschideri lab\n\ndoar semnale. fără spam. dezabonare oricând."
   },
   "thankYou": {
     "title": "mulțumesc",
     "subtitle": "pentru citit",
-    "content": "**credite:**\n**anca stavenski** — design & logică\n**alex p** — idei\n**ray svitla** — cercetare\n**link-uri:**\n→ [**abonează-te pe substack**](https://aimindsetspace.substack.com) — primește următoarele resetări & semnale\n→ [**explorează ecosistemul**](https://aimindset.org) — laboratoare, instrumente, comunitate\n→ [**vorbește cu noi**](mailto:info@aimindset.org) — parteneriate / speaking\nsfârșit de transmisie"
+    "content": "**credite:**\n\n**anca stavenski** — design & logică\n\n**alex p** — idei\n\n**ray svitla** — cercetare\n\n**link-uri:**\n\n→ [**abonează-te pe substack**](https://aimindsetspace.substack.com) — primește următoarele resetări & semnale\n\n→ [**explorează ecosistemul**](https://aimindset.org) — laboratoare, instrumente, comunitate\n\n→ [**vorbește cu noi**](mailto:info@aimindset.org) — parteneriate / speaking\n\nsfârșit de transmisie"
   },
-  "generated": "2026-01-23T13:02:58.838Z"
+  "generated": "2026-01-23T23:44:33.441Z"
 }

@@ -216,7 +216,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({ onNext, onPrev, theme,
           <div className="trend-container w-full max-w-4xl px-6 mb-32 relative z-10">
               <div className={`${isDark ? 'bg-neutral-900/60' : 'bg-white/70'} trend-bg backdrop-blur-md border ${isDark ? 'border-white/10' : 'border-black/10'} p-8 md:p-12 rounded-2xl shadow-2xl relative overflow-hidden`}>
                   <div className="absolute -top-20 -right-20 w-60 h-60 bg-[#DC2626] opacity-10 blur-[80px] rounded-full pointer-events-none"></div>
-                  <p className={`font-mono text-lg md:text-xl leading-loose tracking-wide opacity-90 text-justify md:text-left relative z-10 ${isDark ? 'text-white' : 'text-black'}`}>
+                  <p className={`font-mono text-lg md:text-lg leading-loose tracking-wide opacity-90 text-justify md:text-left relative z-10 ${isDark ? 'text-white' : 'text-black'}`}>
                        {renderTrendText()}
                   </p>
               </div>
@@ -244,9 +244,29 @@ export const SummaryView: React.FC<SummaryViewProps> = ({ onNext, onPrev, theme,
                 <div className="absolute -bottom-12 -right-12 text-[#DC2626] text-6xl opacity-20 font-serif">”</div>
               </div>
               
-              <div className="flex justify-center mt-64 gap-8 nav-buttons">
-                  <button onClick={onPrev} className={`px-8 py-4 border ${isDark ? 'border-neutral-800 text-neutral-500' : 'border-neutral-300 text-neutral-600'} font-mono text-xs uppercase tracking-[0.2em] hover:text-[#DC2626] hover:border-[#DC2626] transition-all`}>{i18n?.summary.reviewButton || 'Review'}</button>
-                  <button onClick={onNext} className={`${isDark ? 'bg-white text-black' : 'bg-black text-white'} px-10 py-4 font-mono text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#DC2626] hover:text-white transition-all shadow-xl`}>{i18n?.summary.manifestoButton || 'The Manifesto'}</button>
+              <div className="flex justify-between items-center mt-32 md:mt-64 nav-buttons max-w-4xl mx-auto">
+                  <button onClick={onPrev} className="group flex items-center gap-3 hover:opacity-70 transition-opacity">
+                    <div className={`w-12 h-12 rounded-full border ${isDark ? 'border-neutral-800' : 'border-neutral-300'} flex items-center justify-center flex-shrink-0`}>
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path d="M15 19l-7-7 7-7"/>
+                      </svg>
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className={`font-mono text-[10px] tracking-widest ${isDark ? 'text-neutral-500' : 'text-neutral-600'} mb-1 lowercase`}>{i18n?.ui.prev || 'previous'}</span>
+                      <span className={`font-sans text-[11px] md:text-base font-semibold ${isDark ? 'text-white' : 'text-black'} max-w-[100px] md:max-w-[200px] line-clamp-2 lowercase leading-tight`}>{i18n?.summary.reviewButton || 'shifts'}</span>
+                    </div>
+                  </button>
+                  <button onClick={onNext} className="group flex items-center gap-3 hover:opacity-70 transition-opacity">
+                    <div className="flex flex-col items-end">
+                      <span className={`font-mono text-[10px] tracking-widest ${isDark ? 'text-neutral-500' : 'text-neutral-600'} mb-1 lowercase`}>{i18n?.ui.next || 'next'}</span>
+                      <span className={`font-sans text-[11px] md:text-base font-semibold ${isDark ? 'text-white' : 'text-black'} max-w-[100px] md:max-w-[200px] line-clamp-2 lowercase leading-tight text-right`}>{i18n?.summary.manifestoButton || 'manifesto'}</span>
+                    </div>
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#DC2626] flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </div>
+                  </button>
               </div>
           </div>
       </div>

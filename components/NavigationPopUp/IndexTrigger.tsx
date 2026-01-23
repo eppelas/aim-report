@@ -7,10 +7,11 @@ interface IndexTriggerProps {
     lang: 'en' | 'ru' | 'by' | 'ro';
     setLang: (lang: 'en' | 'ru' | 'by' | 'ro') => void;
     showThemeToggle?: boolean;
+    forceDarkTheme?: boolean;
 }
 
-export const IndexTrigger: React.FC<IndexTriggerProps> = ({ onOpen, theme, toggleTheme, lang, setLang, showThemeToggle = true }) => {
-    const isDark = theme === 'dark';
+export const IndexTrigger: React.FC<IndexTriggerProps> = ({ onOpen, theme, toggleTheme, lang, setLang, showThemeToggle = true, forceDarkTheme = false }) => {
+    const isDark = forceDarkTheme ? true : theme === 'dark';
     const [langOpen, setLangOpen] = useState(false);
     const langRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +36,7 @@ export const IndexTrigger: React.FC<IndexTriggerProps> = ({ onOpen, theme, toggl
     const languages = ['en', 'ru', 'by', 'ro'] as const;
 
     return (
-        <div className="fixed top-6 right-6 z-[100] pointer-events-auto flex items-start gap-2 font-mono text-[10px] uppercase tracking-widest">
+        <div className="fixed top-6 right-6 z-[100] pointer-events-auto flex items-start gap-2 font-mono text-[10px] uppercase tracking-widest animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}>
             
             {/* 1. THEME TOGGLE (Hidden on Landing) */}
             {showThemeToggle && (
@@ -108,7 +109,7 @@ export const IndexTrigger: React.FC<IndexTriggerProps> = ({ onOpen, theme, toggl
             <button 
                 onClick={onOpen}
                 className={`
-                    h-10 px-6 flex items-center gap-3
+                    h-12 md:h-10 px-8 md:px-6 flex items-center gap-3
                     border ${borderCol} ${bgCol} backdrop-blur-md
                     ${textCol} hover:text-[#DC2626] hover:border-[#DC2626] 
                     transition-all duration-300 group

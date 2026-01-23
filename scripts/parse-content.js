@@ -5,14 +5,14 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Languages to process  
+// Languages to process
 const languages = ['en', 'ru', 'by', 'ro'];
 
 // Parse evidence data from English slides.md
 function parseEnglishEvidence() {
   const englishPath = path.join(__dirname, '../content/slides.md');
   if (!fs.existsSync(englishPath)) {
-    console.warn('⚠ English slides.md not found');
+    console.warn(' English slides.md not found');
     return {};
   }
   
@@ -29,7 +29,23 @@ function parseEnglishEvidence() {
       const line = lines[i];
       if (line.includes(':') && !line.startsWith(' ')) {
         const [key, ...valueParts] = line.split(':');
-        metadata[key.trim()] = valueParts.join(':').trim();
+        const value = valueParts.join(':').trim();
+        
+        // Handle multiline YAML (|)
+        if (value === '|') {
+          const multilineContent = [];
+          i++;
+          while (i < lines.length && (lines[i].startsWith('  ') || lines[i].trim() === '')) {
+            if (lines[i].trim()) {
+              multilineContent.push(lines[i].trim());
+            }
+            i++;
+          }
+          metadata[key.trim()] = multilineContent.join('\n');
+          i--; // step back one line
+        } else {
+          metadata[key.trim()] = value;
+        }
       } else if (line.trim() === '') {
         contentStart = i + 1;
         break;
@@ -53,18 +69,30 @@ function parseEnglishEvidence() {
       if (statsMatch) {
         const statLines = statsMatch[1].split('\n').filter(l => l.trim().startsWith('-'));
         statLines.forEach(line => {
-          const match = line.match(/^-\s*\*\*([^:*]+):\*\*\s*(.+)/);
+          const match = line.match(/\*\*([^:]+):\*\*\s*(.+)/);
           if (match) {
+            let desc = match[2].trim();
+            // Extract ALL URLs from markdown links
+            const urlMatches = [...desc.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)];
+            const url = urlMatches.length > 0 ? urlMatches[0][2] : '';
+            
+            // Take only text before the first opening parenthesis (removes all markdown links)
+            const parenIndex = desc.indexOf('(');
+            if (parenIndex > 0) {
+              desc = desc.substring(0, parenIndex).trim();
+            }
             evidence.stats.push({
+              label: '',
               value: match[1].trim(),
-              label: match[2].trim()
+              desc: desc.trim(),
+              url: url
             });
           }
         });
       }
       
       // Parse Research
-      const researchMatch = shiftContent.match(/\*\*Research:\*\*(.*?)(?=\*\*AI Mindset Evidence:|$)/s);
+      const researchMatch = shiftContent.match(/\*\*Research:\*\*(.*?)(?=\*\*AI Mindset Evidence:|\*\*Tags:|$)/s);
       if (researchMatch) {
         const researchLines = researchMatch[1].split('\n').filter(l => l.trim().startsWith('-'));
         researchLines.forEach(line => {
@@ -115,11 +143,15 @@ function parseEnglishEvidence() {
       if (voicesMatch) {
         const voiceLines = voicesMatch[1].split('\n').filter(l => l.trim().startsWith('→'));
         voiceLines.forEach(line => {
-          const quoteMatch = line.match(/\*\*"([^"]+)"\*\*\s*—\s*"(.+?)"\s*\(([^)]+)\)/);
+          // Match format: → **"tag"** — "text" (author) OR → **"tag"** — text without quotes (author)
+          const quoteMatch = line.match(/\*\*"([^"]+)"\*\*\s*—\s*(.+?)\s*\(([^)]+)\)/);
           if (quoteMatch) {
+            let text = quoteMatch[2].trim();
+            // Remove quotes if present
+            text = text.replace(/^"|"$/g, '');
             evidence.voices.push({
               tag: quoteMatch[1].trim(),
-              text: quoteMatch[2].trim(),
+              text: text,
               author: quoteMatch[3].trim()
             });
           }
@@ -158,36 +190,47 @@ function parseLanguage(lang) {
   sections.forEach((section, index) => {
     const lines = section.trim().split('\n');
     const slide = { metadata: {}, content: '' };
-    let inMetadata = true;
-    let contentLines = [];
     let freeTextLines = [];
 
-    lines.forEach(line => {
-      if (line.startsWith('title:')) {
-        slide.metadata.title = line.replace('title:', '').trim();
-      } else if (line.startsWith('subtitle:')) {
-        slide.metadata.subtitle = line.replace('subtitle:', '').trim();
-      } else if (line.startsWith('alternativeSubtitle:')) {
-        slide.metadata.alternativeSubtitle = line.replace('alternativeSubtitle:', '').trim();
-      } else if (line.startsWith('layout:')) {
-        slide.metadata.layout = line.replace('layout:', '').trim();
-      } else if (line.startsWith('loopNumber:')) {
-        slide.metadata.loopNumber = line.replace('loopNumber:', '').trim();
+    // Parse metadata with multiline YAML support
+    let i = 0;
+    let inMetadata = true;
+    while (i < lines.length && inMetadata) {
+      const line = lines[i];
+      
+      // YAML field: key: value
+      if (line.includes(':') && !line.startsWith(' ') && line.trim() !== '') {
+        const [key, ...valueParts] = line.split(':');
+        const value = valueParts.join(':').trim();
+        
+        // Handle multiline YAML (|)
+        if (value === '|') {
+          const multilineContent = [];
+          i++;
+          while (i < lines.length && lines[i].startsWith('  ')) {
+            multilineContent.push(lines[i].trim());
+            i++;
+          }
+          slide.metadata[key.trim()] = multilineContent.join('\n');
+          continue; // don't increment i, already at next line
+        } else {
+          slide.metadata[key.trim()] = value;
+        }
       } else if (line.trim() === '') {
+        // Empty line - metadata ends here
         inMetadata = false;
-      } else if (inMetadata && !line.includes(':')) {
-        // Free-text line in metadata block (likely constraint)
-        freeTextLines.push(line.trim());
-      } else if (!inMetadata) {
-        contentLines.push(line);
+        i++;
+        freeTextLines = lines.slice(i);
+        break;
       }
-    });
+      i++;
+    }
 
-    slide.content = contentLines.join('\n').trim();
-    slide.metadata.constraint = freeTextLines.join(' ');
+    slide.content = freeTextLines.join('\n').trim();
 
     // Determine slide type - check for layer keywords in multiple languages
     const isLayer = slide.metadata.layout === 'center' && (
+      slide.metadata.title?.toLowerCase().includes('layer') || // en
       slide.metadata.title?.toLowerCase().includes('слой') ||  // ru
       slide.metadata.title?.toLowerCase().includes('пласт') || // by
       slide.metadata.title?.toLowerCase().includes('strat')    // ro
@@ -196,20 +239,21 @@ function parseLanguage(lang) {
     if (isLayer) {
       const layerId = slide.metadata.title.match(/([iv]+):/i)?.[1]?.toUpperCase() || `L${layers.length + 1}`;
       const titleClean = slide.metadata.title
+        .replace(/layer [iv]+:\s*/i, '')
         .replace(/слой [iv]+:\s*/i, '')
         .replace(/пласт [iv]+:\s*/i, '')
         .replace(/stratul [iv]+:\s*/i, '');
       
-      // Get description from content
-      const contentLines = slide.content.split('\n').filter(line => line.trim());
-      const desc = contentLines[0] || '';
+      // Get description and constraint from metadata
+      const desc = slide.metadata.caption || '';
+      const constraint = slide.metadata.content || slide.content || '';
       
       layers.push({
         id: layerId,
         title: titleClean.toUpperCase(),
         subtitle: slide.metadata.subtitle || '',
         desc: desc,
-        constraint: slide.metadata.constraint || '',
+        constraint: constraint,
         metaphor: 'globe'
       });
     } else if (slide.metadata.layout === 'shift-scroll') {
@@ -218,15 +262,56 @@ function parseLanguage(lang) {
       
       // Parse content sections - check for keywords in multiple languages
       let techSection = '', humanSection = '', gapSection = '';
+      let techTitle = '', humanTitle = '';
       
-      // Russian patterns
-      const ruTech = slide.content.match(/\*\*технологии:\*\*(.*?)(?=\*\*вывод для технологий:|$)/s);
-      const ruHuman = slide.content.match(/\*\*люди:\*\*(.*?)(?=\*\*вывод для людей:|$)/s);
-      const ruGap = slide.content.match(/\*\*разрыв:\*\*(.*?)$/s);
+      // ВАЖНО: для shift слайдов весь контент (Machine Vector, Human Reaction, Gap) находится в slide.content
+      // English patterns - ищем блоки текста между заголовками (включая стрелочку)
+      const machineBlock = slide.content.match(/\*\*Machine Vector:\*\*([\s\S]*?)(?=\n\n\*\*Human Reaction:)/);
+      const humanBlock = slide.content.match(/\*\*Human Reaction:\*\*([\s\S]*?)(?=\n\n\*\*Gap:)/);
       
-      if (ruTech) techSection = ruTech[1].trim().replace(/\*\*/g, '');
-      if (ruHuman) humanSection = ruHuman[1].trim().replace(/\*\*/g, '');
-      if (ruGap) gapSection = ruGap[1].trim().replace(/\*\*/g, '');
+      // Извлекаем основной текст (до стрелочки) и summary (после стрелочки)
+      if (machineBlock) {
+        const machineText = machineBlock[1].trim();
+        const lines = machineText.split('\n');
+        const arrowLineIndex = lines.findIndex(line => line.trim().startsWith('→'));
+        if (arrowLineIndex !== -1) {
+          techSection = lines.slice(0, arrowLineIndex).join('\n').trim();
+          techTitle = lines[arrowLineIndex].replace(/^→\s*/, '').trim();
+        } else {
+          techSection = machineText;
+        }
+      }
+      
+      if (humanBlock) {
+        const humanText = humanBlock[1].trim();
+        const lines = humanText.split('\n');
+        const arrowLineIndex = lines.findIndex(line => line.trim().startsWith('→'));
+        if (arrowLineIndex !== -1) {
+          humanSection = lines.slice(0, arrowLineIndex).join('\n').trim();
+          humanTitle = lines[arrowLineIndex].replace(/^→\s*/, '').trim();
+        } else {
+          humanSection = humanText;
+        }
+      }
+      
+      // Gap - весь текст до Key Stats/Tags
+      const gapMatch = slide.content.match(/\*\*Gap:\*\*\s*([\s\S]+?)(?=\n+\*\*(?:Key Stats|Tags))/);
+      if (gapMatch) {
+        gapSection = gapMatch[1].trim();
+      }
+      // Remove ** from gap
+      gapSection = gapSection.replace(/\*\*/g, '');
+
+      
+      // Extract gap title from brackets like [context gap]
+      let gapTitle = '';
+      const gapTitleMatch = gapSection.match(/^\[([^\]]+)\]/);
+      if (gapTitleMatch) {
+        gapTitle = gapTitleMatch[1];
+        gapSection = gapSection.replace(/^\[([^\]]+)\]\s*/, '').trim();
+      }
+      // Remove ** from gap
+      gapSection = gapSection.replace(/\*\*/g, '');
 
       // Extract shift name from title
       const shiftName = slide.metadata.title
@@ -255,22 +340,22 @@ function parseLanguage(lang) {
         id: shiftNum.toString().padStart(2, '0'),
         layerId: layerId,
         layerTitle: layerTitles[layerId][lang] || layerTitles[layerId]['en'],
-        title: slide.metadata.subtitle || '',
-        subtitle: shiftName || '',
+        title: shiftName || '',
+        subtitle: slide.metadata.subtitle || '',
         context: slide.metadata.alternativeSubtitle || '',
         machineCol: {
-          label: lang === 'en' ? 'MACHINE' : lang === 'ru' ? 'ТЕХНОЛОГИЯ' : lang === 'by' ? 'ТЭХНАЛОГІЯ' : 'TEHNOLOGIE',
-          title: lang === 'en' ? 'What\'s being built' : lang === 'ru' ? 'Что строится' : lang === 'by' ? 'Што будуецца' : 'Ce se construiește',
-          desc: techSection
+          label: lang === 'en' ? 'MACHINE VECTOR' : lang === 'ru' ? 'МАШИННЫЙ ВЕКТОР' : lang === 'by' ? 'МАШЫННЫ ВЕКТАР' : 'VECTOR MAȘINĂ',
+          title: techTitle || (lang === 'en' ? 'What\'s being built' : lang === 'ru' ? 'Что строится' : lang === 'by' ? 'Што будуецца' : 'Ce se construiește'),
+          desc: techSection || ''
         },
         humanCol: {
-          label: lang === 'en' ? 'HUMAN' : lang === 'ru' ? 'ЧЕЛОВЕК' : lang === 'by' ? 'ЧАЛАВЕК' : 'UMAN',
-          title: lang === 'en' ? 'How humans adapt' : lang === 'ru' ? 'Как люди адаптируются' : lang === 'by' ? 'Як людзі адаптуюцца' : 'Cum se adaptează oamenii',
-          desc: humanSection
+          label: lang === 'en' ? 'HUMAN REACTION' : lang === 'ru' ? 'ЧЕЛОВЕЧЕСКАЯ РЕАКЦИЯ' : lang === 'by' ? 'ЧАЛАВЕЧАЯ РЭАКЦЫЯ' : 'REACȚIE UMANĂ',
+          title: humanTitle || (lang === 'en' ? 'How humans adapt' : lang === 'ru' ? 'Как люди адаптируются' : lang === 'by' ? 'Як людзі адаптуюцца' : 'Cum se adaptează oamenii'),
+          desc: humanSection || ''
         },
         gap: {
-          title: lang === 'en' ? 'GAP' : lang === 'ru' ? 'РАЗРЫВ' : lang === 'by' ? 'РАЗРЫЎ' : 'DECALAJ',
-          desc: gapSection
+          title: gapTitle || (lang === 'en' ? 'GAP' : lang === 'ru' ? 'РАЗРЫВ' : lang === 'by' ? 'РАЗРЫЎ' : 'DECALAJ'),
+          desc: gapSection.trim()
         },
         stats: evidence.stats,
         researchTop: evidence.researchTop,

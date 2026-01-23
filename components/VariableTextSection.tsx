@@ -64,7 +64,7 @@ export const VariableTextSection: React.FC<VariableTextSectionProps> = ({ lang =
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=2500",
+          end: () => window.innerWidth < 768 ? "+=300" : "+=2500",
           pin: true,
           scrub: 0.5,
           anticipatePin: 1
@@ -149,7 +149,7 @@ export const VariableTextSection: React.FC<VariableTextSectionProps> = ({ lang =
     <div className="relative w-full bg-[#0A0A0A] text-[#F5F5F5]">
       <section 
         ref={containerRef} 
-        className="h-screen w-full flex flex-col justify-center px-[2vw] overflow-hidden relative" 
+        className="h-screen w-full flex flex-col items-center justify-center px-[2vw] overflow-hidden relative" 
       >
         <div className="flex w-full items-center justify-between h-full">
           {chars.map((item, index) => {
@@ -197,10 +197,9 @@ export const VariableTextSection: React.FC<VariableTextSectionProps> = ({ lang =
         {/* AI TOP */}
         <div 
           ref={aiTopRef}
-          className="absolute left-[2vw] pointer-events-none origin-left"
-          style={{ top: 'calc(50% - 11vw)' }}
+          className="absolute left-[2vw] pointer-events-none origin-left top-[calc(50%-13vw)] md:top-[calc(50%-11vw)]"
         >
-          <p className="font-sans text-[#F5F5F5] text-2xl md:text-4xl uppercase tracking-tighter font-black leading-none drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+          <p className="font-sans text-[#F5F5F5] text-lg md:text-4xl uppercase tracking-tighter font-black leading-none drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             {i18n?.variable.aiEvolving || 'AI Is Evolving'}
           </p>
         </div>
@@ -208,8 +207,7 @@ export const VariableTextSection: React.FC<VariableTextSectionProps> = ({ lang =
         {/* AI BOTTOM */}
         <div 
           ref={aiBotRef}
-          className="absolute left-[2vw] pointer-events-none origin-left"
-          style={{ top: 'calc(50% + 11vw)' }}
+          className="absolute left-[2vw] pointer-events-none origin-left top-[calc(50%+9vw)] md:top-[calc(50%+11vw)]"
         >
           <p className="font-sans text-[#DC2626] text-sm md:text-lg font-bold uppercase tracking-wider leading-tight">
             {i18n?.variable.aiFaster || 'Faster. Deeper. Smarter.'}
@@ -219,10 +217,9 @@ export const VariableTextSection: React.FC<VariableTextSectionProps> = ({ lang =
         {/* HUMAN TOP */}
         <div 
           ref={huTopRef}
-          className="absolute right-[2vw] text-right pointer-events-none origin-right flex flex-col items-end"
-          style={{ top: 'calc(50% - 11vw)' }}
+          className="absolute right-[2vw] text-right pointer-events-none origin-right flex flex-col items-end top-[calc(50%-13vw)] md:top-[calc(50%-11vw)]"
         >
-          <p className="font-sans text-[#F5F5F5] text-2xl md:text-4xl uppercase tracking-tighter font-black leading-none">
+          <p className="font-sans text-[#F5F5F5] text-lg md:text-4xl uppercase tracking-tighter font-black leading-none">
             {i18n?.variable.humanReacting || 'Humans Are Reacting'}
           </p>
         </div>
@@ -230,8 +227,7 @@ export const VariableTextSection: React.FC<VariableTextSectionProps> = ({ lang =
         {/* HUMAN BOTTOM */}
         <div 
           ref={huBotRef}
-          className="absolute right-[2vw] text-right pointer-events-none origin-right flex flex-col items-end"
-          style={{ top: 'calc(50% + 11vw)' }}
+          className="absolute right-[2vw] text-right pointer-events-none origin-right flex flex-col items-end top-[calc(50%+16vw)] md:top-[calc(50%+11vw)]"
         >
           <p className="font-sans text-neutral-400 text-sm md:text-lg font-bold uppercase tracking-wider leading-tight">
             {i18n?.variable.humanSlower || 'Slower. Overwhelmed. Adapting.'}

@@ -232,7 +232,41 @@ export default function App() {
 
   const handleJumpToConclusion = useCallback(() => setViewState({ view: 'conclusion', index: 0 }), []);
   const handleJumpToThankYou = useCallback(() => setViewState({ view: 'thankyou', index: 0 }), []);
-  
+
+  // Swipe navigation for mobile
+  useEffect(() => {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    };
+    
+    const handleTouchEnd = (e: TouchEvent) => {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      const diffX = touchStartX - touchEndX;
+      const diffY = touchStartY - touchEndY;
+      const minSwipeDistance = 50;
+      
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+        if (diffX > 0) handleNext();
+        else handlePrev();
+      }
+    };
+    
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchend', handleTouchEnd, { passive: true });
+    
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [handleNext, handlePrev]);
+
   const handleIndexNavigate = useCallback((type: string, id?: string) => {
       if (type === 'landing') closeReport();
       else if (type === 'manifesto') handleJumpToConclusion();
@@ -249,19 +283,93 @@ export default function App() {
       }
   }, [timeline, closeReport, handleJumpToConclusion, handleJumpToThankYou]);
 
+  // Single keyboard handler for all navigation
   useEffect(() => {
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      const isForward = e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.code === 'Space';
-      const isBackward = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
-      if ((isForward || isBackward) && viewState.view !== 'landing') e.preventDefault();
-      if (isForward) {
-          if (viewState.view === 'landing') {
-              if (e.key === 'ArrowRight' || e.key === 'Enter') openReport();
-          } else handleNext();
-      } else if (isBackward && viewState.view !== 'landing') handlePrev();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isArrowForward = e.key === 'ArrowRight' || e.key === 'ArrowDown';
+      const isArrowBackward = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
+      const isSpace = e.code === 'Space';
+      
+      // Arrows: next/prev page
+      if (isArrowForward || isArrowBackward) {
+        if (viewState.view !== 'landing') e.preventDefault();
+        if (isArrowForward) {
+          if (viewState.view === 'landing') openReport();
+          else handleNext();
+        } else if (isArrowBackward && viewState.view !== 'landing') {
+          handlePrev();
+        }
+        return;
+      }
+      
+      // Space: scroll down, at bottom go to next page
+      if (isSpace) {
+        e.preventDefault();
+        
+        // Landing page
+        if (viewState.view === 'landing') {
+          const pinnedSection = document.getElementById('pinned-svg-section');
+          if (!pinnedSection) return;
+          
+          const rect = pinnedSection.getBoundingClientRect();
+          
+          // Before pinned section - scroll down to it
+          if (rect.top > 10) {
+            window.scrollBy({ top: window.innerHeight * 0.9, behavior: 'smooth' });
+            return;
+          }
+          
+          // In pinned section - use snap points
+          const triggers = ScrollTrigger.getAll();
+          const st = triggers.find(t => t.vars.trigger === pinnedSection);
+          if (!st) return;
+          
+          const currentProgress = st.progress;
+          
+          // Animation complete - go to report
+          if (currentProgress >= 0.94) {
+            openReport();
+            return;
+          }
+          
+          // Jump to next snap point - each is a clear, complete state
+          // 1: "They intersect" clear
+          // 2: "They intersect" + "For a moment" both visible  
+          // 3: "And diverge" clear
+          // 4: "Creating" clear
+          // 5: "THE CONTEXT GAP" + definition visible
+          // 6: "11 TECTONIC SHIFTS" clear
+          // 7: "IN 4 LAYERS" all 4 rows visible (final state)
+          // 8: "INPUT/RESPONSE" manifesto complete with THE GAP
+          // 9: "11" red grid
+          // 10: Final -> next page
+          const snapPoints = [0.03, 0.08, 0.12, 0.28, 0.38, 0.48, 0.58, 0.72, 0.85, 0.97];
+          const nextSnap = snapPoints.find(p => p > currentProgress + 0.01);
+          if (nextSnap) {
+            const targetScroll = st.start + nextSnap * (st.end - st.start);
+            st.scroll(targetScroll);
+          }
+          return;
+        }
+        
+        // Other pages: check if we CAN scroll, then scroll or go next
+        const scrollTop = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const distanceToBottom = documentHeight - scrollTop - windowHeight;
+        
+        // If there's room to scroll (more than 100px), scroll down
+        if (distanceToBottom > 100) {
+          window.scrollBy({ top: windowHeight * 0.7, behavior: 'smooth' });
+        } else {
+          // At bottom - go to next page
+          handleNext();
+        }
+      }
     };
-    window.addEventListener('keydown', handleGlobalKeyDown);
-    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [viewState.view, handleNext, handlePrev, openReport]);
 
   useLayoutEffect(() => {
@@ -334,16 +442,16 @@ export default function App() {
         const getPrevTitle = () => {
           if (!prevItem) return '';
           if (prevItem.type === 'layer') return (prevItem.data as LayerData).title;
-          if (prevItem.type === 'shift') return (prevItem.data as ShiftData).subtitle || (prevItem.data as ShiftData).title;
-          if (prevItem.type === 'summary') return lang === 'ru' ? 'ИСПОЛНИТЕЛЬНОЕ РЕЗЮМЕ' : 'EXECUTIVE SUMMARY';
+          if (prevItem.type === 'shift') return (prevItem.data as ShiftData).title;
+          if (prevItem.type === 'summary') return (prevItem.data as LayerData).title;
           return '';
         };
         
         const getNextTitle = () => {
           if (!nextItem) return '';
           if (nextItem.type === 'layer') return (nextItem.data as LayerData).title;
-          if (nextItem.type === 'shift') return (nextItem.data as ShiftData).subtitle || (nextItem.data as ShiftData).title;
-          if (nextItem.type === 'summary') return lang === 'ru' ? 'ИСПОЛНИТЕЛЬНОЕ РЕЗЮМЕ' : 'EXECUTIVE SUMMARY';
+          if (nextItem.type === 'shift') return (nextItem.data as ShiftData).title;
+          if (nextItem.type === 'summary') return (nextItem.data as LayerData).title;
           return '';
         };
         
@@ -387,7 +495,7 @@ export default function App() {
         </div>
         
         {renderContent()}
-        <IndexNavigation onNavigate={handleIndexNavigate} theme={theme} toggleTheme={toggleTheme} lang={lang} setLang={setLang} showThemeToggle={viewState.view !== 'landing'} />
+        <IndexNavigation onNavigate={handleIndexNavigate} theme={theme} toggleTheme={toggleTheme} lang={lang} setLang={setLang} showThemeToggle={viewState.view !== 'landing'} forceDarkTheme={viewState.view === 'landing'} />
         <TimelineNav timeline={timeline} currentIndex={viewState.view === 'report' ? viewState.index : 0} viewState={viewState.view} onNavigate={handleNavigate} onNavigateToConclusion={handleJumpToConclusion} onNavigateToLanding={closeReport} onNavigateToThankYou={handleJumpToThankYou} theme={theme} visible={isNavVisible} />
     </div>
   );

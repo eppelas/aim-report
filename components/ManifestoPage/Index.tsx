@@ -5,6 +5,7 @@ import { ProtocolCard } from './ProtocolCard';
 import { EcoVisual } from './EcoVisuals';
 import { useI18n } from '../../hooks/useI18n';
 import { useManifestoData } from '../../hooks/useManifestoData';
+import { AIMindsetLogo } from '../AIMindsetLogo';
 
 const BLOCKED_DOMAINS = [
   'youtube.com',
@@ -257,14 +258,33 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext,
                                 )}
                             </div>
                         ) : (
-                            <iframe 
-                                src={browserUrl} 
-                                className="w-full h-full border-0" 
-                                title={browserTitle || "Browser"} 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowFullScreen
-                                onError={() => setIframeError(true)}
-                            ></iframe>
+                            <>
+                                <div className="absolute inset-0 flex items-center justify-center bg-neutral-100">
+                                    <div className="text-center">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626] mb-4 mx-auto"></div>
+                                        <p className="text-sm text-neutral-500 font-mono">loading...</p>
+                                    </div>
+                                </div>
+                                <iframe 
+                                    src={browserUrl} 
+                                    className="w-full h-full border-0 relative z-10 bg-white" 
+                                    title={browserTitle || "Browser"} 
+                                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowFullScreen
+                                    onLoad={(e) => {
+                                        const iframe = e.target as HTMLIFrameElement;
+                                        try {
+                                            if (!iframe.contentDocument || iframe.contentDocument.body.children.length === 0) {
+                                                setTimeout(() => setIframeError(true), 1000);
+                                            }
+                                        } catch (err) {
+                                            // Cross-origin - cannot check, assume OK
+                                        }
+                                    }}
+                                    onError={() => setIframeError(true)}
+                                ></iframe>
+                            </>
                         )}
                     </div>
                 </div>
@@ -297,8 +317,10 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext,
                         {(() => {
                           if (!manifesto?.content) return i18n?.manifesto.intro || "we're not a research institute. we're a lab — a place where people practice AI.";
                           const lines = manifesto.content.split('\n');
+                          const teamLine = lines.find(l => l.includes('AI Mindset team')) || '';
                           const introLine = lines.find(l => l.includes('lab')) || lines[1] || '';
-                          return introLine;
+                          const highlighted = introLine.replace(/practice/gi, '<span class="text-[#DC2626] font-semibold">practice</span>');
+                          return <>{teamLine && <><span dangerouslySetInnerHTML={{__html: teamLine}} /><br /><br /></>}<span dangerouslySetInnerHTML={{__html: highlighted}} /></>;
                         })()}
                     </p>
                 </div>
@@ -306,24 +328,24 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext,
         </div>
 
         <div className={`stats-row border-y ${styles.border} ${isDark ? 'bg-white/5' : 'bg-black/5'} backdrop-blur-sm`}>
-            <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                 {(() => {
                   if (!manifesto?.content) {
                     return (
                       <>
-                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>1,500+</span><span className={`font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Participants</span></div>
-                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>30+</span><span className={`font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Countries</span></div>
-                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>3 Years</span><span className={`font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Field Work</span></div>
+                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>1,500+</span><span className={`block font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Participants</span></div>
+                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>30+</span><span className={`block font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Countries</span></div>
+                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>3</span><span className={`block font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Years Field Work</span></div>
                       </>
                     );
                   }
-                  const statsMatch = manifesto.content.match(/\*\*(\d[^*]+)\*\*[^\n]*(\d[^*]+)[^\n]*\*\*(\d[^*]+)\*\*/);
+                  const statsMatch = manifesto.content.match(/\*\*([0-9,]+\+?)\s+\w+\*\*[^\n]*\*\*([0-9,]+\+?)\s+\w+\*\*[^\n]*\*\*([0-9]+)\s+(\w+)\*\*/);
                   if (statsMatch) {
                     return (
                       <>
-                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>{statsMatch[1].trim()}</span><span className={`font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Participants</span></div>
-                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>{statsMatch[2].trim()}</span><span className={`font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Countries</span></div>
-                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>{statsMatch[3].trim()}</span><span className={`font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Field Work</span></div>
+                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>{statsMatch[1]}</span><span className={`block font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Participants</span></div>
+                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>{statsMatch[2]}</span><span className={`block font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>Countries</span></div>
+                        <div className="stat-item group cursor-default"><span className={`block text-5xl md:text-6xl font-black ${styles.textMain} mb-2 group-hover:text-[#DC2626] transition-colors`}>{statsMatch[3]}</span><span className={`block font-mono text-xs uppercase tracking-widest text-[#DC2626] ${styles.statGroup} transition-colors`}>{statsMatch[4]} Field Work</span></div>
                       </>
                     );
                   }
@@ -344,7 +366,7 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext,
                     <div>
                         <h3 className={`font-mono ${styles.textMain} font-bold uppercase mb-4`}>The Reality</h3>
                         <p className={`${styles.textDim} leading-relaxed mb-6`}>Technologists like Amodei and Andreessen view the world from the top down.</p>
-                        <div className="void-glow group cursor-pointer inline-block px-6 py-4 border border-[#DC2626] rounded bg-[#DC2626]/10 backdrop-blur-sm relative overflow-hidden"><div className="absolute inset-0 bg-[#DC2626]/20 animate-pulse group-hover:bg-[#DC2626] transition-colors duration-500"></div><p className={`text-2xl ${isDark ? 'text-white' : 'text-black'} font-black uppercase relative z-10 tracking-wider flex items-center gap-4 group-hover:text-white transition-colors`}><span>We fill the void.</span><svg className="w-6 h-6 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg></p></div>
+                        <div className="void-glow group cursor-pointer inline-block px-6 py-4 border border-[#DC2626] rounded bg-[#DC2626]/10 backdrop-blur-sm relative overflow-hidden"><div className="absolute inset-0 bg-[#DC2626]/20 animate-pulse group-hover:bg-[#DC2626] transition-colors duration-500"></div><p className={`text-2xl ${isDark ? 'text-white' : 'text-black'} font-black uppercase relative z-10 tracking-wider flex items-center gap-4 group-hover:text-white transition-colors`}><span>We fill the void</span><AIMindsetLogo className="w-6 h-6 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-300" color={isDark ? 'white' : 'black'} /></p></div>
                     </div>
                 </div>
             </div>
@@ -397,7 +419,7 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({ onRestart, onNext,
                         className={`px-8 py-4 border ${isDark ? 'border-neutral-800 text-neutral-500' : 'border-neutral-300 text-neutral-600'} font-mono text-[10px] uppercase tracking-[0.2em] hover:text-[#DC2626] hover:border-[#DC2626] transition-all flex items-center justify-center gap-3`}
                     >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                        Review Summary
+                        Back to Summary
                     </button>
                     <button 
                         onClick={onNext} 

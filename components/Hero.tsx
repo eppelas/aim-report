@@ -68,10 +68,12 @@ export const Hero: React.FC<HeroProps> = ({ lang = 'en' }) => {
      }
   }, [tilt]);
 
-  // Scroll to next section smoothly
+  // Scroll to next section smoothly - к середине AI/HUMAN анимации
   const handleButtonClick = () => {
+      const isMobile = window.innerWidth < 768;
+      const scrollTarget = isMobile ? window.innerHeight * 1.3 : window.innerHeight * 1.5;
       window.scrollTo({
-          top: window.innerHeight,
+          top: scrollTarget,
           behavior: 'smooth'
       });
   };
@@ -111,7 +113,7 @@ export const Hero: React.FC<HeroProps> = ({ lang = 'en' }) => {
       
       {/* Interactive Magnetic Button */}
       <div 
-         className="absolute bottom-10 group cursor-pointer transition-transform duration-300 hover:scale-110"
+         className="absolute bottom-24 md:bottom-10 group cursor-pointer transition-transform duration-300 hover:scale-110"
          onClick={handleButtonClick}
       >
         <div className="relative w-12 h-12 flex items-center justify-center">

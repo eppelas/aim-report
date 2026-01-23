@@ -15,7 +15,7 @@
     "research": "Research",
     "industrySignals": "Industry Signals",
     "dataSources": "Data Sources",
-    "voices": "Voices"
+    "voices": "Community Voices"
   },
   "hero": {
     "title": "AI Mindset 2026 report",
@@ -58,7 +58,10 @@
     "finalQuote": "The gap between what machines generate and what humans can integrate is the",
     "finalQuoteHighlight": "defining challenge",
     "finalQuoteEnd": "of our time.",
-    "reviewButton": "Review",
+    "reviewButton": "Back",
     "manifestoButton": "The Manifesto"
+  },
+  "shift": {
+    "divideTitle": "The Divide"
   }
 }

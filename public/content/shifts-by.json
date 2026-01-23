@@ -4,16 +4,16 @@
       "id": "01",
       "layerId": "I",
       "layerTitle": "ФУНДАМЕНТ",
-      "title": "энергетычны столь",
-      "subtitle": "ад кошту - да межаў інфраструктуры",
+      "title": "ад кошту - да межаў інфраструктуры",
+      "subtitle": "энергетычны столь",
       "context": "без дастатковай колькасці энергіі разгортванне іі спыняецца. для агентаў, разважаючых мадэляў і новых адкрыццяў патрэбна энергія.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -23,16 +23,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "160%",
-          "label": "AI energy demand surge by 2030 ([IEA](https://www.iea.org/reports/electricity-2024) / [Goldman Sachs](https://www.goldmansachs.com/insights/articles/AI-poised-to-drive-160-increase-in-power-demand))"
+          "desc": "AI energy demand surge by 2030",
+          "url": "https://www.iea.org/reports/electricity-2024"
         },
         {
+          "label": "",
           "value": "40x",
-          "label": "Gap: $500B infrastructure vs $12B consumer spend ([Menlo Ventures](https://menlovc.com/perspective/2025-the-state-of-consumer-ai/) / [Goldman Sachs](https://www.goldmansachs.com/insights/articles/why-ai-companies-may-invest-more-than-500-billion-in-2026))"
+          "desc": "Gap: $500B infrastructure vs $12B consumer spend",
+          "url": "https://menlovc.com/perspective/2025-the-state-of-consumer-ai/"
         },
         {
+          "label": "",
           "value": "$7T",
-          "label": "Total AI infrastructure requirement ([McKinsey](https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-cost-of-compute-a-7-trillion-dollar-race-to-scale-data-centers) / Sam Altman)"
+          "desc": "Total AI infrastructure requirement",
+          "url": "https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-cost-of-compute-a-7-trillion-dollar-race-to-scale-data-centers"
         }
       ],
       "researchTop": [
@@ -81,16 +87,16 @@
       "id": "02",
       "layerId": "I",
       "layerTitle": "ФУНДАМЕНТ",
-      "title": "змяшчэнне (агентная праца)",
-      "subtitle": "copilot → аўтаномны калега",
+      "title": "copilot → аўтаномны калега",
+      "subtitle": "змяшчэнне (агентная праца)",
       "context": "калі энергетычная інфраструктура стабілізуецца, мадэлі могуць маштабавацца. разумныя мадэлі становяцца агентамі.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -100,12 +106,16 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "47%",
-          "label": "Workforce tasks automatable by 2030 ([McKinsey](https://www.mckinsey.com/mgi/our-research/generative-ai-and-the-future-of-work-in-america))"
+          "desc": "Workforce tasks automatable by 2030",
+          "url": "https://www.mckinsey.com/mgi/our-research/generative-ai-and-the-future-of-work-in-america"
         },
         {
+          "label": "",
           "value": "$46k",
-          "label": "Cost to replace a human with an agent ([Ark Invest](https://ark-invest.com/big-ideas-2025/))"
+          "desc": "Cost to replace a human with an agent",
+          "url": "https://ark-invest.com/big-ideas-2025/"
         }
       ],
       "researchTop": [
@@ -174,6 +184,11 @@
           "tag": "from tool to participant",
           "text": "from 'ai as smart assistant' to 'ai as full participant in the process'",
           "author": "Yakov Vasiliev, AI Strategy × Product Architecture"
+        },
+        {
+          "tag": "from consumer to builder",
+          "text": "business coach → ai chatbot developer. \"vibe-coded prototypes, shipped in 30 minutes what stalled 1.5 months",
+          "author": "Natalya Savenkova, Project Lead → Product Automation"
         }
       ]
     },
@@ -181,16 +196,16 @@
       "id": "03",
       "layerId": "I",
       "layerTitle": "ФУНДАМЕНТ",
-      "title": "суверэнітэт (раскол інтэрнэту)",
-      "subtitle": "глабальная адкрытасць → фрагментаваныя стэкі",
+      "title": "глабальная адкрытасць → фрагментаваныя стэкі",
+      "subtitle": "суверэнітэт (раскол інтэрнэту)",
       "context": "калі агенты датыкаюцца грошай, інстытуты патрабуюць правілаў. агентная праца робіць іі стратэгічным актывам.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -200,16 +215,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "3%",
-          "label": "Paying users for AI (97% are the product) ([Menlo Ventures](https://menlovc.com/perspective/2025-the-state-of-consumer-ai/))"
+          "desc": "Paying users for AI",
+          "url": "https://menlovc.com/perspective/2025-the-state-of-consumer-ai/"
         },
         {
+          "label": "",
           "value": "€13/mo",
-          "label": "Meta's privacy price in Europe ([Wired](https://www.wired.com/story/meta-facebook-pay-for-privacy-europe/))"
+          "desc": "Meta's privacy price in Europe",
+          "url": "https://www.wired.com/story/meta-facebook-pay-for-privacy-europe/"
         },
         {
+          "label": "",
           "value": "90%",
-          "label": "Companies with \"Shadow AI\" usage ([MIT/Fortune](https://fortune.com/2025/08/19/shadow-ai-economy-mit-study-genai-divide-llm-chatbots/))"
+          "desc": "Companies with \"Shadow AI\" usage",
+          "url": "https://fortune.com/2025/08/19/shadow-ai-economy-mit-study-genai-divide-llm-chatbots/"
         }
       ],
       "researchTop": [
@@ -263,16 +284,16 @@
       "id": "04",
       "layerId": "II",
       "layerTitle": "МЫСЛЕННЕ",
-      "title": "разважанне",
-      "subtitle": "chatbots (сістэма 1) → думаючыя мадэлі (сістэма 2)",
+      "title": "chatbots (сістэма 1) → думаючыя мадэлі (сістэма 2)",
+      "subtitle": "разважанне",
       "context": "фундаментальны пласт завершаны. AI пераходзіць ад інстынктыўных адказаў да абдуманай думкі. акт два sequoia.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -282,16 +303,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "126%",
-          "label": "Productivity boost from AI Copilots ([Qodo](https://www.qodo.ai/reports/state-of-ai-code-quality/))"
+          "desc": "Productivity boost from AI Copilots",
+          "url": "https://www.qodo.ai/reports/state-of-ai-code-quality/"
         },
         {
+          "label": "",
           "value": "21%",
-          "label": "Quality degradation when prioritizing speed ([Nielsen Norman Group](https://www.nngroup.com/articles/ai-programmers-productive/))"
+          "desc": "Quality degradation when prioritizing speed",
+          "url": "https://www.nngroup.com/articles/ai-programmers-productive/"
         },
         {
+          "label": "",
           "value": "48%",
-          "label": "Error rate in complex reasoning tasks ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))"
+          "desc": "Error rate in complex reasoning tasks",
+          "url": "https://www.korra.ai/ai-hallucination-enterprise-risk"
         }
       ],
       "researchTop": [
@@ -335,16 +362,16 @@
       "id": "05",
       "layerId": "II",
       "layerTitle": "МЫСЛЕННЕ",
-      "title": "веды (памяць)",
-      "subtitle": "назапашванне інфармацыі → фільтрацыя кантэксту",
+      "title": "назапашванне інфармацыі → фільтрацыя кантэксту",
+      "subtitle": "веды (памяць)",
       "context": "разважаючыя мадэлі не могуць думаць у вакууме. ім патрэбен максімальны кантэкст - карпаратыўныя даныя, дакументы, размовы.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -354,16 +381,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "$67B",
-          "label": "Annual financial risk from unmanaged context/hallucinations ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))"
+          "desc": "Annual financial risk from unmanaged context/hallucinations",
+          "url": "https://www.korra.ai/ai-hallucination-enterprise-risk"
         },
         {
+          "label": "",
           "value": "30%",
-          "label": "Work time lost to internal search ([Gartner](https://www.gartner.com/en/documents/5415263))"
+          "desc": "Work time lost to internal search",
+          "url": "https://www.gartner.com/en/documents/5415263"
         },
         {
+          "label": "",
           "value": "1M tokens",
-          "label": "Model context window vs 7 items human working memory limit ([Anthropic](https://www.anthropic.com/news/claude-3-5-sonnet))"
+          "desc": "Model context window vs 7 items human working memory limit",
+          "url": "https://www.anthropic.com/news/claude-3-5-sonnet"
         }
       ],
       "researchTop": [
@@ -429,16 +462,16 @@
       "id": "06",
       "layerId": "II",
       "layerTitle": "МЫСЛЕННЕ",
-      "title": "адкрыццё (генератыўная навука)",
-      "subtitle": "пошук інфармацыі → генерацыя гіпотэз",
+      "title": "пошук інфармацыі → генерацыя гіпотэз",
+      "subtitle": "адкрыццё (генератыўная навука)",
       "context": "калі AI атрымлівае доступ да даследаванняў у маштабе, ён чытае мільёны артыкулаў за ноч. адкрыцці са хуткасцю машыны.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -448,16 +481,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "100 → 10",
-          "label": "Scientific progress compression timeline (years) ([Dario Amodei](https://darioamodei.com/machines-of-loving-grace))"
+          "desc": "Scientific progress compression timeline",
+          "url": "https://darioamodei.com/machines-of-loving-grace"
         },
         {
+          "label": "",
           "value": "78%",
-          "label": "Improvement in research speed with AI tools ([StackOverflow Developer Survey](https://survey.stackoverflow.co/2024))"
+          "desc": "Improvement in research speed with AI tools",
+          "url": "https://survey.stackoverflow.co/2024"
         },
         {
+          "label": "",
           "value": "2026-2028",
-          "label": "Human data exhaustion timeline ([Epoch AI](https://epochai.org/blog/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data))"
+          "desc": "Human data exhaustion timeline",
+          "url": "https://epochai.org/blog/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data"
         }
       ],
       "researchTop": [
@@ -501,16 +540,16 @@
       "id": "07",
       "layerId": "III",
       "layerTitle": "ІНТЭРФЕЙС",
-      "title": "майстэрства (канец сінтаксісу)",
-      "subtitle": "сінтаксіс → vibe кодынг & крызіс цэласнасці",
+      "title": "сінтаксіс → vibe кодынг & крызіс цэласнасці",
+      "subtitle": "майстэрства (канец сінтаксісу)",
       "context": "калі агенты могуць аркестраваць рабочыя працэсы, кодынг становіцца самым лёгкім даменам для аўтаматызацыі.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -520,16 +559,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "65%",
-          "label": "Of new code at Google is AI-generated ([Sundar Pichai](https://www.cnbc.com/2024/10/29/alphabet-earnings-q3-2024.html))"
+          "desc": "Of new code at Google is AI-generated",
+          "url": "https://www.cnbc.com/2024/10/29/alphabet-earnings-q3-2024.html"
         },
         {
+          "label": "",
           "value": "46%",
-          "label": "Developers distrust AI code quality ([GitClear](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality))"
+          "desc": "Developers distrust AI code quality",
+          "url": "https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality"
         },
         {
+          "label": "",
           "value": "50%",
-          "label": "Increase in code churn from AI-generated code ([GitClear](https://www.gitclear.com/))"
+          "desc": "Increase in code churn from AI-generated code",
+          "url": "https://www.gitclear.com/"
         }
       ],
       "researchTop": [
@@ -605,16 +650,16 @@
       "id": "08",
       "layerId": "III",
       "layerTitle": "ІНТЭРФЕЙС",
-      "title": "рэальнасць (цела)",
-      "subtitle": "лічбавая сімуляцыя → фізічны інтэлект",
+      "title": "лічбавая сімуляцыя → фізічны інтэлект",
+      "subtitle": "рэальнасць (цела)",
       "context": "калі AI мае даныя аб фізічным свеце, ён можа яго сімуляваць. AI вучыць фізіку не датыкаючыся атамаў.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -624,12 +669,16 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "2027-2028",
-          "label": "Timeline for useful household robots ([Kyle Vogt](https://www.theverge.com/2024/3/13/24099757/kyle-vogt-cruise-robotics-startup))"
+          "desc": "Timeline for useful household robots",
+          "url": "https://www.theverge.com/2024/3/13/24099757/kyle-vogt-cruise-robotics-startup"
         },
         {
+          "label": "",
           "value": "$800M",
-          "label": "Tyler Perry studio expansion halted after Sora demo ([Hollywood Reporter](https://www.hollywoodreporter.com/business/business-news/tyler-perry-ai-alarm-1235833276/))"
+          "desc": "Tyler Perry studio expansion halted after Sora demo",
+          "url": "https://www.hollywoodreporter.com/business/business-news/tyler-perry-ai-alarm-1235833276/"
         }
       ],
       "researchTop": [
@@ -657,16 +706,16 @@
       "id": "09",
       "layerId": "III",
       "layerTitle": "ІНТЭРФЕЙС",
-      "title": "абарона (цёмны лес)",
-      "subtitle": "кібербяспека → кагнітыўная вайна",
+      "title": "кібербяспека → кагнітыўная вайна",
+      "subtitle": "абарона (цёмны лес)",
       "context": "калі сімуляцыя танная, сінтэтычная рэальнасць становіцца зброяй. дыпфейкі каштуюць амаль нуль.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -676,28 +725,40 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "87%",
-          "label": "Organizations experiencing AI-driven attacks ([Cybersecurity surveys](https://www.cybersecuritydive.com/))"
+          "desc": "Organizations experiencing AI-driven attacks",
+          "url": "https://www.cybersecuritydive.com/"
         },
         {
+          "label": "",
           "value": "85%",
-          "label": "Organizations attacked with deepfakes ([Deepstrike](https://deepstrike.io/blog/deepfake-statistics-2025))"
+          "desc": "Organizations attacked with deepfakes",
+          "url": "https://deepstrike.io/blog/deepfake-statistics-2025"
         },
         {
+          "label": "",
           "value": "1,265%",
-          "label": "AI-driven phishing increase ([CrowdStrike](https://www.crowdstrike.com/))"
+          "desc": "AI-driven phishing increase",
+          "url": "https://www.crowdstrike.com/"
         },
         {
+          "label": "",
           "value": "$25.6M",
-          "label": "Single deepfake fraud loss ([All About AI](https://www.allaboutai.com/resources/ai-statistics/ai-cyberattack/))"
+          "desc": "Single deepfake fraud loss",
+          "url": "https://www.allaboutai.com/resources/ai-statistics/ai-cyberattack/"
         },
         {
+          "label": "",
           "value": "10x",
-          "label": "Increase in deepfake identity attacks 2024-2025 ([Industry reports](https://deepstrike.io/))"
+          "desc": "Increase in deepfake identity attacks 2024-2025",
+          "url": "https://deepstrike.io/"
         },
         {
+          "label": "",
           "value": "97%",
-          "label": "Cybersecurity professionals fear AI-driven incidents ([Surveys](https://www.cybersecuritydive.com/))"
+          "desc": "Cybersecurity professionals fear AI-driven incidents",
+          "url": "https://www.cybersecuritydive.com/"
         }
       ],
       "researchTop": [
@@ -751,16 +812,16 @@
       "id": "10",
       "layerId": "IV",
       "layerTitle": "ЧАЛАВЕЧНАСЦЬ",
-      "title": "наратыў (выраўноўванне як цэнзура)",
-      "subtitle": "галюцынацыя → ідэалагічныя фільтры",
+      "title": "галюцынацыя → ідэалагічныя фільтры",
+      "subtitle": "наратыў (выраўноўванне як цэнзура)",
       "context": "крызіс абароны прымушае выраўноўванне. бяспека становіцца цэнзурай.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -770,16 +831,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "$67.4B",
-          "label": "Global enterprise losses from AI hallucinations ([Korra AI](https://www.korra.ai/blog/ai-hallucination-enterprise-risk))"
+          "desc": "Global enterprise losses from AI hallucinations",
+          "url": "https://www.korra.ai/ai-hallucination-enterprise-risk"
         },
         {
+          "label": "",
           "value": "47%",
-          "label": "Business leaders making decisions on hallucinated output ([Forbes](https://www.forbes.com/sites/bernardmarr/2024/03/generative-ai-hallucinations/))"
+          "desc": "Business leaders making decisions on hallucinated output",
+          "url": "https://www.forbes.com/sites/bernardmarr/2024/03/generative-ai-hallucinations/"
         },
         {
+          "label": "",
           "value": "0.7%",
-          "label": "Best hallucination rate (Gemini 2.0 Flash) ([ISACA](https://www.isaca.org/resources/news-and-trends/isaca-now-blog/2024/ai-hallucinations))"
+          "desc": "Best hallucination rate",
+          "url": "https://www.isaca.org/resources/news-and-trends/isaca-now-blog/2024/ai-hallucinations"
         }
       ],
       "researchTop": [
@@ -823,16 +890,16 @@
       "id": "11",
       "layerId": "IV",
       "layerTitle": "ЧАЛАВЕЧНАСЦЬ",
-      "title": "інтымнасць (сябры на продаж)",
-      "subtitle": "інструмент → эмацыйны кампаньён",
+      "title": "інструмент → эмацыйны кампаньён",
+      "subtitle": "інтымнасць (сябры на продаж)",
       "context": "калі AI адаптуецца занадта добра, ён трансфармуецца з інструмента ў кампаньёна.",
       "machineCol": {
-        "label": "ТЭХНАЛОГІЯ",
+        "label": "МАШЫННЫ ВЕКТАР",
         "title": "Што будуецца",
         "desc": ""
       },
       "humanCol": {
-        "label": "ЧАЛАВЕК",
+        "label": "ЧАЛАВЕЧАЯ РЭАКЦЫЯ",
         "title": "Як людзі адаптуюцца",
         "desc": ""
       },
@@ -842,16 +909,22 @@
       },
       "stats": [
         {
+          "label": "",
           "value": "2+ hours",
-          "label": "Daily sessions in Character.ai, Replika, Talkie"
+          "desc": "Daily sessions in Character.ai, Replika, Talkie",
+          "url": "https://www.aboutchromebooks.com/character-ai-statistics/"
         },
         {
+          "label": "",
           "value": "#1",
-          "label": "Companionship is top retention category in Gen AI apps ([a16z Top 100](https://a16z.com/100-gen-ai-apps-2025/))"
+          "desc": "Companionship is top retention category in Gen AI apps",
+          "url": "https://a16z.com/100-gen-ai-apps-2025/"
         },
         {
+          "label": "",
           "value": "95%",
-          "label": "GenAI pilots failing to deliver ROI ([MIT](https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/))"
+          "desc": "GenAI pilots failing to deliver ROI",
+          "url": "https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/"
         }
       ],
       "researchTop": [
@@ -908,44 +981,44 @@
       "id": "I",
       "title": "ФУНДАМЕНТ",
       "subtitle": "калі інфраструктура ламаецца. фізіка, эканоміка і ўлада.",
-      "desc": "",
-      "constraint": "ці можам мы забяспечыць энергіяй? ці можам дазволіць? хто кантралюе? энергарэсурсы, працоўная сіла, незалежнасць. матэрыяльныя абмежаванні, якія ствараюць базу.",
+      "desc": "энергарэсурсы, працоўная сіла, незалежнасць.\nматэрыяльныя абмежаванні, якія ствараюць базу.",
+      "constraint": "",
       "metaphor": "globe"
     },
     {
       "id": "II",
       "title": "КАГНІЦЫЯ",
       "subtitle": "архітэктура сэнсу і розуму",
-      "desc": "з **энергетычнай інфраструктурай**, **агентнай працай** і **геапалітычнымі стэкамі** на месцы, іі пераходзіць ад сырых вылічэнняў да **здольнасці разважаць**. гэты пласт адказвае на тры пытанні: **ці можам мы давяраць як ён думае?** **ці можам мы праверыць яго логіку?** **ці можам мы паскорыць адкрыцці?**",
-      "constraint": "як мы думаем і вучымся. разважанне, веды, адкрыццё.",
+      "desc": "як мы думаем і вучымся.\nразважанне, веды, адкрыццё.",
+      "constraint": "з **энергетычнай інфраструктурай**, **агентнай працай** і **геапалітычнымі стэкамі** на месцы, іі пераходзіць ад сырых вылічэнняў да **здольнасці разважаць**. гэты пласт адказвае на тры пытанні: **ці можам мы давяраць як ён думае?** **ці можам мы праверыць яго логіку?** **ці можам мы паскорыць адкрыцці?**",
       "metaphor": "globe"
     },
     {
       "id": "III",
       "title": "ІНТЭРФЕЙС",
       "subtitle": "як мы будуем, абараняем і жывём",
-      "desc": "з разважаннем, доступам да ведаў і здольнасцямі да адкрыццяў, іі рухаецца ад **абстрактнага інтэлекту да практычнага выканання**. **ці можам мы падтрымліваць тое што будуем?** **ці можам мы злучыць лічбавае і фізічнае?** **ці можам мы абараніцца ад таго што ствараем?**",
-      "constraint": "як мы будуем, абараняем і жывём",
+      "desc": "як мы будуем, абараняем і жывём",
+      "constraint": "з разважаннем, доступам да ведаў і здольнасцямі да адкрыццяў, іі рухаецца ад **абстрактнага інтэлекту да практычнага выканання**. **ці можам мы падтрымліваць тое што будуем?** **ці можам мы злучыць лічбавае і фізічнае?** **ці можам мы абараніцца ад таго што ствараем?**",
       "metaphor": "globe"
     },
     {
       "id": "IV",
       "title": "ЧАЛАВЕЧНАСЦЬ",
       "subtitle": "калі машыны фармуюць сэнс. наратыў, інтымнасць, праўда",
-      "desc": "крызіс абароны прымушае выраўноўванне. бяспека становіцца цэнзурай. калі наратыў фільтруецца і давер каліапсуе, людзі адступаюць да іі кампаньёнаў.",
-      "constraint": "фінальны пласт. як мы звязваемся, у што верым, каму давяраем.",
+      "desc": "фінальны пласт.\nяк мы звязваемся, у што верым, каму давяраем.",
+      "constraint": "крызіс абароны прымушае выраўноўванне. бяспека становіцца цэнзурай. калі наратыў фільтруецца і давер каліапсуе, людзі адступаюць да іі кампаньёнаў.",
       "metaphor": "globe"
     }
   ],
   "manifesto": {
     "title": "маніфест",
     "subtitle": "дык... што далей?",
-    "content": "перазагрузка суверэнітэту\nмы не даследчы інстытут. мы лабараторыя — месца дзе людзі практыкуюць AI.\n**1,500+ удзельнікаў** у **30+ краінах**, **3 гады** палявой працы.\nгэты справаздача не кабінетнае даследаванне. яна загартавана палявымі нататкамі з лабараторый, артэфактамі супольнасці і рэальнымі зрухамі якія людзі перажываюць.\n**кантэкст:**\nбольшая частка дыскурсу пра іі адбываецца ў крайнасцях:\n**утапічны хайп** ад кансалтынгу. **экзістэнцыяльная паніка** ад медыя. **адэрманасць аптымізацыяй** ад тэхлідэраў.\nбудучыня чалавецтва пішацца тэхнолагамі і капіталістамі якія глядзяць на свет зверху ўніз.\n**мы запаўняем пустату.**\nмы ставімся да **абмежаванняў чалавечай адаптацыі** так жа сур'ёзна як да тэхналагічнага паскарэння. пакуль іі сціскае 100 гадоў навукі ў дзесяцігоддзе, мы даём **інструкцыю для чалавека як не згарэць у працэсе.**\n**пратаколы:**\nнаша жыццё працуе на канфігурацыі. што ты кажаш так не думаючы. што перапыняе цябе. давай перайдзем ад \"я паспрабую\" да \"у мяне ёсць дэфолты\".\n**узровень 01 - простае (пачні тут):**\nзаўважай калі прымаеш вывад AI не думаючы.\nзахавай адну ідэю афлайн. напішы ад рукі.\nвыключы адно паведамленне. вярні 10 хвілін.\nпраясні сваю думку перад запытам да AI.\nпаставі на паўзу перад даверам выводу.\n**узровень 02 - сярэдні (будуй звычкі):**\nстварыя персанальную базу ведаў для адной вобласці.\nтэставай 3 мадэлі на адным пытанні каб бачыць зрух.\nупрадзі адзін кантэкстны фільтр.\nпапярэдзь старэйшае пакаленне пра сінтэтычную інфармацыю.\nпрактыкуй аналаг: званкі, почырк.\n**узровень 03 - прасунуты (будуй сістэмы):**\nразгарні агентаў-абаронцаў.\nустанаві сямейныя \"сакрэтныя рукапажацці\".\nбудуй local-first рабочыя працэсы.\nправяраў ланцужкі разважанняў.\nадмовіся ад трэніроўкі на тваіх даных.\n**узровень 04 - глыбокі (структурны):**\nзрушайся ад Стваральніка да Кансільерыі.\nцані tacit knowledge.\nпрактыкуй дывергентнае тэставанне.\nмы не можам закрыць усе разрывы, але па меншай меры можам усведамляць іх і дзейнічаць адпаведна.\n**наша экасістэма:**\n→ [**ivanov.aimindset.org**](https://ivanov.aimindset.org) — IFS + AI: абарона псіхікі\n→ [**intention.aimindset.org**](https://intention.aimindset.org) — Intention OS: кіраванне ўвагай калі кантэкст выбухае\n→ [**spiridonov.aimindset.org**](https://spiridonov.aimindset.org) — абарона прагматычным рамантызмам\n→ [**AI ARK knowledge system**](https://aimindsetspace.substack.com/p/ai-ark-knowledge-system) — комплексная архітэктура ведаў\n→ [**Founder OS YouTube**](https://youtube.com/@aimindsetlabs) — брандмауэры ментальнага здароўя\n→ [**Coding with Gemini**](https://telegram.me/ai_mind_set/282) — практычныя гайды\n→ [**@ai_mind_set**](https://t.me/ai_mind_set) — штодзённыя сігналы & палявыя нататкі\n**заставайся на сувязі:**\nкалі гэты артэфакт дапамог табе назваць церушчанне — не губляй ніт.\n→ [**падпісацца на substack**](https://aimindsetspace.substack.com) — наступныя рэсеты, палявыя нататкі, шаблоны, адкрыцці лабараторый\nтолькі сігналы. без спаму. адпіска ў любы момант."
+    "content": "перазагрузка суверэнітэту\n\nмы не даследчы інстытут. мы лабараторыя — месца дзе людзі практыкуюць AI.\n\n**1,500+ удзельнікаў** у **30+ краінах**, **3 гады** палявой працы.\n\nгэты справаздача не кабінетнае даследаванне. яна загартавана палявымі нататкамі з лабараторый, артэфактамі супольнасці і рэальнымі зрухамі якія людзі перажываюць.\n\n**кантэкст:**\n\nбольшая частка дыскурсу пра іі адбываецца ў крайнасцях:\n\n**утапічны хайп** ад кансалтынгу. **экзістэнцыяльная паніка** ад медыя. **адэрманасць аптымізацыяй** ад тэхлідэраў.\n\nбудучыня чалавецтва пішацца тэхнолагамі і капіталістамі якія глядзяць на свет зверху ўніз.\n\n**мы запаўняем пустату.**\n\nмы ставімся да **абмежаванняў чалавечай адаптацыі** так жа сур'ёзна як да тэхналагічнага паскарэння. пакуль іі сціскае 100 гадоў навукі ў дзесяцігоддзе, мы даём **інструкцыю для чалавека як не згарэць у працэсе.**\n\n**пратаколы:**\n\nнаша жыццё працуе на канфігурацыі. што ты кажаш так не думаючы. што перапыняе цябе. давай перайдзем ад \"я паспрабую\" да \"у мяне ёсць дэфолты\".\n\n**узровень 01 - простае (пачні тут):**\n\nзаўважай калі прымаеш вывад AI не думаючы.\n\nзахавай адну ідэю афлайн. напішы ад рукі.\n\nвыключы адно паведамленне. вярні 10 хвілін.\n\nпраясні сваю думку перад запытам да AI.\n\nпаставі на паўзу перад даверам выводу.\n\n**узровень 02 - сярэдні (будуй звычкі):**\n\nстварыя персанальную базу ведаў для адной вобласці.\n\nтэставай 3 мадэлі на адным пытанні каб бачыць зрух.\n\nупрадзі адзін кантэкстны фільтр.\n\nпапярэдзь старэйшае пакаленне пра сінтэтычную інфармацыю.\n\nпрактыкуй аналаг: званкі, почырк.\n\n**узровень 03 - прасунуты (будуй сістэмы):**\n\nразгарні агентаў-абаронцаў.\n\nустанаві сямейныя \"сакрэтныя рукапажацці\".\n\nбудуй local-first рабочыя працэсы.\n\nправяраў ланцужкі разважанняў.\n\nадмовіся ад трэніроўкі на тваіх даных.\n\n**узровень 04 - глыбокі (структурны):**\n\nзрушайся ад Стваральніка да Кансільерыі.\n\nцані tacit knowledge.\n\nпрактыкуй дывергентнае тэставанне.\n\nмы не можам закрыць усе разрывы, але па меншай меры можам усведамляць іх і дзейнічаць адпаведна.\n\n**наша экасістэма:**\n\n→ [**ivanov.aimindset.org**](https://ivanov.aimindset.org) — IFS + AI: абарона псіхікі\n\n→ [**intention.aimindset.org**](https://intention.aimindset.org) — Intention OS: кіраванне ўвагай калі кантэкст выбухае\n\n→ [**spiridonov.aimindset.org**](https://spiridonov.aimindset.org) — абарона прагматычным рамантызмам\n\n→ [**AI ARK knowledge system**](https://aimindsetspace.substack.com/p/ai-ark-knowledge-system) — комплексная архітэктура ведаў\n\n→ [**Founder OS YouTube**](https://youtube.com/@aimindsetlabs) — брандмауэры ментальнага здароўя\n\n→ [**Coding with Gemini**](https://telegram.me/ai_mind_set/282) — практычныя гайды\n\n→ [**@ai_mind_set**](https://t.me/ai_mind_set) — штодзённыя сігналы & палявыя нататкі\n\n**заставайся на сувязі:**\n\nкалі гэты артэфакт дапамог табе назваць церушчанне — не губляй ніт.\n\n→ [**падпісацца на substack**](https://aimindsetspace.substack.com) — наступныя рэсеты, палявыя нататкі, шаблоны, адкрыцці лабараторый\n\nтолькі сігналы. без спаму. адпіска ў любы момант."
   },
   "thankYou": {
     "title": "дзякуй",
     "subtitle": "за чытанне",
-    "content": "**аўтары:**\n**anca stavenski** — дызайн & логіка\n**alex p** — ідэі\n**ray svitla** — даследаванне\n**спасылкі:**\n→ [**падпісацца на substack**](https://aimindsetspace.substack.com) — атрымаць наступныя рэсеты & сігналы\n→ [**даследаваць экасістэму**](https://aimindset.org) — лабараторыі, інструменты, супольнасць\n→ [**звязацца з намі**](mailto:info@aimindset.org) — партнёрствы / выступленні\nканец перадачы"
+    "content": "**аўтары:**\n\n**anca stavenski** — дызайн & логіка\n\n**alex p** — ідэі\n\n**ray svitla** — даследаванне\n\n**спасылкі:**\n\n→ [**падпісацца на substack**](https://aimindsetspace.substack.com) — атрымаць наступныя рэсеты & сігналы\n\n→ [**даследаваць экасістэму**](https://aimindset.org) — лабараторыі, інструменты, супольнасць\n\n→ [**звязацца з намі**](mailto:info@aimindset.org) — партнёрствы / выступленні\n\nканец перадачы"
   },
-  "generated": "2026-01-23T13:02:58.834Z"
+  "generated": "2026-01-23T23:44:33.438Z"
 }
