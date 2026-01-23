@@ -479,7 +479,7 @@ export const TectonicShifts: React.FC<TectonicShiftsProps> = ({ onOpenReport, la
       id="pinned-svg-section"
       ref={containerRef} 
       className="relative w-full h-screen bg-[#0A0A0A] overflow-hidden flex items-center justify-center perspective-[1000px]"
-      style={{ perspective: '1000px' }} 
+      style={{ perspective: '1000px', visibility: 'hidden' }} 
       onTouchStart={() => triggerHaptic('light')}
     >
       <div 

@@ -246,6 +246,9 @@ export default function App() {
     };
     
     const handleTouchEnd = (e: TouchEvent) => {
+      // Don't handle swipe on landing page
+      if (viewState.view === 'landing') return;
+      
       touchEndX = e.changedTouches[0].screenX;
       touchEndY = e.changedTouches[0].screenY;
       const diffX = touchStartX - touchEndX;
@@ -265,7 +268,7 @@ export default function App() {
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [handleNext, handlePrev]);
+  }, [handleNext, handlePrev, viewState.view]);
 
   const handleIndexNavigate = useCallback((type: string, id?: string) => {
       if (type === 'landing') closeReport();
