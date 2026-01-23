@@ -72,6 +72,41 @@
           "title": "Goldman Sachs Fossil Fuel Reality",
           "url": "https://www.goldmansachs.com/intelligence/pages/gen-ai-too-much-spend-too-little-benefit.html",
           "description": "60% of increased demand met by fossil fuels, adding 220M tons CO2 annually"
+        },
+        {
+          "title": "A painful power crunch that could constrain AI's growth likely lies ahead\" (Brian Janous)",
+          "url": "https://www.goldmansachs.com/intelligence/pages/gen-ai-too-much-spend-too-little-benefit.html",
+          "description": "Goldman Sachs"
+        },
+        {
+          "title": "Microsoft reopening Three Mile Island nuclear plant for AI power",
+          "url": "https://www.reuters.com/markets/deals/constellation-inks-power-supply-deal-with-microsoft-2024-09-20/",
+          "description": "Reuters"
+        },
+        {
+          "title": "AI poised to drive 160% increase in data center power demand",
+          "url": "https://www.goldmansachs.com/insights/articles/AI-poised-to-drive-160-increase-in-power-demand",
+          "description": "Goldman Sachs"
+        },
+        {
+          "title": "2025 State of Consumer AI ($12B spend)",
+          "url": "https://menlovc.com/perspective/2025-the-state-of-consumer-ai/",
+          "description": "Menlo Ventures"
+        },
+        {
+          "title": "The physical grid cannot be built fast enough",
+          "url": "https://itbrief.news/story/when-the-grid-becomes-the-bottleneck-the-real-threat-to-ai-deployment",
+          "description": "IT Brief"
+        },
+        {
+          "title": "Intelligence per Watt",
+          "url": "https://snorkel.ai/blog/intelligence-per-watt-a-new-metric-for-ais-future/",
+          "description": "Snorkel AI / McKinsey"
+        },
+        {
+          "title": "$7T Total AI infrastructure requirement",
+          "url": "https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-cost-of-compute-a-7-trillion-dollar-race-to-scale-data-centers",
+          "description": "McKinsey"
         }
       ],
       "aimEvidence": [],
@@ -155,6 +190,11 @@
           "title": "Josh Bersin Hiring for AI",
           "url": "https://www.linkedin.com/pulse/hiring-ai-new-hr-frontier-josh-bersin/",
           "description": "Emergence of AI talent management as new HR discipline"
+        },
+        {
+          "title": "SHRM",
+          "url": "https://www.shrm.org/about/press-room/ai-s-wake-up-call--new-shrm-research-reveals-23-2-million-americ",
+          "description": "23.2M Jobs Exposed to AI"
         }
       ],
       "aimEvidence": [
@@ -254,6 +294,31 @@
           "title": "WebAI Local-First AI",
           "url": "https://www.webai.com/blog/what-is-local-ai",
           "description": "Private drafting, smaller circles, local storage, intentional friction against performative posting"
+        },
+        {
+          "title": "Leopold Aschenbrenner",
+          "url": "https://situational-awareness.ai/",
+          "description": "Situational Awareness"
+        },
+        {
+          "title": "Marc Andreessen",
+          "url": "https://a16z.com/the-techno-optimist-manifesto/",
+          "description": "Techno-Optimist Manifesto"
+        },
+        {
+          "title": "Balaji Srinivasan",
+          "url": "https://thenetworkstate.com/",
+          "description": "Network State"
+        },
+        {
+          "title": "Menlo Ventures",
+          "url": "https://menlovc.com/perspective/2025-the-state-of-consumer-ai/",
+          "description": "State of Consumer AI"
+        },
+        {
+          "title": "Fortune",
+          "url": "https://fortune.com/2025/08/19/shadow-ai-economy-mit-study-genai-divide-llm-chatbots/",
+          "description": "Shadow AI Economy"
         }
       ],
       "aimEvidence": [],
@@ -326,6 +391,26 @@
           "title": "All About AI Hallucination Statistics",
           "url": "https://www.allaboutai.com/resources/ai-statistics/ai-hallucinations/",
           "description": "4.3 hours weekly spent fact-checking AI output, 48% error rate in complex reasoning"
+        },
+        {
+          "title": "Sequoia Capital",
+          "url": "https://www.sequoiacap.com/article/generative-ai-act-two/",
+          "description": "Generative AI Act Two"
+        },
+        {
+          "title": "Nielsen Norman Group",
+          "url": "https://www.nngroup.com/articles/ai-programmers-productive/",
+          "description": "AI Productivity"
+        },
+        {
+          "title": "Qodo",
+          "url": "https://www.qodo.ai/reports/state-of-ai-code-quality/",
+          "description": "State of AI Code Quality"
+        },
+        {
+          "title": "OpenAI",
+          "url": "https://cdn.openai.com/pdf/2221c875-02dc-4789-800b-e7758f3722c1/o3-and-o4-mini-system-card.pdf",
+          "description": "o3 and o4-mini System Card"
         }
       ],
       "aimEvidence": [],
@@ -398,6 +483,11 @@
           "title": "AI Mindset Context Obesity",
           "url": "https://hackernoon.com/youre-not-burned-out-youve-got-context-obesity",
           "description": "You're not burned out, you have context obesity"
+        },
+        {
+          "title": "Gartner",
+          "url": "https://www.gartner.com/en/documents/5415263",
+          "description": "Getting Started with RAG"
         }
       ],
       "aimEvidence": [
@@ -492,6 +582,26 @@
           "title": "Deepstrike Deepfake Statistics",
           "url": "https://deepstrike.io/blog/deepfake-statistics-2025",
           "description": "1,740% surge in deepfake fraud (2022-2023) - provenance crisis"
+        },
+        {
+          "title": "OpenAI",
+          "url": "https://openai.com/index/introducing-chatgpt-pro/",
+          "description": "Deep Research"
+        },
+        {
+          "title": "Nature",
+          "url": "https://www.nature.com/articles/d41586-023-00107-w",
+          "description": "Generative Biology"
+        },
+        {
+          "title": "Epoch AI",
+          "url": "https://epochai.org/blog/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data",
+          "description": "Data Exhaustion"
+        },
+        {
+          "title": "Dario Amodei",
+          "url": "https://darioamodei.com/machines-of-loving-grace",
+          "description": "Scientific Compression"
         }
       ],
       "aimEvidence": [],
@@ -574,6 +684,11 @@
           "title": "GitClear Code Churn",
           "url": "https://www.gitclear.com/",
           "description": "50% increase in code churn from AI-generated code"
+        },
+        {
+          "title": "Qodo",
+          "url": "https://www.qodo.ai/",
+          "description": "AI Code Integrity"
         }
       ],
       "aimEvidence": [
@@ -649,7 +764,18 @@
           "description": "2027-2028 for useful household robots, 2030 for human-level manipulation"
         }
       ],
-      "research": [],
+      "research": [
+        {
+          "title": "Fei-Fei Li",
+          "url": "https://time.com/7339693/fei-fei-li-ai/",
+          "description": "Spatial Intelligence"
+        },
+        {
+          "title": "Tyler Perry",
+          "url": "https://www.hollywoodreporter.com/business/business-news/tyler-perry-ai-alarm-1235833276/",
+          "description": "$800M Studio Halt"
+        }
+      ],
       "aimEvidence": [],
       "voices": []
     },
@@ -742,6 +868,31 @@
           "title": "Ribbonfarm Dark Forest Internet",
           "url": "https://www.ribbonfarm.com/2020/01/16/the-internet-as-a-dark-forest/",
           "description": "Default assumption becomes distrust - every entity you encounter might be AI, zero trust as baseline"
+        },
+        {
+          "title": "CrowdStrike",
+          "url": "https://www.crowdstrike.com/",
+          "description": "AI Attack Speed"
+        },
+        {
+          "title": "Cyble",
+          "url": "https://cyble.com/",
+          "description": "Deepfake-as-a-Service"
+        },
+        {
+          "title": "FTC",
+          "url": "https://www.ftc.gov/",
+          "description": "Financial Fraud Losses"
+        },
+        {
+          "title": "Nieman Lab",
+          "url": "https://www.niemanlab.org/2023/03/detecting-ai-generated-content-is-hard-heres-why/",
+          "description": "Detecting AI Content"
+        },
+        {
+          "title": "Ribbonfarm",
+          "url": "https://www.ribbonfarm.com/2020/01/16/the-internet-as-a-dark-forest/",
+          "description": "Dark Forest Internet"
         }
       ],
       "aimEvidence": [],
@@ -886,6 +1037,26 @@
           "title": "Ubisoft NEO NPC",
           "url": "https://www.ubisoft.com/en-us/studio/laforge/news/7Cm4VJVbWKHzHmRgqwYbAX/neos-the-future-of-npcs",
           "description": "NPCs with psychological profiles reacting to player tone/mood - \"as big a revolution as shift to 3D\""
+        },
+        {
+          "title": "Ada Lovelace Institute",
+          "url": "https://www.adalovelaceinstitute.org/blog/ai-companions/",
+          "description": "Friends for Sale"
+        },
+        {
+          "title": "a16z",
+          "url": "https://a16z.com/100-gen-ai-apps-2025/",
+          "description": "Top 100 Gen AI Apps"
+        },
+        {
+          "title": "Ubisoft",
+          "url": "https://www.ubisoft.com/en-us/studio/laforge/news/7Cm4VJVbWKHzHmRgqwYbAX/neos-the-future-of-npcs",
+          "description": "NEO NPC"
+        },
+        {
+          "title": "AI Mindset",
+          "url": "https://aimindsetspace.substack.com/p/founder-os-mental-health",
+          "description": "Mental Health Boundaries"
         }
       ],
       "aimEvidence": [
@@ -947,5 +1118,5 @@
     "subtitle": "за чытанне",
     "content": "**аўтары:**\n**anca stavenski** — дызайн & логіка\n**alex p** — ідэі\n**ray svitla** — даследаванне\n**спасылкі:**\n→ [**падпісацца на substack**](https://aimindsetspace.substack.com) — атрымаць наступныя рэсеты & сігналы\n→ [**даследаваць экасістэму**](https://aimindset.org) — лабараторыі, інструменты, супольнасць\n→ [**звязацца з намі**](mailto:info@aimindset.org) — партнёрствы / выступленні\nканец перадачы"
   },
-  "generated": "2026-01-23T12:32:52.572Z"
+  "generated": "2026-01-23T12:43:20.168Z"
 }

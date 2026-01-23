@@ -30,6 +30,12 @@ export interface VoiceItem {
   role: string;
 }
 
+export interface ResearchItem {
+  title: string;
+  url: string;
+  description: string;
+}
+
 export interface ShiftData {
   id: string; 
   layerId: string; 
@@ -57,13 +63,22 @@ export interface ShiftData {
   stats: {
     label: string;
     value: string;
-    desc: string;
+    desc?: string;
     url?: string;
   }[];
 
-  sources: Source[];
+  researchTop: ResearchItem[];
+  research: ResearchItem[];
+  aimEvidence: ResearchItem[];
+  voices?: {
+    tag: string;
+    text: string;
+    author: string;
+  }[];
+  
+  // Legacy fields for backward compatibility
+  sources?: Source[];
   evidence?: EvidenceItem[];
-  voices?: VoiceItem[];
 }
 
 export const layers: LayerData[] = [
