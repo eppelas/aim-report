@@ -64,7 +64,7 @@ function parseEnglishEvidence() {
       }
       
       // Parse Research
-      const researchMatch = shiftContent.match(/\*\*Research:\*\*(.*?)(?=\*\*AI Mindset Evidence:|$)/s);
+      const researchMatch = shiftContent.match(/\*\*Research:\*\*(.*?)(?=\*\*AI Mindset Evidence:|\*\*Tags:|$)/s);
       if (researchMatch) {
         const researchLines = researchMatch[1].split('\n').filter(l => l.trim().startsWith('-'));
         researchLines.forEach(line => {
