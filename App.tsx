@@ -335,19 +335,18 @@ export default function App() {
             return;
           }
           
-          // Jump to next snap point based on timeline timings (total ~28 units)
-          // Timeline: intersect(0) -> moment(1) -> diverge(2.8) -> creating(7.3) -> gap(8.5) -> bridge(12.5) -> layers(15) -> manifesto(18) -> shifts(23) -> report(26.2)
+          // Snap points fixed at clear visible animation states
           const snapPoints = [
-            0.04,  // 1: "They intersect" clear (time ~1)
-            0.07,  // 2: "They intersect" + "For a moment" both visible (time ~2)
-            0.11,  // 3: "And diverge" clear (time ~3)
-            0.27,  // 4: "Creating" clear (time ~7.5)
-            0.38,  // 5: "THE CONTEXT GAP" + definition (time ~10.5)
-            0.46,  // 6: "11 TECTONIC SHIFTS" (time ~13)
-            0.57,  // 7: "IN 4 LAYERS" all 4 rows (time ~16)
-            0.75,  // 8: "INPUT/RESPONSE" with THE GAP (time ~21)
-            0.87,  // 9: "11" red grid (time ~24.5)
-            0.96,  // 10: Final report screen -> next page
+            0.04,  // 1: "They intersect"
+            0.08,  // 2: "They intersect" + "FOR A MOMENT"
+            0.15,  // 3: "And diverge"
+            0.26,  // 4: "Creating" 
+            0.36,  // 5: "THE GAP" + description
+            0.46,  // 6: "11 TECTONIC SHIFTS"
+            0.56,  // 7: "IN 4 LAYERS" all rows
+            0.72,  // 8: "INPUT/RESPONSE" manifesto
+            0.85,  // 9: "11" red grid
+            0.96,  // 10: Final -> next page
           ];
           const nextSnap = snapPoints.find(p => p > currentProgress + 0.01);
           if (nextSnap) {
