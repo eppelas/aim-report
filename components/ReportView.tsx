@@ -364,6 +364,19 @@ export const ReportView: React.FC<ReportViewProps> = ({ onBack, data, onNext, on
           <div className="max-w-7xl mx-auto">
               <h2 className={`text-5xl md:text-7xl font-black ${textMain} uppercase tracking-tighter leading-none mb-12`}>{i18n?.ui.dataSources || 'Data Sources'}</h2>
               
+              {/* DEBUG */}
+              {console.log('ReportView data:', {
+                id: data.id,
+                hasResearchTop: !!data.researchTop,
+                researchTopLength: data.researchTop?.length,
+                hasResearch: !!data.research,
+                researchLength: data.research?.length,
+                hasAimEvidence: !!data.aimEvidence,
+                aimEvidenceLength: data.aimEvidence?.length,
+                researchTopSample: data.researchTop?.[0],
+                researchSample: data.research?.[0]
+              })}
+              
               {/* TOP RESEARCH */}
               {data.researchTop && data.researchTop.length > 0 && (
                   <div className="mb-12">

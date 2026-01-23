@@ -33,15 +33,16 @@ export const useShiftsData = (lang: 'en' | 'ru' | 'by' | 'ro' = 'en'): ShiftsDat
         if (response.ok) {
           const content = await response.json();
           
-          // Merge English evidence/stats/sources data into translated shifts
-          const mergedShifts = (content.shifts || []).map((shift: ShiftData, index: number) => {
-            const englishShift = defaultShifts[index];
+          // Use shifts from JSON with all data (researchTop, research, aimEvidence, etc.)
+          const mergedShifts = (content.shifts || []).map((shift: ShiftData) => {
             return {
               ...shift,
-              stats: englishShift?.stats || [],
-              evidence: englishShift?.evidence || [],
-              sources: englishShift?.sources || [],
-              voices: englishShift?.voices || []
+              // Ensure arrays exist
+              stats: shift.stats || [],
+              researchTop: shift.researchTop || [],
+              research: shift.research || [],
+              aimEvidence: shift.aimEvidence || [],
+              voices: shift.voices || []
             };
           });
           
